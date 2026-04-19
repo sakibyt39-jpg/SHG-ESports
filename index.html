@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SHG亗ESPORTS | Live Timer Edition</title>
+    <title>SHG亗ESPORTS | Join Form & Anti-Duplicate</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
         :root { --primary: #0088ff; --bg: #010409; --card: #0d1117; --success: #238636; --danger: #da3633; }
@@ -16,13 +16,15 @@
         .active { display: block; }
         .card { background: var(--card); border: 1px solid #30363d; border-radius: 12px; padding: 20px; margin-bottom: 20px; position: relative; }
         
-        /* Timer Style */
+        /* Modal Style for Join Form */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; justify-content: center; align-items: center; }
+        .modal-content { background: var(--card); padding: 30px; border-radius: 15px; width: 90%; max-width: 400px; border: 1px solid var(--primary); }
+
         .timer-box { position: absolute; top: 15px; right: 15px; background: rgba(218, 54, 51, 0.1); border: 1px solid var(--danger); color: var(--danger); padding: 4px 10px; border-radius: 6px; font-family: 'Orbitron'; font-size: 11px; font-weight: bold; }
         
-        input, select { width: 100%; padding: 12px; margin: 8px 0; background: #0d1117; border: 1px solid #30363d; color: white; border-radius: 6px; }
+        input, select { width: 100%; padding: 12px; margin: 8px 0; background: #0d1117; border: 1px solid #30363d; color: white; border-radius: 6px; box-sizing: border-box; }
         .btn { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; font-family: 'Orbitron'; margin-top: 10px; }
-        .admin-table { width: 100%; border-collapse: collapse; font-size: 11px; }
-        .admin-table td { padding: 8px; border-bottom: 1px solid #30363d; }
+        .btn:disabled { background: #334155; cursor: not-allowed; }
     </style>
 </head>
 <body>
@@ -36,6 +38,18 @@
     </div>
 </nav>
 
+<div id="joinModal" class="modal">
+    <div class="modal-content">
+        <h3 style="font-family:'Orbitron'; color:var(--primary); margin-top:0;">JOIN TOURNAMENT</h3>
+        <p style="font-size:12px; color:#8b949e;">Please enter your game details correctly.</p>
+        <input type="hidden" id="joinMatchId">
+        <input type="text" id="game-name" placeholder="In-Game Name (IGN)">
+        <input type="text" id="game-uid" placeholder="Game UID">
+        <button class="btn" onclick="confirmJoin()">Confirm Join</button>
+        <button class="btn" style="background:#334155;" onclick="closeModal()">Cancel</button>
+    </div>
+</div>
+
 <div class="container">
     <div id="home" class="section active">
         <div id="match-display-container"></div>
@@ -45,13 +59,12 @@
         <div class="card">
             <h3 id="p-name">Player</h3>
             <p id="p-uid-display" style="color:var(--primary); font-size:12px;">UID: 000</p>
-            <div style="display:flex; gap:10px; margin-top:10px;">
-                <div class="card" style="flex:1; text-align:center; margin:0;">
-                    <small>BALANCE</small><br><b style="color:var(--success);">৳<span id="u-bal">0</span></b>
-                </div>
+            <div style="text-align:center; padding:15px; background:#161b22; border-radius:10px;">
+                <small>MY BALANCE</small><br><b style="color:var(--success); font-size:24px;">৳<span id="u-bal">0</span></b>
             </div>
-            <button class="btn" style="background:#334155; margin-top:10px;" onclick="userLogout()">Logout</button>
+            <button class="btn" style="background:#334155; margin-top:20px;" onclick="userLogout()">Logout</button>
         </div>
+        <h4 style="font-family:'Orbitron';">My Joined Matches</h4>
         <div id="my-match-list"></div>
     </div>
 
@@ -63,13 +76,12 @@
         </div>
         <div id="admin-dash" style="display:none;">
             <div class="card">
-                <h4>CREATE MATCH WITH TIMER</h4>
+                <h4>CREATE MATCH</h4>
                 <input type="text" id="m-name" placeholder="Match Title">
                 <input type="number" id="m-fee" placeholder="Fee">
                 <input type="number" id="m-prize" placeholder="Prize">
-                <p style="font-size:11px; color:var(--primary); margin:5px 0 0 0;">Set Match Date & Time:</p>
                 <input type="datetime-local" id="m-time">
-                <button class="btn" onclick="createMatch()">Publish Match</button>
+                <button class="btn" onclick="createMatch()">Publish</button>
             </div>
             <button class="btn" style="background:var(--danger);" onclick="location.reload()">Exit</button>
         </div>
@@ -80,20 +92,24 @@
     let dbUsers = JSON.parse(localStorage.getItem('shg_db_users')) || {};
     let user = JSON.parse(localStorage.getItem('shg_current_user')) || null;
     let matches = JSON.parse(localStorage.getItem('shg_matches')) || [];
+    let matchParticipants = JSON.parse(localStorage.getItem('shg_participants')) || {}; // {matchId: [uid1, uid2]}
 
     function saveDB() {
         localStorage.setItem('shg_db_users', JSON.stringify(dbUsers));
         localStorage.setItem('shg_current_user', JSON.stringify(user));
         localStorage.setItem('shg_matches', JSON.stringify(matches));
+        localStorage.setItem('shg_participants', JSON.stringify(matchParticipants));
     }
 
     function showPage(id) {
+        if(!user && id === 'profile') { alert("Login First!"); return; }
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         if(user) {
             document.getElementById('p-name').innerText = user.name;
             document.getElementById('p-uid-display').innerText = "UID: " + user.uid;
             document.getElementById('u-bal').innerText = user.balance;
+            renderMyMatches();
         }
     }
 
@@ -104,39 +120,64 @@
         }
     }
 
+    // Modal Control
+    function openJoinForm(matchId) {
+        if(!user) return alert("Please Login First!");
+        document.getElementById('joinMatchId').value = matchId;
+        document.getElementById('joinModal').style.display = 'flex';
+    }
+
+    function closeModal() {
+        document.getElementById('joinModal').style.display = 'none';
+    }
+
+    function confirmJoin() {
+        const matchId = document.getElementById('joinMatchId').value;
+        const ign = document.getElementById('game-name').value;
+        const gameUid = document.getElementById('game-uid').value;
+        const match = matches.find(m => m.id == matchId);
+
+        if(!ign || !gameUid) return alert("Fill In-Game Name & UID!");
+        
+        // 1. Anti-Duplicate System (Ek UID diye ek bar)
+        if(!matchParticipants[matchId]) matchParticipants[matchId] = [];
+        if(matchParticipants[matchId].includes(gameUid)) {
+            return alert("This Game UID is already registered for this match!");
+        }
+
+        // 2. Balance Check
+        if(user.balance < match.fee) return alert("Insufficient Balance!");
+
+        // 3. Process Join
+        user.balance -= match.fee;
+        user.joined_matches = user.joined_matches || [];
+        user.joined_matches.push({
+            matchId: matchId,
+            ign: ign,
+            gameUid: gameUid
+        });
+        
+        matchParticipants[matchId].push(gameUid); // Store for duplicate check
+        dbUsers[user.uid] = user;
+        saveDB();
+        
+        alert("Successfully Joined!");
+        closeModal();
+        showPage('profile');
+        renderMatches();
+    }
+
     function createMatch() {
         const name = document.getElementById('m-name').value;
         const fee = document.getElementById('m-fee').value;
         const prize = document.getElementById('m-prize').value;
         const time = document.getElementById('m-time').value;
-
-        if(!name || !time) return alert("Fill all info!");
+        if(!name || !time) return alert("Error!");
 
         matches.push({ id: Date.now(), name, fee, prize, startTime: time });
         saveDB();
         renderMatches();
-        alert("Match Published!");
-    }
-
-    // Live Timer Function
-    function updateTimers() {
-        matches.forEach(m => {
-            const timerEl = document.getElementById(`timer-${m.id}`);
-            if(!timerEl) return;
-
-            const now = new Date().getTime();
-            const distance = new Date(m.startTime).getTime() - now;
-
-            if (distance < 0) {
-                timerEl.innerText = "STARTED";
-                timerEl.style.color = "var(--success)";
-            } else {
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                timerEl.innerText = `${hours}h ${minutes}m ${seconds}s`;
-            }
-        });
+        alert("Published!");
     }
 
     function renderMatches() {
@@ -145,38 +186,48 @@
         matches.forEach(m => {
             cont.innerHTML += `
                 <div class="card">
-                    <div class="timer-box" id="timer-${m.id}">Loading...</div>
+                    <div class="timer-box" id="timer-${m.id}">...</div>
                     <h3 style="margin-top:15px; color:var(--primary); font-family:'Orbitron';">${m.name}</h3>
                     <p style="font-size:13px;">Fee: ৳${m.fee} | Prize: ৳${m.prize}</p>
-                    <button class="btn" onclick="joinMatch(${m.id})">Join Now</button>
+                    <button class="btn" onclick="openJoinForm(${m.id})">Join Now</button>
                 </div>`;
         });
     }
 
-    function joinMatch(id) {
-        if(!user) return alert("Please Login first!");
-        const m = matches.find(x => x.id === id);
-        if(user.balance < m.fee) return alert("Low Balance!");
-        
-        user.balance -= m.fee;
-        user.joined_matches = user.joined_matches || [];
-        user.joined_matches.push(id);
-        dbUsers[user.uid] = user;
-        saveDB();
-        renderMatches();
-        showPage('profile');
-        alert("Joined!");
+    function renderMyMatches() {
+        const cont = document.getElementById('my-match-list');
+        cont.innerHTML = "";
+        (user.joined_matches || []).forEach(j => {
+            const m = matches.find(x => x.id == j.matchId);
+            if(m) {
+                cont.innerHTML += `<div class="card" style="border-left:4px solid var(--success);">
+                    <b>${m.name}</b><br>
+                    <small>IGN: ${j.ign} | Game UID: ${j.gameUid}</small>
+                </div>`;
+            }
+        });
+    }
+
+    function updateTimers() {
+        matches.forEach(m => {
+            const timerEl = document.getElementById(`timer-${m.id}`);
+            if(!timerEl) return;
+            const distance = new Date(m.startTime).getTime() - new Date().getTime();
+            if (distance < 0) {
+                timerEl.innerText = "LIVE";
+                timerEl.style.color = "var(--success)";
+            } else {
+                const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const m_ = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const s = Math.floor((distance % (1000 * 60)) / 1000);
+                timerEl.innerText = `${h}h ${m_}m ${s}s`;
+            }
+        });
     }
 
     function userLogout() { user = null; saveDB(); location.reload(); }
-
-    // Start Timer Interval
     setInterval(updateTimers, 1000);
-
-    window.onload = () => {
-        renderMatches();
-        if(user) showPage('home');
-    };
+    window.onload = () => { renderMatches(); if(user) showPage('home'); };
 </script>
 </body>
 </html>
