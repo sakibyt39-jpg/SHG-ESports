@@ -413,15 +413,32 @@
             this.updateUI();
         },
 
-        register: function() {
-            const n = document.getElementById('r-name').value, u = document.getElementById('r-uid').value, p = document.getElementById('r-pass').value;
-            if(!n || !u || !p) return alert("Fill all!");
-            if(this.db.users[u]) return alert("UID Taken!");
-            
-            this.db.users[u] = { name: n, uid: u, pass: p, balance: 0, trxs: [] };
-            this.db.current = this.db.users[u];
-            this.save();
-            showPage('home-page');
+        register: async function() {
+            const n = document.getElementById('r-name').value;
+            const u = document.getElementById('r-uid').value;
+            const p = document.getElementById('r-pass').value;
+
+            if(!n || !u || !p) return alert("Sop field puron koren!");
+
+            try {
+                // Cloud database reference neya
+                const { doc, setDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
+                
+                const userRef = doc(window.db, "users", u);
+                const userData = { name: n, uid: u, pass: p, balance: 0, rank: "SOLDIER" };
+                
+                // Cloud-e data pathano
+                await setDoc(userRef, userData);
+                
+                this.db.current = userData;
+                localStorage.setItem('shg_session', JSON.stringify(userData));
+                alert("Account Created on Cloud!");
+                showPage('home-page');
+            } catch (error) {
+                console.error("Firebase Error: ", error);
+                alert("Registration Failed!");
+            }
+        },
         },
 
         login: function() {
