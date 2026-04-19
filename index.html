@@ -455,26 +455,33 @@
             location.reload();
         }
         
-        ,createMatch: async function() {
+        createMatch: async function() {
     const n = document.getElementById('am-name').value, 
           f = document.getElementById('am-fee').value, 
           p = document.getElementById('am-prize').value, 
           t = document.getElementById('am-time').value;
 
-    if(!n || !f || !p || !t) return alert("Sop match info thik moton din!");
+    if(!n || !f || !p || !t) return alert("Match-er sob info thik moto den!");
 
     try {
         const { collection, addDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
         
         const matchData = { 
-            title: n, fee: f, prize: p, time: t, 
-            roomId: "TBA", roomPass: "TBA", 
+            title: n, 
+            fee: parseFloat(f), 
+            prize: parseFloat(p), 
+            time: t, 
+            roomId: "TBA", 
+            roomPass: "TBA", 
             timestamp: new Date().getTime() 
         };
 
+        // Firebase-e 'matches' collection-e data pathano
         await addDoc(collection(window.db, "matches"), matchData);
         alert("Match Firebase-e Live hoyeche!");
-        this.renderAdmin();
+        
+        // Input gulo clear kora
+        document.getElementById('am-name').value = "";
     } catch (e) {
         alert("Error: " + e.message);
     }
@@ -782,14 +789,21 @@ if (app.db.current) {
         window.db = db;
         console.log("Firebase Connected Successfully!");
         
+    
+});
+<script type="module">
         import { collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
-// Firestore theke auto match data ana
-const q = query(collection(window.db, "matches"), orderBy("timestamp", "desc"));
-onSnapshot(q, (snapshot) => {
-    app.db.matches = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    app.renderMatches(); // Screen auto update hobe
-});
+        // Firestore theke auto match data ana
+        if (window.db) {
+            const qMatches = query(collection(window.db, "matches"), orderBy("timestamp", "desc"));
+            onSnapshot(qMatches, (snapshot) => {
+                // Firebase theke asha data local list-e replace kora
+                app.db.matches = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                app.renderMatches(); // Website-er UI auto refresh hobe
+                app.renderAdmin();  // Admin panel-o refresh hobe
+            });
+        }
     </script>
 </body>
 </html>
