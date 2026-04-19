@@ -3,251 +3,334 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SHG亗ESPORTS | Secure Edition</title>
+    <title>SHG亗ESPORTS | Pro Working Panel</title>
     <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --primary: #00d2ff; --secondary: #3a7bd5; --bg: #05070a; --card: rgba(13, 17, 23, 0.95); --success: #00ff88; --danger: #ff3e3e; --gold: #ffd700; }
-        body { margin: 0; font-family: 'Rajdhani', sans-serif; background: radial-gradient(circle at top, #111e31 0%, #05070a 100%); color: #e1e1e1; min-height: 100vh; }
+        body { margin: 0; font-family: 'Rajdhani', sans-serif; background: #05070a; color: #e1e1e1; min-height: 100vh; }
         
-        .wa-float { position: fixed; bottom: 25px; right: 25px; background: #25d366; color: white; width: 55px; height: 55px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 28px; z-index: 5000; }
+        nav { background: rgba(13, 17, 23, 0.98); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--secondary); position: sticky; top: 0; z-index: 1000; }
+        .logo { font-family: 'Oxanium', sans-serif; color: var(--primary); font-size: 20px; font-weight: 700; letter-spacing: 1px; }
 
-        nav { background: rgba(13, 17, 23, 0.95); backdrop-filter: blur(10px); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--secondary); position: sticky; top: 0; z-index: 1000; }
-        .logo { font-family: 'Oxanium', sans-serif; color: var(--primary); font-size: 22px; font-weight: 700; letter-spacing: 2px; }
+        .container { padding: 20px 5%; max-width: 800px; margin: auto; }
+        .section { display: none; }
+        .active { display: block; animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        .container { padding: 20px 5%; max-width: 850px; margin: auto; }
-        .section { display: none; animation: fadeIn 0.4s ease; }
-        .active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        .card { background: var(--card); border: 1px solid rgba(58, 123, 213, 0.3); border-radius: 16px; padding: 20px; margin-bottom: 20px; position: relative; }
+        .card { background: var(--card); border: 1px solid rgba(58, 123, 213, 0.3); border-radius: 15px; padding: 20px; margin-bottom: 20px; position: relative; }
         
-        input, select { width: 100%; padding: 12px; margin: 8px 0; background: #080a0f; border: 1px solid #1e293b; color: white; border-radius: 10px; font-family: 'Rajdhani'; font-size: 16px; box-sizing: border-box; }
-        .btn { background: linear-gradient(90deg, var(--secondary), var(--primary)); color: white; border: none; padding: 14px; border-radius: 10px; cursor: pointer; font-weight: 700; width: 100%; font-family: 'Oxanium'; text-transform: uppercase; margin-top: 10px; }
-
-        .room-details-match { background: rgba(0, 210, 255, 0.1); border: 1px solid var(--primary); padding: 10px; border-radius: 8px; margin-top: 10px; display: none; font-family: 'Oxanium'; text-align: center; color: var(--gold); }
-        .visible { display: block; }
-
-        .timer-badge { position: absolute; top: -10px; right: 20px; background: var(--danger); padding: 5px 12px; border-radius: 5px; font-size: 12px; font-weight: bold; }
+        input, select { width: 100%; padding: 12px; margin: 10px 0; background: #000; border: 1px solid #1e293b; color: #fff; border-radius: 8px; box-sizing: border-box; }
+        .btn { background: linear-gradient(90deg, var(--secondary), var(--primary)); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: 700; width: 100%; font-family: 'Oxanium'; text-transform: uppercase; margin-top: 5px; }
+        
+        .timer-badge { position: absolute; top: 10px; right: 10px; background: var(--danger); padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; font-family: 'Oxanium'; }
+        
+        .room-info-box { background: rgba(0, 255, 136, 0.1); border: 1px dashed var(--success); padding: 10px; border-radius: 8px; margin-top: 15px; color: var(--success); font-family: 'Oxanium'; font-size: 14px; text-align: center; }
+        
+        .admin-item { border-bottom: 1px solid #333; padding: 10px 0; }
+        .notice { background: rgba(255, 215, 0, 0.1); border: 1px solid var(--gold); padding: 10px; border-radius: 10px; margin-bottom: 15px; color: var(--gold); font-size: 14px; }
     </style>
 </head>
 <body>
 
 <nav>
     <div class="logo">SHG亗ESPORTS</div>
-    <div class="nav-links">
-        <button onclick="showPage('home')" style="background:none; border:none; color:white; font-family:'Oxanium';">Matches</button>
-        <button onclick="showPage('profile')" style="background:none; border:none; color:white; font-family:'Oxanium'; margin-left:15px;">Account</button>
-        <button onclick="showPage('admin-login')" style="background:none; border:none; color:white; font-family:'Oxanium'; margin-left:15px;">Admin</button>
+    <div id="nav-btns" style="display:none;">
+        <button onclick="showPage('home')" style="background:none; border:none; color:white; cursor:pointer;"><i class="fas fa-gamepad"></i></button>
+        <button onclick="showPage('profile')" style="background:none; border:none; color:white; cursor:pointer; margin-left:15px;"><i class="fas fa-user-circle"></i></button>
+        <button onclick="showPage('admin-panel')" style="background:none; border:none; color:white; cursor:pointer; margin-left:15px;"><i class="fas fa-user-shield"></i></button>
     </div>
 </nav>
 
 <div class="container">
-    <div id="auth-choice" class="section active">
+    <div id="auth-page" class="section active">
         <div class="card" style="text-align:center;">
-            <h2 style="font-family:'Oxanium';">WELCOME GAMER</h2>
-            <p>Select an option to continue</p>
-            <button class="btn" onclick="showPage('login-form')">Login to Account</button>
-            <button class="btn" style="background:#1e293b;" onclick="showPage('reg-form')">Register New Account</button>
+            <h2 style="font-family:'Oxanium'; color:var(--primary);">ELITE TOURNAMENT</h2>
+            <p style="font-size:14px; opacity:0.7;">Login or Register to start playing</p>
+            <button class="btn" onclick="showPage('login-page')">Login</button>
+            <button class="btn" style="background:#1e293b; margin-top:10px;" onclick="showPage('reg-page')">Create Account</button>
         </div>
     </div>
 
-    <div id="reg-form" class="section">
+    <div id="login-page" class="section">
         <div class="card">
-            <h3>CREATE ACCOUNT</h3>
-            <input type="text" id="reg-name" placeholder="Your Name">
-            <input type="text" id="reg-uid" placeholder="Set Unique UID (Numbers)">
-            <input type="password" id="reg-pass" placeholder="Set Account Password">
-            <button class="btn" onclick="processRegister()">Register & Login</button>
+            <h3 style="font-family:'Oxanium';">LOGIN</h3>
+            <input type="text" id="l-uid" placeholder="Enter UID">
+            <input type="password" id="l-pass" placeholder="Enter Password">
+            <button class="btn" onclick="login()">Login Now</button>
+            <p onclick="showPage('reg-page')" style="text-align:center; font-size:12px; cursor:pointer;">New here? Register</p>
         </div>
     </div>
 
-    <div id="login-form" class="section">
+    <div id="reg-page" class="section">
         <div class="card">
-            <h3>LOGIN</h3>
-            <input type="text" id="log-uid" placeholder="Enter Your UID">
-            <input type="password" id="log-pass" placeholder="Enter Password">
-            <button class="btn" onclick="processLogin()">Access Profile</button>
+            <h3 style="font-family:'Oxanium';">REGISTER</h3>
+            <input type="text" id="r-name" placeholder="Full Name">
+            <input type="text" id="r-uid" placeholder="Create UID (Numbers)">
+            <input type="password" id="r-pass" placeholder="Create Password">
+            <button class="btn" onclick="register()">Create Account</button>
+            <p onclick="showPage('login-page')" style="text-align:center; font-size:12px; cursor:pointer;">Back to Login</p>
         </div>
     </div>
 
     <div id="home" class="section">
-        <div id="match-container"></div>
+        <div class="notice"><i class="fas fa-bullhorn"></i> <span id="board-notice">Welcome to SHG! Join matches and win prizes.</span></div>
+        <div id="match-list"></div>
     </div>
 
     <div id="profile" class="section">
         <div class="card" style="text-align:center;">
-            <h2 id="p-name" style="color:var(--primary);">...</h2>
-            <p id="p-uid" style="opacity:0.6;">UID: 000</p>
-            <div style="font-size:24px; color:var(--success);">৳<span id="u-bal">0</span></div>
-            <button class="btn" onclick="showPage('wallet')" style="width:150px; font-size:12px;">Wallet</button>
-            <button class="btn" onclick="userLogout()" style="background:var(--danger); width:100px; font-size:12px;">Logout</button>
+            <h2 id="user-display-name" style="margin:0; color:var(--primary);">User</h2>
+            <p id="user-display-uid" style="opacity:0.6; font-size:13px;">UID: 000</p>
+            <div style="font-size:28px; font-weight:bold; color:var(--success); margin:10px 0;">৳<span id="user-display-bal">0</span></div>
+            <div style="display:flex; gap:10px;">
+                <button class="btn" onclick="showPage('wallet')">Wallet</button>
+                <button class="btn" onclick="logout()" style="background:var(--danger);">Logout</button>
+            </div>
         </div>
-        <h3>My Joined Matches</h3>
-        <div id="my-joined-list"></div>
+        <h4 style="font-family:'Oxanium';">Joined History</h4>
+        <div id="joined-history"></div>
     </div>
 
     <div id="wallet" class="section">
         <div class="card">
-            <h3>WALLET SYSTEM</h3>
-            <select id="w-type"><option value="dep">Deposit</option><option value="wit">Withdraw</option></select>
-            <input type="number" id="w-amt" placeholder="Amount">
-            <input type="text" id="w-trx" placeholder="Transaction Info">
-            <button class="btn" onclick="submitWallet()">Submit</button>
+            <h3 style="font-family:'Oxanium';">WALLET SYSTEM</h3>
+            <select id="w-method"><option value="dep">Deposit</option><option value="wit">Withdraw</option></select>
+            <input type="number" id="w-amount" placeholder="Amount (৳)">
+            <input type="text" id="w-trx" placeholder="Number / TrxID">
+            <button class="btn" onclick="sendReq()">Submit Request</button>
+            <button class="btn" style="background:#1e293b;" onclick="showPage('profile')">Back</button>
         </div>
     </div>
 
-    <div id="admin-login" class="section">
-        <div id="admin-dash" class="card">
-            <h3>ADMIN PANEL</h3>
-            <div id="admin-auth-fields">
-                <input type="password" id="adm-pass" placeholder="Admin Secret Key">
-                <button class="btn" onclick="accessAdmin()">Login Admin</button>
-            </div>
-            <div id="admin-controls" style="display:none;">
-                <h4>Create Match</h4>
-                <input type="text" id="m-title" placeholder="Match Title">
-                <input type="number" id="m-fee" placeholder="Fee">
-                <input type="datetime-local" id="m-time">
-                <button class="btn" onclick="addMatch()">Create Match</button>
-                <hr>
-                <h4>Match List & Room Update</h4>
-                <div id="adm-m-list"></div>
-                <hr>
-                <h4>Finance</h4>
-                <div id="adm-req-list"></div>
-            </div>
+    <div id="admin-panel" class="section">
+        <div id="admin-auth" class="card">
+            <h3>ADMIN LOGIN</h3>
+            <input type="password" id="adm-key" placeholder="Enter Key">
+            <button class="btn" onclick="authAdmin()">Login</button>
+        </div>
+        <div id="admin-dash" class="card" style="display:none;">
+            <h3>DASHBOARD</h3>
+            <div class="notice">Revenue: ৳<span id="adm-rev">0</span></div>
+            <hr>
+            <h4>Create Match</h4>
+            <input type="text" id="m-title" placeholder="Match Name">
+            <input type="number" id="m-fee" placeholder="Entry Fee">
+            <input type="datetime-local" id="m-time">
+            <button class="btn" onclick="createMatch()">Publish</button>
+            <hr>
+            <h4>Match Controls (Room Info)</h4>
+            <div id="adm-m-list"></div>
+            <hr>
+            <h4>Finance Requests</h4>
+            <div id="adm-req-list"></div>
         </div>
     </div>
 </div>
 
 <script>
-    let dbUsers = JSON.parse(localStorage.getItem('shg_sec_users')) || {};
-    let currentUser = JSON.parse(localStorage.getItem('shg_sec_curr')) || null;
-    let matches = JSON.parse(localStorage.getItem('shg_sec_matches')) || [];
-    let regs = JSON.parse(localStorage.getItem('shg_sec_regs')) || [];
-    let requests = JSON.parse(localStorage.getItem('shg_sec_reqs')) || [];
+    // Database Logic
+    let users = JSON.parse(localStorage.getItem('shg_users')) || {};
+    let currentUser = JSON.parse(localStorage.getItem('shg_curr')) || null;
+    let matches = JSON.parse(localStorage.getItem('shg_matches')) || [];
+    let registrations = JSON.parse(localStorage.getItem('shg_regs')) || [];
+    let requests = JSON.parse(localStorage.getItem('shg_reqs')) || [];
+    let revenue = localStorage.getItem('shg_rev') || 0;
 
     function save() {
-        localStorage.setItem('shg_sec_users', JSON.stringify(dbUsers));
-        localStorage.setItem('shg_sec_curr', JSON.stringify(currentUser));
-        localStorage.setItem('shg_sec_matches', JSON.stringify(matches));
-        localStorage.setItem('shg_sec_regs', JSON.stringify(regs));
-        localStorage.setItem('shg_sec_reqs', JSON.stringify(requests));
+        localStorage.setItem('shg_users', JSON.stringify(users));
+        localStorage.setItem('shg_curr', JSON.stringify(currentUser));
+        localStorage.setItem('shg_matches', JSON.stringify(matches));
+        localStorage.setItem('shg_regs', JSON.stringify(registrations));
+        localStorage.setItem('shg_reqs', JSON.stringify(requests));
+        localStorage.setItem('shg_rev', revenue);
     }
 
+    // Page Navigation
     function showPage(id) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         if(id === 'home') renderMatches();
         if(id === 'profile') renderProfile();
+        if(id === 'admin-panel') renderAdmin();
+        
+        // Toggle Nav Buttons
+        document.getElementById('nav-btns').style.display = currentUser ? 'block' : 'none';
     }
 
-    // Auth Logic
-    function processRegister() {
-        const n = document.getElementById('reg-name').value, u = document.getElementById('reg-uid').value, p = document.getElementById('reg-pass').value;
-        if(!n || !u || !p) return alert("Fill all fields!");
-        if(dbUsers[u]) return alert("UID already exists!");
-        dbUsers[u] = { name: n, uid: u, pass: p, balance: 0 };
-        currentUser = dbUsers[u]; save(); showPage('home');
+    // Auth Actions
+    function register() {
+        const n = document.getElementById('r-name').value, u = document.getElementById('r-uid').value, p = document.getElementById('r-pass').value;
+        if(!n || !u || !p) return alert("Fill all!");
+        if(users[u]) return alert("UID Taken!");
+        users[u] = { name: n, uid: u, pass: p, balance: 0 };
+        currentUser = users[u];
+        save();
+        showPage('home');
     }
 
-    function processLogin() {
-        const u = document.getElementById('log-uid').value, p = document.getElementById('log-pass').value;
-        if(dbUsers[u] && dbUsers[u].pass === p) { currentUser = dbUsers[u]; save(); showPage('home'); }
-        else alert("Wrong Credentials!");
+    function login() {
+        const u = document.getElementById('l-uid').value, p = document.getElementById('l-pass').value;
+        if(users[u] && users[u].pass === p) {
+            currentUser = users[u];
+            save();
+            showPage('home');
+        } else {
+            alert("Wrong UID/Password");
+        }
     }
 
-    // Match Logic
-    function addMatch() {
-        const t = document.getElementById('m-title').value, f = document.getElementById('m-fee').value, tm = document.getElementById('m-time').value;
-        matches.push({ id: Date.now(), title: t, fee: f, time: tm, roomId: "TBA", roomPass: "TBA" });
-        save(); renderAdminPanel(); renderMatches();
+    function logout() {
+        currentUser = null;
+        save();
+        location.reload();
     }
 
+    // Match Board Logic
     function renderMatches() {
-        const cont = document.getElementById('match-container'); cont.innerHTML = "";
+        const cont = document.getElementById('match-list');
+        cont.innerHTML = "";
         matches.forEach(m => {
-            const isJoined = currentUser && regs.some(r => r.mid == m.id && r.uUid == currentUser.uid);
-            cont.innerHTML += `<div class="card">
-                <div class="timer-badge" id="t-${m.id}">Timer</div>
-                <h3 style="font-family:'Oxanium'; color:var(--primary);">${m.title}</h3>
-                <p>Fee: ৳${m.fee}</p>
-                <button class="btn" onclick="joinMatch(${m.id})">${isJoined ? 'ALREADY JOINED' : 'JOIN NOW'}</button>
-                <div class="room-details-match ${isJoined ? 'visible' : ''}">
-                    <b>ROOM ID:</b> ${m.roomId} | <b>PASS:</b> ${m.roomPass}
+            const joined = registrations.some(r => r.mid == m.id && r.uUid == currentUser.uid);
+            cont.innerHTML += `
+                <div class="card">
+                    <div class="timer-badge" id="tm-${m.id}">...</div>
+                    <h3 style="color:var(--primary); margin:0;">${m.title}</h3>
+                    <p style="font-size:14px; opacity:0.8;">Entry Fee: ৳${m.fee}</p>
+                    <button class="btn" onclick="joinMatch(${m.id})">${joined ? 'ALREADY JOINED' : 'JOIN MATCH'}</button>
+                    ${joined ? `
+                        <div class="room-info-box">
+                            <b>ROOM DETAILS</b><br>
+                            ID: ${m.rid || 'Wait...'} | Pass: ${m.rpass || 'Wait...'}
+                        </div>
+                    ` : ''}
                 </div>
-            </div>`;
+            `;
         });
     }
 
     function joinMatch(mid) {
-        if(!currentUser) return showPage('auth-choice');
         const m = matches.find(x => x.id == mid);
-        if(regs.some(r => r.mid == mid && r.uUid == currentUser.uid)) return;
+        if(registrations.some(r => r.mid == mid && r.uUid == currentUser.uid)) return;
         if(currentUser.balance < m.fee) return alert("Low Balance!");
         
         currentUser.balance -= parseFloat(m.fee);
-        dbUsers[currentUser.uid].balance = currentUser.balance;
-        regs.push({ mid: mid, uUid: currentUser.uid, mTitle: m.title });
-        save(); renderMatches(); alert("Joined!");
+        users[currentUser.uid].balance = currentUser.balance;
+        revenue = parseFloat(revenue) + parseFloat(m.fee);
+        registrations.push({ mid: mid, uUid: currentUser.uid, mTitle: m.title });
+        save();
+        renderMatches();
+        alert("Success! Room info will show here.");
     }
 
-    // Admin Panel Logic
-    function accessAdmin() {
-        if(document.getElementById('adm-pass').value === "shg123") {
-            document.getElementById('admin-auth-fields').style.display = 'none';
-            document.getElementById('admin-controls').style.display = 'block';
-            renderAdminPanel();
+    // Profile Render
+    function renderProfile() {
+        document.getElementById('user-display-name').innerText = currentUser.name;
+        document.getElementById('user-display-uid').innerText = "UID: " + currentUser.uid;
+        document.getElementById('user-display-bal').innerText = currentUser.balance;
+        
+        const hist = document.getElementById('joined-history');
+        hist.innerHTML = "";
+        registrations.filter(r => r.uUid == currentUser.uid).forEach(r => {
+            hist.innerHTML += `<div class="card" style="padding:10px; border-left:4px solid var(--success);">${r.mTitle}</div>`;
+        });
+    }
+
+    // Admin Dash
+    function authAdmin() {
+        if(document.getElementById('adm-key').value === "shg123") {
+            document.getElementById('admin-auth').style.display = "none";
+            document.getElementById('admin-dash').style.display = "block";
+            renderAdmin();
         }
     }
 
-    function renderAdminPanel() {
-        const mCont = document.getElementById('adm-m-list'); mCont.innerHTML = "";
+    function createMatch() {
+        const t = document.getElementById('m-title').value, f = document.getElementById('m-fee').value, tm = document.getElementById('m-time').value;
+        if(!t || !f || !tm) return alert("Fill!");
+        matches.push({ id: Date.now(), title: t, fee: f, time: tm, rid: "TBA", rpass: "TBA" });
+        save();
+        renderAdmin();
+        alert("Match Published!");
+    }
+
+    function renderAdmin() {
+        document.getElementById('adm-rev').innerText = revenue;
+        const mCont = document.getElementById('adm-m-list');
+        mCont.innerHTML = "";
         matches.forEach(m => {
-            mCont.innerHTML += `<div class="card" style="font-size:12px;">
-                <b>${m.title}</b><br>
-                <input type="text" id="rid-${m.id}" placeholder="Room ID" value="${m.roomId}">
-                <input type="text" id="rps-${m.id}" placeholder="Room Pass" value="${m.roomPass}">
-                <button onclick="updateRoomAdmin(${m.id})">Update Details</button>
-            </div>`;
+            mCont.innerHTML += `
+                <div class="admin-item">
+                    <b>${m.title}</b><br>
+                    <input style="width:45%; display:inline;" type="text" id="rid-${m.id}" value="${m.rid}" placeholder="ID">
+                    <input style="width:45%; display:inline;" type="text" id="rps-${m.id}" value="${m.rpass}" placeholder="Pass">
+                    <button class="btn" style="padding:5px; font-size:10px;" onclick="updateRoom(${m.id})">Update Room</button>
+                </div>
+            `;
+        });
+
+        const rCont = document.getElementById('adm-req-list');
+        rCont.innerHTML = "";
+        requests.forEach((r, idx) => {
+            rCont.innerHTML += `
+                <div class="admin-item">
+                    UID: ${r.uUid} | ৳${r.amt} (${r.type})
+                    <button onclick="approveReq(${idx})" style="background:var(--success); border:none; padding:5px; border-radius:5px; cursor:pointer;">Approve</button>
+                </div>
+            `;
         });
     }
 
-    function updateRoomAdmin(id) {
+    function updateRoom(id) {
         const m = matches.find(x => x.id == id);
-        m.roomId = document.getElementById('rid-'+id).value;
-        m.roomPass = document.getElementById('rps-'+id).value;
-        save(); alert("Room Updated!"); renderMatches();
+        m.rid = document.getElementById('rid-'+id).value;
+        m.rpass = document.getElementById('rps-'+id).value;
+        save();
+        alert("Room Info Sent to Players!");
     }
 
-    function renderProfile() {
-        document.getElementById('p-name').innerText = currentUser.name;
-        document.getElementById('p-uid').innerText = "UID: " + currentUser.uid;
-        document.getElementById('u-bal').innerText = currentUser.balance;
-        const cont = document.getElementById('my-joined-list'); cont.innerHTML = "";
-        regs.filter(r => r.uUid == currentUser.uid).forEach(r => {
-            const m = matches.find(x => x.id == r.mid);
-            cont.innerHTML += `<div class="card" style="border-left:4px solid var(--success);">
-                <b>${r.mTitle}</b><br>
-                <small>Room: ${m ? m.roomId : 'TBA'} | Pass: ${m ? m.roomPass : 'TBA'}</small>
-            </div>`;
-        });
+    function approveReq(idx) {
+        const r = requests[idx];
+        if(r.type === 'dep') users[r.uUid].balance += parseFloat(r.amt);
+        else users[r.uUid].balance -= parseFloat(r.amt);
+        if(currentUser && currentUser.uid === r.uUid) currentUser.balance = users[r.uUid].balance;
+        requests.splice(idx, 1);
+        save();
+        renderAdmin();
     }
 
-    function userLogout() { currentUser = null; save(); location.reload(); }
-    function submitWallet() {
-        requests.push({ uUid: currentUser.uid, type: document.getElementById('w-type').value, amt: document.getElementById('w-amt').value });
-        save(); alert("Sent!");
+    function sendReq() {
+        const a = document.getElementById('w-amount').value, t = document.getElementById('w-method').value;
+        if(!a) return;
+        requests.push({ uUid: currentUser.uid, amt: a, type: t });
+        save();
+        alert("Request Sent to Admin!");
+        showPage('profile');
     }
 
-    // Real-time Timer
+    // Timer Interval
     setInterval(() => {
         matches.forEach(m => {
-            const el = document.getElementById('t-'+m.id); if(!el) return;
+            const el = document.getElementById('tm-'+m.id);
+            if(!el) return;
             const diff = new Date(m.time).getTime() - new Date().getTime();
-            if(diff < 0) el.innerText = "LIVE";
+            if(diff <= 0) { el.innerText = "LIVE"; el.style.background = "var(--success)"; }
             else {
                 const h = Math.floor(diff/3600000), m_ = Math.floor((diff%3600000)/60000), s = Math.floor((diff%60000)/1000);
-                el.innerText = `${h
+                el.innerText = `${h}h ${m_}m ${s}s`;
+            }
+        });
+    }, 1000);
+
+    // Initial Load
+    window.onload = () => {
+        if(currentUser) {
+            showPage('home');
+        } else {
+            showPage('auth-page');
+        }
+    };
+</script>
+</body>
+    </html>
 
