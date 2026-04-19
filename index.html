@@ -3,205 +3,487 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SHG亗ESPORTS | Pro Working Panel</title>
+    <title>SHG亗ESPORTS | Ultra Pro Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Oxanium:wght@400;700&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --primary: #00d2ff; --secondary: #3a7bd5; --bg: #05070a; --card: rgba(13, 17, 23, 0.95); --success: #00ff88; --danger: #ff3e3e; --gold: #ffd700; }
-        body { margin: 0; font-family: 'Rajdhani', sans-serif; background: #05070a; color: #e1e1e1; min-height: 100vh; }
-        
-        nav { background: rgba(13, 17, 23, 0.98); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--secondary); position: sticky; top: 0; z-index: 1000; }
-        .logo { font-family: 'Oxanium', sans-serif; color: var(--primary); font-size: 20px; font-weight: 700; letter-spacing: 1px; }
+        :root {
+            --primary: #00d2ff;
+            --secondary: #3a7bd5;
+            --bg: #05070a;
+            --card-bg: rgba(13, 17, 23, 0.95);
+            --success: #00ff88;
+            --danger: #ff3e3e;
+            --gold: #ffd700;
+            --text: #e1e1e1;
+        }
 
-        .container { padding: 20px 5%; max-width: 800px; margin: auto; }
+        /* Basic Setup */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Rajdhani', sans-serif; 
+            background: radial-gradient(circle at top, #111e31 0%, #05070a 100%); 
+            color: var(--text); 
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Navbar Styling */
+        nav {
+            background: rgba(13, 17, 23, 0.98);
+            padding: 15px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--secondary);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+        .logo { 
+            font-family: 'Oxanium', sans-serif; 
+            color: var(--primary); 
+            font-size: 22px; 
+            font-weight: 700; 
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px var(--secondary);
+        }
+        .nav-links i { font-size: 20px; color: #fff; cursor: pointer; margin-left: 20px; transition: 0.3s; }
+        .nav-links i:hover { color: var(--primary); transform: scale(1.1); }
+
+        /* Container & Sections */
+        .container { padding: 20px 5%; max-width: 900px; margin: auto; }
         .section { display: none; }
-        .active { display: block; animation: fadeIn 0.3s ease-in; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .active { display: block; animation: slideUp 0.4s ease-out; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        .card { background: var(--card); border: 1px solid rgba(58, 123, 213, 0.3); border-radius: 15px; padding: 20px; margin-bottom: 20px; position: relative; }
+        /* Notice Board */
+        .notice-container {
+            background: rgba(0, 210, 255, 0.1);
+            border: 1px dashed var(--primary);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .notice-tag {
+            background: var(--primary);
+            color: #000;
+            padding: 2px 10px;
+            border-radius: 5px;
+            font-weight: 700;
+            font-size: 12px;
+            font-family: 'Oxanium';
+        }
+
+        /* Card Styling */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid rgba(58, 123, 213, 0.3);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 25px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: 0.3s;
+        }
+        .card:hover { border-color: var(--primary); }
+
+        /* Form Inputs */
+        input, select, textarea {
+            width: 100%;
+            padding: 14px;
+            margin: 10px 0;
+            background: #080a0f;
+            border: 1px solid #1e293b;
+            color: #fff;
+            border-radius: 10px;
+            font-family: 'Rajdhani';
+            font-size: 16px;
+            outline: none;
+        }
+        input:focus { border-color: var(--primary); box-shadow: 0 0 8px rgba(0, 210, 255, 0.3); }
+
+        /* Buttons */
+        .btn {
+            background: linear-gradient(90deg, var(--secondary), var(--primary));
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 700;
+            width: 100%;
+            font-family: 'Oxanium';
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+        .btn:hover { transform: translateY(-3px); box-shadow: 0 5px 15px rgba(0, 210, 255, 0.4); }
+        .btn-danger { background: linear-gradient(90deg, #ff3e3e, #b91d1d); }
+
+        /* Match Specifics */
+        .timer-badge {
+            position: absolute;
+            top: -10px;
+            right: 25px;
+            background: var(--danger);
+            padding: 6px 15px;
+            border-radius: 8px;
+            font-family: 'Oxanium';
+            font-size: 12px;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(255,62,62,0.3);
+        }
+        .room-box {
+            background: rgba(0, 255, 136, 0.1);
+            border: 1px solid var(--success);
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+            color: var(--success);
+            font-family: 'Oxanium';
+            text-align: center;
+        }
+
+        /* Profile & Wallet Details */
+        .profile-stat { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
+        .stat-item { background: #161b22; padding: 15px; border-radius: 12px; text-align: center; border: 1px solid #333; }
         
-        input, select { width: 100%; padding: 12px; margin: 10px 0; background: #000; border: 1px solid #1e293b; color: #fff; border-radius: 8px; box-sizing: border-box; }
-        .btn { background: linear-gradient(90deg, var(--secondary), var(--primary)); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: 700; width: 100%; font-family: 'Oxanium'; text-transform: uppercase; margin-top: 5px; }
-        
-        .timer-badge { position: absolute; top: 10px; right: 10px; background: var(--danger); padding: 4px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; font-family: 'Oxanium'; }
-        
-        .room-info-box { background: rgba(0, 255, 136, 0.1); border: 1px dashed var(--success); padding: 10px; border-radius: 8px; margin-top: 15px; color: var(--success); font-family: 'Oxanium'; font-size: 14px; text-align: center; }
-        
-        .admin-item { border-bottom: 1px solid #333; padding: 10px 0; }
-        .notice { background: rgba(255, 215, 0, 0.1); border: 1px solid var(--gold); padding: 10px; border-radius: 10px; margin-bottom: 15px; color: var(--gold); font-size: 14px; }
+        .history-item {
+            background: #0d1117;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid var(--primary);
+            font-size: 14px;
+        }
+
+        /* Admin Dashboard Tabs */
+        .admin-nav { display: flex; gap: 10px; overflow-x: auto; margin-bottom: 20px; padding-bottom: 10px; }
+        .admin-nav-btn {
+            background: #161b22;
+            color: #888;
+            padding: 8px 15px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            cursor: pointer;
+            white-space: nowrap;
+            font-family: 'Oxanium';
+            font-size: 12px;
+        }
+        .admin-nav-btn.active { background: var(--primary); color: #000; border-color: var(--primary); }
+
+        /* WhatsApp Floating */
+        .wa-float {
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            background: #25d366;
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 28px;
+            color: white;
+            z-index: 5000;
+            box-shadow: 0 0 20px rgba(37, 211, 102, 0.4);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top:0; left:0; width:100%; height:100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background: var(--card-bg);
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 400px;
+            border: 1px solid var(--primary);
+        }
     </style>
 </head>
 <body>
 
+<a href="https://wa.me/01941686065" class="wa-float" target="_blank"><i class="fab fa-whatsapp"></i></a>
+
 <nav>
     <div class="logo">SHG亗ESPORTS</div>
-    <div id="nav-btns" style="display:none;">
-        <button onclick="showPage('home')" style="background:none; border:none; color:white; cursor:pointer;"><i class="fas fa-gamepad"></i></button>
-        <button onclick="showPage('profile')" style="background:none; border:none; color:white; cursor:pointer; margin-left:15px;"><i class="fas fa-user-circle"></i></button>
-        <button onclick="showPage('admin-panel')" style="background:none; border:none; color:white; cursor:pointer; margin-left:15px;"><i class="fas fa-user-shield"></i></button>
+    <div class="nav-links" id="main-nav" style="display:none;">
+        <i class="fas fa-home" onclick="showPage('home')" title="Matches"></i>
+        <i class="fas fa-trophy" onclick="showPage('results')" title="Winners"></i>
+        <i class="fas fa-user-circle" onclick="showPage('profile')" title="Profile"></i>
+        <i class="fas fa-user-shield" onclick="showPage('admin-login')" title="Admin"></i>
     </div>
 </nav>
 
 <div class="container">
-    <div id="auth-page" class="section active">
+    <div id="auth-section" class="section active">
         <div class="card" style="text-align:center;">
-            <h2 style="font-family:'Oxanium'; color:var(--primary);">ELITE TOURNAMENT</h2>
-            <p style="font-size:14px; opacity:0.7;">Login or Register to start playing</p>
-            <button class="btn" onclick="showPage('login-page')">Login</button>
-            <button class="btn" style="background:#1e293b; margin-top:10px;" onclick="showPage('reg-page')">Create Account</button>
-        </div>
-    </div>
+            <h1 style="font-family:'Oxanium'; color:var(--primary); margin-bottom:10px;">WELCOME HERO</h1>
+            <p style="opacity:0.7;">Enter the battlefield of elite gamers.</p>
+            <div id="auth-choice">
+                <button class="btn" onclick="showAuth('login')">Login to Account</button>
+                <button class="btn" style="background:#1e293b;" onclick="showAuth('reg')">Create New Profile</button>
+            </div>
 
-    <div id="login-page" class="section">
-        <div class="card">
-            <h3 style="font-family:'Oxanium';">LOGIN</h3>
-            <input type="text" id="l-uid" placeholder="Enter UID">
-            <input type="password" id="l-pass" placeholder="Enter Password">
-            <button class="btn" onclick="login()">Login Now</button>
-            <p onclick="showPage('reg-page')" style="text-align:center; font-size:12px; cursor:pointer;">New here? Register</p>
-        </div>
-    </div>
+            <div id="login-form" style="display:none; margin-top:20px;">
+                <input type="text" id="l-uid" placeholder="Your Unique UID">
+                <input type="password" id="l-pass" placeholder="Password">
+                <button class="btn" onclick="handleLogin()">Access Dashboard</button>
+                <p onclick="showAuth('reg')" style="margin-top:15px; font-size:13px; cursor:pointer; color:var(--primary);">Don't have an account? Register</p>
+            </div>
 
-    <div id="reg-page" class="section">
-        <div class="card">
-            <h3 style="font-family:'Oxanium';">REGISTER</h3>
-            <input type="text" id="r-name" placeholder="Full Name">
-            <input type="text" id="r-uid" placeholder="Create UID (Numbers)">
-            <input type="password" id="r-pass" placeholder="Create Password">
-            <button class="btn" onclick="register()">Create Account</button>
-            <p onclick="showPage('login-page')" style="text-align:center; font-size:12px; cursor:pointer;">Back to Login</p>
+            <div id="reg-form" style="display:none; margin-top:20px;">
+                <input type="text" id="r-name" placeholder="Full Name">
+                <input type="text" id="r-uid" placeholder="Set Unique UID (Numbers)">
+                <input type="password" id="r-pass" placeholder="Set Password">
+                <button class="btn" onclick="handleRegister()">Create Profile</button>
+                <p onclick="showAuth('login')" style="margin-top:15px; font-size:13px; cursor:pointer; color:var(--primary);">Already have an account? Login</p>
+            </div>
         </div>
     </div>
 
     <div id="home" class="section">
-        <div class="notice"><i class="fas fa-bullhorn"></i> <span id="board-notice">Welcome to SHG! Join matches and win prizes.</span></div>
-        <div id="match-list"></div>
+        <div class="notice-container">
+            <span class="notice-tag">NOTICE</span>
+            <marquee id="main-notice" style="font-size: 14px; font-weight: 500; color: var(--gold);">
+                Welcome to SHG Esports! New tournament starts every day. Check match timers!
+            </marquee>
+        </div>
+        <div id="match-display-list"></div>
+    </div>
+
+    <div id="results" class="section">
+        <h2 style="font-family:'Oxanium'; margin-bottom:20px; color:var(--gold);">🏆 CHAMPION BOARD</h2>
+        <div id="result-list"></div>
     </div>
 
     <div id="profile" class="section">
         <div class="card" style="text-align:center;">
-            <h2 id="user-display-name" style="margin:0; color:var(--primary);">User</h2>
-            <p id="user-display-uid" style="opacity:0.6; font-size:13px;">UID: 000</p>
-            <div style="font-size:28px; font-weight:bold; color:var(--success); margin:10px 0;">৳<span id="user-display-bal">0</span></div>
-            <div style="display:flex; gap:10px;">
-                <button class="btn" onclick="showPage('wallet')">Wallet</button>
-                <button class="btn" onclick="logout()" style="background:var(--danger);">Logout</button>
+            <div id="p-avatar" style="width:80px; height:80px; background:var(--primary); border-radius:50%; margin:0 auto 15px; display:flex; justify-content:center; align-items:center; font-size:35px; color:#000;">
+                <i class="fas fa-user-ninja"></i>
+            </div>
+            <h2 id="p-name" style="color:var(--primary); font-family:'Oxanium';">Player Name</h2>
+            <p id="p-uid" style="opacity:0.6; font-size:14px;">UID: 00000</p>
+            
+            <div class="profile-stat">
+                <div class="stat-item">
+                    <small style="display:block; opacity:0.6;">BALANCE</small>
+                    <b style="color:var(--success); font-size:20px;">৳<span id="p-bal">0</span></b>
+                </div>
+                <div class="stat-item">
+                    <small style="display:block; opacity:0.6;">JOINED</small>
+                    <b style="color:var(--primary); font-size:20px;"><span id="p-joined-count">0</span></b>
+                </div>
+            </div>
+
+            <div style="display:flex; gap:10px; margin-top:20px;">
+                <button class="btn" onclick="showPage('wallet')"><i class="fas fa-wallet"></i> Wallet</button>
+                <button class="btn btn-danger" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
             </div>
         </div>
-        <h4 style="font-family:'Oxanium';">Joined History</h4>
-        <div id="joined-history"></div>
+
+        <h3 style="font-family:'Oxanium'; margin-bottom:15px;">Your Match Activities</h3>
+        <div id="my-match-history"></div>
     </div>
 
     <div id="wallet" class="section">
         <div class="card">
-            <h3 style="font-family:'Oxanium';">WALLET SYSTEM</h3>
-            <select id="w-method"><option value="dep">Deposit</option><option value="wit">Withdraw</option></select>
+            <h2 style="font-family:'Oxanium'; border-bottom:1px solid #333; padding-bottom:10px;">WALLET</h2>
+            <div style="margin:15px 0;">
+                <label>Transaction Type</label>
+                <select id="w-type">
+                    <option value="Deposit">Deposit Money</option>
+                    <option value="Withdraw">Withdraw Money</option>
+                </select>
+            </div>
             <input type="number" id="w-amount" placeholder="Amount (৳)">
-            <input type="text" id="w-trx" placeholder="Number / TrxID">
-            <button class="btn" onclick="sendReq()">Submit Request</button>
-            <button class="btn" style="background:#1e293b;" onclick="showPage('profile')">Back</button>
+            <input type="text" id="w-trxid" placeholder="Transaction ID or Phone Number">
+            <button class="btn" onclick="submitWalletRequest()">Submit Request</button>
+            <button class="btn" style="background:#1e293b;" onclick="showPage('profile')">Back to Profile</button>
         </div>
+        
+        <h4 style="margin-bottom:10px;">Transaction History</h4>
+        <div id="trx-history"></div>
     </div>
 
-    <div id="admin-panel" class="section">
-        <div id="admin-auth" class="card">
-            <h3>ADMIN LOGIN</h3>
-            <input type="password" id="adm-key" placeholder="Enter Key">
-            <button class="btn" onclick="authAdmin()">Login</button>
+    <div id="admin-login" class="section">
+        <div id="adm-auth-box" class="card">
+            <h2 style="text-align:center; font-family:'Oxanium';">ADMIN ACCESS</h2>
+            <input type="password" id="adm-key" placeholder="Enter Secret Admin Key">
+            <button class="btn" onclick="handleAdminLogin()">Verify & Login</button>
         </div>
-        <div id="admin-dash" class="card" style="display:none;">
-            <h3>DASHBOARD</h3>
-            <div class="notice">Revenue: ৳<span id="adm-rev">0</span></div>
-            <hr>
-            <h4>Create Match</h4>
-            <input type="text" id="m-title" placeholder="Match Name">
-            <input type="number" id="m-fee" placeholder="Entry Fee">
-            <input type="datetime-local" id="m-time">
-            <button class="btn" onclick="createMatch()">Publish</button>
-            <hr>
-            <h4>Match Controls (Room Info)</h4>
-            <div id="adm-m-list"></div>
-            <hr>
-            <h4>Finance Requests</h4>
-            <div id="adm-req-list"></div>
+
+        <div id="adm-dashboard" style="display:none;">
+            <div class="admin-nav">
+                <button class="admin-nav-btn active" onclick="switchAdminTab('adm-stats', event)">Statistics</button>
+                <button class="admin-nav-btn" onclick="switchAdminTab('adm-matches', event)">Match Manager</button>
+                <button class="admin-nav-btn" onclick="switchAdminTab('adm-finance', event)">Finance (Req)</button>
+                <button class="admin-nav-btn" onclick="switchAdminTab('adm-settings', event)">Settings</button>
+            </div>
+
+            <div id="adm-stats" class="adm-content">
+                <div class="profile-stat">
+                    <div class="stat-item">
+                        <small>Total Revenue</small>
+                        <h2 style="color:var(--success);">৳<span id="adm-rev">0</span></h2>
+                    </div>
+                    <div class="stat-item">
+                        <small>Users</small>
+                        <h2 style="color:var(--primary);"><span id="adm-user-count">0</span></h2>
+                    </div>
+                </div>
+            </div>
+
+            <div id="adm-matches" class="adm-content" style="display:none;">
+                <div class="card">
+                    <h4>CREATE NEW TOURNAMENT</h4>
+                    <input type="text" id="m-name" placeholder="Match Title">
+                    <input type="number" id="m-fee" placeholder="Entry Fee">
+                    <input type="number" id="m-prize" placeholder="Winning Prize">
+                    <input type="datetime-local" id="m-time">
+                    <button class="btn" onclick="createMatch()">Publish Match</button>
+                </div>
+                <div id="adm-match-list-render"></div>
+            </div>
+
+            <div id="adm-finance" class="adm-content" style="display:none;">
+                <h4>Pending Requests</h4>
+                <div id="adm-req-list"></div>
+            </div>
+
+            <div id="adm-settings" class="adm-content" style="display:none;">
+                <div class="card">
+                    <h4>UPDATE GLOBAL NOTICE</h4>
+                    <input type="text" id="new-notice-text" placeholder="Type new notice here...">
+                    <button class="btn" onclick="updateNotice()">Update Now</button>
+                </div>
+                <button class="btn btn-danger" onclick="location.reload()">System Logout</button>
+            </div>
         </div>
     </div>
 </div>
 
-<script>
-    // Database Logic
-    let users = JSON.parse(localStorage.getItem('shg_users')) || {};
-    let currentUser = JSON.parse(localStorage.getItem('shg_curr')) || null;
-    let matches = JSON.parse(localStorage.getItem('shg_matches')) || [];
-    let registrations = JSON.parse(localStorage.getItem('shg_regs')) || [];
-    let requests = JSON.parse(localStorage.getItem('shg_reqs')) || [];
-    let revenue = localStorage.getItem('shg_rev') || 0;
+<div id="joinModal" class="modal">
+    <div class="modal-content">
+        <h2 style="font-family:'Oxanium'; color:var(--primary);">REGISTRATION</h2>
+        <p id="modal-m-title" style="font-size:14px; margin-bottom:15px;"></p>
+        <input type="hidden" id="modal-m-id">
+        <input type="text" id="game-ign" placeholder="In-Game Name (IGN)">
+        <input type="text" id="game-uid" placeholder="Free Fire UID">
+        <button class="btn" onclick="confirmJoin()">Confirm & Join</button>
+        <button class="btn" style="background:#1e293b; margin-top:10px;" onclick="closeModal()">Cancel</button>
+    </div>
+</div>
 
-    function save() {
-        localStorage.setItem('shg_users', JSON.stringify(users));
-        localStorage.setItem('shg_curr', JSON.stringify(currentUser));
-        localStorage.setItem('shg_matches', JSON.stringify(matches));
-        localStorage.setItem('shg_regs', JSON.stringify(registrations));
-        localStorage.setItem('shg_reqs', JSON.stringify(requests));
-        localStorage.setItem('shg_rev', revenue);
+<script>
+    /* ==========================================
+       DATABASE & CORE LOGIC
+       ========================================== */
+    let db = {
+        users: JSON.parse(localStorage.getItem('shg_u')) || {},
+        curr: JSON.parse(localStorage.getItem('shg_c')) || null,
+        matches: JSON.parse(localStorage.getItem('shg_m')) || [],
+        regs: JSON.parse(localStorage.getItem('shg_r')) || [],
+        requests: JSON.parse(localStorage.getItem('shg_req')) || [],
+        settings: JSON.parse(localStorage.getItem('shg_s')) || { notice: "Welcome to SHG Esports Tournament!", revenue: 0 },
+        results: JSON.parse(localStorage.getItem('shg_res')) || []
+    };
+
+    function sync() {
+        localStorage.setItem('shg_u', JSON.stringify(db.users));
+        localStorage.setItem('shg_c', JSON.stringify(db.curr));
+        localStorage.setItem('shg_m', JSON.stringify(db.matches));
+        localStorage.setItem('shg_r', JSON.stringify(db.regs));
+        localStorage.setItem('shg_req', JSON.stringify(db.requests));
+        localStorage.setItem('shg_s', JSON.stringify(db.settings));
+        localStorage.setItem('shg_res', JSON.stringify(db.results));
     }
 
-    // Page Navigation
     function showPage(id) {
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         if(id === 'home') renderMatches();
         if(id === 'profile') renderProfile();
-        if(id === 'admin-panel') renderAdmin();
+        if(id === 'results') renderResults();
+        if(id === 'admin-login') renderAdmin();
         
-        // Toggle Nav Buttons
-        document.getElementById('nav-btns').style.display = currentUser ? 'block' : 'none';
+        document.getElementById('main-nav').style.display = db.curr ? 'flex' : 'none';
+        document.getElementById('main-notice').innerText = db.settings.notice;
     }
 
-    // Auth Actions
-    function register() {
+    /* ==========================================
+       AUTHENTICATION
+       ========================================== */
+    function showAuth(type) {
+        document.getElementById('auth-choice').style.display = 'none';
+        document.getElementById('login-form').style.display = type === 'login' ? 'block' : 'none';
+        document.getElementById('reg-form').style.display = type === 'reg' ? 'block' : 'none';
+    }
+
+    function handleRegister() {
         const n = document.getElementById('r-name').value, u = document.getElementById('r-uid').value, p = document.getElementById('r-pass').value;
-        if(!n || !u || !p) return alert("Fill all!");
-        if(users[u]) return alert("UID Taken!");
-        users[u] = { name: n, uid: u, pass: p, balance: 0 };
-        currentUser = users[u];
-        save();
+        if(!n || !u || !p) return alert("Fill all fields!");
+        if(db.users[u]) return alert("UID already exists!");
+        
+        db.users[u] = { name: n, uid: u, pass: p, balance: 0, trxs: [] };
+        db.curr = db.users[u];
+        sync();
         showPage('home');
     }
 
-    function login() {
+    function handleLogin() {
         const u = document.getElementById('l-uid').value, p = document.getElementById('l-pass').value;
-        if(users[u] && users[u].pass === p) {
-            currentUser = users[u];
-            save();
+        if(db.users[u] && db.users[u].pass === p) {
+            db.curr = db.users[u];
+            sync();
             showPage('home');
         } else {
-            alert("Wrong UID/Password");
+            alert("Invalid Credentials!");
         }
     }
 
     function logout() {
-        currentUser = null;
-        save();
+        db.curr = null;
+        sync();
         location.reload();
     }
 
-    // Match Board Logic
+    /* ==========================================
+       MATCH LOGIC
+       ========================================== */
     function renderMatches() {
-        const cont = document.getElementById('match-list');
+        const cont = document.getElementById('match-display-list');
         cont.innerHTML = "";
-        matches.forEach(m => {
-            const joined = registrations.some(r => r.mid == m.id && r.uUid == currentUser.uid);
+        db.matches.slice().reverse().forEach(m => {
+            const isJoined = db.curr && db.regs.some(r => r.mid == m.id && r.uUid == db.curr.uid);
             cont.innerHTML += `
                 <div class="card">
                     <div class="timer-badge" id="tm-${m.id}">...</div>
-                    <h3 style="color:var(--primary); margin:0;">${m.title}</h3>
-                    <p style="font-size:14px; opacity:0.8;">Entry Fee: ৳${m.fee}</p>
-                    <button class="btn" onclick="joinMatch(${m.id})">${joined ? 'ALREADY JOINED' : 'JOIN MATCH'}</button>
-                    ${joined ? `
-                        <div class="room-info-box">
-                            <b>ROOM DETAILS</b><br>
-                            ID: ${m.rid || 'Wait...'} | Pass: ${m.rpass || 'Wait...'}
+                    <h3 style="font-family:'Oxanium'; color:var(--primary);">${m.title}</h3>
+                    <div style="display:flex; justify-content:space-between; margin:10px 0; font-size:14px; opacity:0.8;">
+                        <span><i class="fas fa-coins"></i> Fee: ৳${m.fee}</span>
+                        <span><i class="fas fa-gift"></i> Prize: ৳${m.prize}</span>
+                    </div>
+                    <button class="btn" onclick="openJoinModal(${m.id}, '${m.title}')">${isJoined ? 'ALREADY JOINED' : 'JOIN TOURNAMENT'}</button>
+                    ${isJoined ? `
+                        <div class="room-box">
+                            <i class="fas fa-key"></i> <b>ROOM ID:</b> ${m.rid || 'TBA'} <br>
+                            <i class="fas fa-lock"></i> <b>PASSWORD:</b> ${m.rpass || 'TBA'}
                         </div>
                     ` : ''}
                 </div>
@@ -209,108 +491,191 @@
         });
     }
 
-    function joinMatch(mid) {
-        const m = matches.find(x => x.id == mid);
-        if(registrations.some(r => r.mid == mid && r.uUid == currentUser.uid)) return;
-        if(currentUser.balance < m.fee) return alert("Low Balance!");
-        
-        currentUser.balance -= parseFloat(m.fee);
-        users[currentUser.uid].balance = currentUser.balance;
-        revenue = parseFloat(revenue) + parseFloat(m.fee);
-        registrations.push({ mid: mid, uUid: currentUser.uid, mTitle: m.title });
-        save();
-        renderMatches();
-        alert("Success! Room info will show here.");
+    function openJoinModal(id, title) {
+        if(db.regs.some(r => r.mid == id && r.uUid == db.curr.uid)) return;
+        document.getElementById('modal-m-id').value = id;
+        document.getElementById('modal-m-title').innerText = "Joining: " + title;
+        document.getElementById('joinModal').style.display = 'flex';
     }
 
-    // Profile Render
-    function renderProfile() {
-        document.getElementById('user-display-name').innerText = currentUser.name;
-        document.getElementById('user-display-uid').innerText = "UID: " + currentUser.uid;
-        document.getElementById('user-display-bal').innerText = currentUser.balance;
+    function closeModal() { document.getElementById('joinModal').style.display = 'none'; }
+
+    function confirmJoin() {
+        const mid = document.getElementById('modal-m-id').value, ign = document.getElementById('game-ign').value, guid = document.getElementById('game-uid').value;
+        const match = db.matches.find(x => x.id == mid);
+
+        if(!ign || !guid) return alert("Fill game info!");
+        if(db.curr.balance < match.fee) return alert("Insufficient Balance! Please refill wallet.");
+
+        db.curr.balance -= parseFloat(match.fee);
+        db.users[db.curr.uid].balance = db.curr.balance;
+        db.settings.revenue += parseFloat(match.fee);
         
-        const hist = document.getElementById('joined-history');
+        db.regs.push({ mid: mid, uUid: db.curr.uid, ign, guid, title: match.title });
+        sync();
+        closeModal();
+        renderMatches();
+        alert("Success! You have joined the match.");
+    }
+
+    /* ==========================================
+       PROFILE & WALLET
+       ========================================== */
+    function renderProfile() {
+        document.getElementById('p-name').innerText = db.curr.name;
+        document.getElementById('p-uid').innerText = "UID: " + db.curr.uid;
+        document.getElementById('p-bal').innerText = db.curr.balance;
+        
+        const myRegs = db.regs.filter(r => r.uUid == db.curr.uid);
+        document.getElementById('p-joined-count').innerText = myRegs.length;
+
+        const hist = document.getElementById('my-match-history');
         hist.innerHTML = "";
-        registrations.filter(r => r.uUid == currentUser.uid).forEach(r => {
-            hist.innerHTML += `<div class="card" style="padding:10px; border-left:4px solid var(--success);">${r.mTitle}</div>`;
+        myRegs.reverse().forEach(r => {
+            const m = db.matches.find(x => x.id == r.mid);
+            hist.innerHTML += `
+                <div class="card" style="padding:15px; border-left:4px solid var(--primary);">
+                    <b>${r.title}</b><br>
+                    <small>IGN: ${r.ign} | ${m ? m.time.replace('T', ' ') : ''}</small>
+                </div>
+            `;
+        });
+
+        const trxH = document.getElementById('trx-history');
+        trxH.innerHTML = "";
+        (db.curr.trxs || []).reverse().forEach(t => {
+            trxH.innerHTML += `<div class="history-item">${t.type}: ৳${t.amt} - ${t.status}</div>`;
         });
     }
 
-    // Admin Dash
-    function authAdmin() {
+    function submitWalletRequest() {
+        const type = document.getElementById('w-type').value, amt = document.getElementById('w-amount').value, trx = document.getElementById('w-trxid').value;
+        if(!amt || !trx) return alert("Fill all fields!");
+        
+        const req = { id: Date.now(), uUid: db.curr.uid, uName: db.curr.name, type, amt, trx, status: 'Pending' };
+        db.requests.push(req);
+        if(!db.curr.trxs) db.curr.trxs = [];
+        db.curr.trxs.push({ type, amt, status: 'Pending' });
+        
+        sync();
+        alert("Request Sent! Admin will verify soon.");
+        showPage('profile');
+    }
+
+    /* ==========================================
+       ADMIN PANEL
+       ========================================== */
+    function handleAdminLogin() {
         if(document.getElementById('adm-key').value === "shg123") {
-            document.getElementById('admin-auth').style.display = "none";
-            document.getElementById('admin-dash').style.display = "block";
+            document.getElementById('adm-auth-box').style.display = 'none';
+            document.getElementById('adm-dashboard').style.display = 'block';
             renderAdmin();
+        } else {
+            alert("Wrong Admin Key!");
         }
     }
 
+    function switchAdminTab(id, e) {
+        document.querySelectorAll('.adm-content').forEach(c => c.style.display = 'none');
+        document.querySelectorAll('.admin-nav-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(id).style.display = 'block';
+        e.target.classList.add('active');
+    }
+
     function createMatch() {
-        const t = document.getElementById('m-title').value, f = document.getElementById('m-fee').value, tm = document.getElementById('m-time').value;
-        if(!t || !f || !tm) return alert("Fill!");
-        matches.push({ id: Date.now(), title: t, fee: f, time: tm, rid: "TBA", rpass: "TBA" });
-        save();
+        const n = document.getElementById('m-name').value, f = document.getElementById('m-fee').value, p = document.getElementById('m-prize').value, t = document.getElementById('m-time').value;
+        if(!n || !f || !p || !t) return alert("Fill all!");
+        db.matches.push({ id: Date.now(), title: n, fee: f, prize: p, time: t, rid: "", rpass: "" });
+        sync();
         renderAdmin();
         alert("Match Published!");
     }
 
+    function deleteMatch(id) {
+        if(confirm("Are you sure to delete this match?")) {
+            db.matches = db.matches.filter(m => m.id != id);
+            sync();
+            renderAdmin();
+            renderMatches();
+        }
+    }
+
     function renderAdmin() {
-        document.getElementById('adm-rev').innerText = revenue;
-        const mCont = document.getElementById('adm-m-list');
+        document.getElementById('adm-rev').innerText = db.settings.revenue;
+        document.getElementById('adm-user-count').innerText = Object.keys(db.users).length;
+
+        const mCont = document.getElementById('adm-match-list-render');
         mCont.innerHTML = "";
-        matches.forEach(m => {
+        db.matches.forEach(m => {
             mCont.innerHTML += `
-                <div class="admin-item">
-                    <b>${m.title}</b><br>
-                    <input style="width:45%; display:inline;" type="text" id="rid-${m.id}" value="${m.rid}" placeholder="ID">
-                    <input style="width:45%; display:inline;" type="text" id="rps-${m.id}" value="${m.rpass}" placeholder="Pass">
-                    <button class="btn" style="padding:5px; font-size:10px;" onclick="updateRoom(${m.id})">Update Room</button>
+                <div class="card" style="padding:15px; font-size:13px;">
+                    <b>${m.title}</b>
+                    <div style="display:flex; gap:5px; margin-top:10px;">
+                        <input type="text" id="adm-rid-${m.id}" placeholder="Room ID" value="${m.rid}" style="padding:5px;">
+                        <input type="text" id="adm-rps-${m.id}" placeholder="Pass" value="${m.rpass}" style="padding:5px;">
+                    </div>
+                    <button class="btn" style="padding:5px; font-size:11px;" onclick="updateRoom(${m.id})">Update Room</button>
+                    <button class="btn btn-danger" style="padding:5px; font-size:11px; margin-top:5px;" onclick="deleteMatch(${m.id})">Delete Match</button>
                 </div>
             `;
         });
 
         const rCont = document.getElementById('adm-req-list');
         rCont.innerHTML = "";
-        requests.forEach((r, idx) => {
+        db.requests.forEach((r, idx) => {
             rCont.innerHTML += `
-                <div class="admin-item">
-                    UID: ${r.uUid} | ৳${r.amt} (${r.type})
-                    <button onclick="approveReq(${idx})" style="background:var(--success); border:none; padding:5px; border-radius:5px; cursor:pointer;">Approve</button>
+                <div class="card" style="padding:15px; font-size:13px;">
+                    ${r.type} Req: ৳${r.amt} from ${r.uName} (${r.uUid})<br>
+                    Info: ${r.trx}
+                    <button class="btn" style="padding:5px; font-size:11px;" onclick="approveReq(${idx})">Approve</button>
                 </div>
             `;
         });
     }
 
     function updateRoom(id) {
-        const m = matches.find(x => x.id == id);
-        m.rid = document.getElementById('rid-'+id).value;
-        m.rpass = document.getElementById('rps-'+id).value;
-        save();
-        alert("Room Info Sent to Players!");
+        const m = db.matches.find(x => x.id == id);
+        m.rid = document.getElementById('adm-rid-'+id).value;
+        m.rpass = document.getElementById('adm-rps-'+id).value;
+        sync();
+        alert("Room Info Updated!");
     }
 
     function approveReq(idx) {
-        const r = requests[idx];
-        if(r.type === 'dep') users[r.uUid].balance += parseFloat(r.amt);
-        else users[r.uUid].balance -= parseFloat(r.amt);
-        if(currentUser && currentUser.uid === r.uUid) currentUser.balance = users[r.uUid].balance;
-        requests.splice(idx, 1);
-        save();
+        const r = db.requests[idx];
+        const user = db.users[r.uUid];
+        if(r.type === 'Deposit') user.balance += parseFloat(r.amt);
+        else user.balance -= parseFloat(r.amt);
+        
+        const uTrx = user.trxs.find(t => t.amt == r.amt && t.status == 'Pending');
+        if(uTrx) uTrx.status = 'Approved';
+        
+        if(db.curr && db.curr.uid === r.uUid) db.curr = user;
+        db.requests.splice(idx, 1);
+        sync();
         renderAdmin();
+        alert("Transaction Approved!");
     }
 
-    function sendReq() {
-        const a = document.getElementById('w-amount').value, t = document.getElementById('w-method').value;
-        if(!a) return;
-        requests.push({ uUid: currentUser.uid, amt: a, type: t });
-        save();
-        alert("Request Sent to Admin!");
-        showPage('profile');
+    function updateNotice() {
+        db.settings.notice = document.getElementById('new-notice-text').value;
+        sync();
+        alert("Notice Updated!");
     }
 
-    // Timer Interval
+    function renderResults() {
+        const cont = document.getElementById('result-list');
+        cont.innerHTML = db.results.length ? "" : "<p style='text-align:center; opacity:0.5;'>No results yet.</p>";
+        db.results.forEach(r => {
+            cont.innerHTML += `<div class="card" style="border-left:4px solid var(--gold);"><b>${r.winner}</b> won ৳${r.prize} in ${r.match}</div>`;
+        });
+    }
+
+    /* ==========================================
+       TIMERS & INIT
+       ========================================== */
     setInterval(() => {
-        matches.forEach(m => {
+        db.matches.forEach(m => {
             const el = document.getElementById('tm-'+m.id);
             if(!el) return;
             const diff = new Date(m.time).getTime() - new Date().getTime();
@@ -322,15 +687,11 @@
         });
     }, 1000);
 
-    // Initial Load
     window.onload = () => {
-        if(currentUser) {
-            showPage('home');
-        } else {
-            showPage('auth-page');
-        }
+        if(db.curr) showPage('home');
+        else showPage('auth-section');
     };
 </script>
 </body>
-    </html>
+</html>
 
