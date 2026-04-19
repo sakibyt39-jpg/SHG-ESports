@@ -3,30 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SHG亗ESports | Mega Tournament App</title>
+    <title>SHG亗ESPORTS PRO</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #0088ff; --bg: #020617; --card: #0f172a; --success: #00ff88; --danger: #ff4444; --glow: rgba(0, 136, 255, 0.3); }
-        body { margin: 0; font-family: 'Poppins', sans-serif; background: var(--bg); color: #e2e8f0; overflow-x: hidden; }
-        nav { background: rgba(15, 23, 42, 0.98); padding: 15px 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--primary); position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(10px); }
-        .logo { font-family: 'Orbitron', sans-serif; color: var(--primary); font-size: 18px; font-weight: bold; text-shadow: 0 0 10px var(--primary); }
-        .nav-links button { background: none; border: none; color: #94a3b8; margin-left: 10px; cursor: pointer; font-size: 11px; font-weight: bold; text-transform: uppercase; }
-        .container { padding: 20px 5%; max-width: 1200px; margin: auto; }
-        .section { display: none; animation: fadeIn 0.4s ease-out; }
+        :root { 
+            --primary: #0088ff; 
+            --bg: #010409; 
+            --card: #0d1117; 
+            --success: #238636; 
+            --danger: #da3633; 
+            --accent: #58a6ff;
+            --glass: rgba(255, 255, 255, 0.05);
+        }
+        body { margin: 0; font-family: 'Poppins', sans-serif; background: var(--bg); color: #c9d1d9; line-height: 1.6; }
+        
+        /* Navbar Customization */
+        nav { background: rgba(13, 17, 23, 0.95); padding: 12px 5%; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #30363d; position: sticky; top: 0; z-index: 1000; backdrop-filter: blur(10px); }
+        .logo { font-family: 'Orbitron', sans-serif; color: var(--primary); font-size: 20px; letter-spacing: 2px; font-weight: bold; }
+        .nav-links button { background: none; border: none; color: #8b949e; margin-left: 12px; cursor: pointer; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; }
+        .nav-links button:hover { color: var(--primary); }
+
+        .container { padding: 20px 5%; max-width: 800px; margin: auto; }
+        .section { display: none; animation: slideUp 0.4s ease; }
         .active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-        .notice-board { background: rgba(0, 136, 255, 0.1); border: 1px dashed var(--primary); border-radius: 12px; padding: 12px; margin-bottom: 20px; color: #fff; font-size: 13px; text-align: center; }
-        .profile-card { background: linear-gradient(135deg, #0f172a, #1e293b); border: 1px solid var(--primary); border-radius: 20px; padding: 25px; text-align: center; margin-bottom: 25px; border-bottom: 5px solid var(--primary); }
-        .profile-img { width: 90px; height: 90px; border-radius: 50%; border: 3px solid var(--primary); object-fit: cover; margin-bottom: 10px; background: #000; }
-        .match-card { background: var(--card); border: 1px solid #1e293b; border-radius: 18px; padding: 20px; margin-bottom: 20px; border-left: 5px solid var(--primary); position: relative; }
-        .m-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 12px; margin-top: 10px; }
-        .m-item { background: #1e293b; padding: 8px; border-radius: 8px; }
-        .glass-panel { background: #0f172a; padding: 25px; border-radius: 15px; border: 1px solid #334155; margin-bottom: 20px; }
-        input, textarea { width: 100%; padding: 12px; margin: 8px 0; background: #1e293b; border: 1px solid #334155; color: white; border-radius: 8px; box-sizing: border-box; }
-        .btn { background: var(--primary); color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; text-transform: uppercase; font-family: 'Orbitron'; }
-        table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 11px; }
-        th, td { padding: 8px; border: 1px solid #334155; text-align: left; }
-        th { background: #1e293b; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Notice & Countdown */
+        .notice-board { background: linear-gradient(90deg, rgba(0,136,255,0.1), transparent); border-left: 4px solid var(--primary); padding: 12px; border-radius: 8px; margin-bottom: 20px; font-size: 13px; color: #adbac7; }
+        
+        /* Premium Cards */
+        .card { background: var(--card); border: 1px solid #30363d; border-radius: 12px; padding: 20px; margin-bottom: 20px; position: relative; transition: 0.3s; }
+        .card:hover { border-color: var(--primary); }
+
+        .profile-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+        .profile-img { width: 70px; height: 70px; border-radius: 50%; border: 2px solid var(--primary); object-fit: cover; }
+        
+        .balance-box { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 15px 0; }
+        .stat-item { background: var(--glass); padding: 15px; border-radius: 10px; text-align: center; border: 1px solid #30363d; }
+        .stat-item span { font-size: 10px; color: #8b949e; text-transform: uppercase; }
+        .stat-item h3 { margin: 5px 0 0 0; color: var(--success); font-family: 'Orbitron'; }
+
+        /* Match Style */
+        .match-label { position: absolute; top: 15px; right: 15px; background: var(--danger); font-size: 10px; padding: 2px 8px; border-radius: 4px; font-family: 'Orbitron'; }
+        .match-info-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px; }
+        .info-pill { background: #161b22; padding: 8px; border-radius: 6px; font-size: 11px; display: flex; justify-content: space-between; }
+
+        /* Tabs UI */
+        .tab-btn-group { display: flex; gap: 5px; margin-bottom: 15px; background: #161b22; padding: 5px; border-radius: 8px; }
+        .tab-btn { flex: 1; padding: 10px; border: none; background: none; color: #8b949e; cursor: pointer; border-radius: 6px; font-size: 12px; }
+        .tab-btn.active { background: var(--primary); color: white; }
+
+        /* Form Inputs */
+        input, select { width: 100%; padding: 12px; margin: 8px 0; background: #0d1117; border: 1px solid #30363d; color: white; border-radius: 6px; font-size: 14px; }
+        input:focus { border-color: var(--primary); outline: none; }
+        .btn { background: var(--primary); color: white; border: none; padding: 14px; border-radius: 6px; cursor: pointer; font-weight: bold; font-family: 'Orbitron'; width: 100%; transition: 0.3s; margin-top: 10px; }
+        .btn:active { transform: scale(0.98); }
+
+        /* Admin Table */
+        .admin-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-top: 10px; }
+        .admin-table th, .admin-table td { padding: 10px; text-align: left; border-bottom: 1px solid #30363d; }
+        .admin-table th { color: var(--primary); }
     </style>
 </head>
 <body>
@@ -42,96 +78,120 @@
 
 <div class="container">
     <div id="setup-section" class="section active">
-        <div class="glass-panel" style="max-width: 450px; margin: auto;">
-            <h2 style="text-align:center; font-family:'Orbitron';">REGISTER</h2>
+        <div class="card" style="max-width: 400px; margin: auto;">
+            <h2 style="font-family:'Orbitron'; text-align:center;">REGISTER</h2>
             <input type="text" id="s-name" placeholder="Full Name">
-            <input type="text" id="s-uid" placeholder="Game UID">
-            <input type="password" id="s-pass" placeholder="Create Password">
+            <input type="text" id="s-uid" placeholder="Free Fire UID">
+            <input type="password" id="s-pass" placeholder="Password">
             <input type="password" id="s-confirm" placeholder="Confirm Password">
-            <button class="btn" onclick="registerUser()">Sign Up</button>
-            <p style="text-align:center; font-size: 12px;">Already have account? <a href="#" onclick="showPage('login-section')" style="color: var(--primary);">Login</a></p>
+            <button class="btn" onclick="registerUser()">Create Account</button>
+            <p style="text-align:center; font-size: 12px; color: #8b949e;">Joined already? <span onclick="showPage('login-section')" style="color:var(--primary); cursor:pointer;">Login</span></p>
         </div>
     </div>
 
     <div id="login-section" class="section">
-        <div class="glass-panel" style="max-width: 450px; margin: auto;">
-            <h2 style="text-align:center; font-family:'Orbitron';">USER LOGIN</h2>
-            <input type="text" id="l-uid" placeholder="Enter UID">
-            <input type="password" id="l-pass" placeholder="Enter Password">
-            <button class="btn" onclick="loginUser()">Login Now</button>
+        <div class="card" style="max-width: 400px; margin: auto;">
+            <h2 style="font-family:'Orbitron'; text-align:center;">LOGIN</h2>
+            <input type="text" id="l-uid" placeholder="UID">
+            <input type="password" id="l-pass" placeholder="Password">
+            <button class="btn" onclick="loginUser()">Enter Dashboard</button>
         </div>
     </div>
 
     <div id="home" class="section">
-        <div id="notice-display" class="notice-board">📢 Loading notice...</div>
-        <h2 style="font-family:'Orbitron'; font-size:16px;">ACTIVE TOURNAMENTS</h2>
+        <div id="notice-display" class="notice-board">📢 Welcome to SHG亗ESports PRO!</div>
         <div id="match-display-container"></div>
     </div>
 
     <div id="profile" class="section">
-        <div class="profile-card">
-            <img id="p-img" src="https://via.placeholder.com/100" class="profile-img">
-            <input type="file" id="img-input" style="display:none;" onchange="uploadProfilePic(event)">
-            <button onclick="document.getElementById('img-input').click()" style="background:none; border:none; color:var(--primary); cursor:pointer; display:block; margin:auto; font-size:11px; margin-bottom:10px;">Change Photo</button>
-            
-            <h2 id="p-name" style="margin:0; font-family:'Orbitron'; color:var(--primary);">Player Name</h2>
-            <p id="p-uid-display" style="color:#94a3b8; font-size:12px;">UID: 000000</p>
-            <div style="display:flex; justify-content:space-around; margin-top:15px; background:rgba(0,0,0,0.2); padding:10px; border-radius:10px;">
-                <div><small>WALLET</small><br><b style="color:var(--success);">৳<span id="u-bal">0</span></b></div>
-                <div><small>JOINED</small><br><b id="u-count">0</b></div>
+        <div class="card">
+            <div class="profile-header">
+                <img id="p-img" src="https://via.placeholder.com/100" class="profile-img" onclick="document.getElementById('img-input').click()">
+                <input type="file" id="img-input" style="display:none;" onchange="uploadProfilePic(event)">
+                <div>
+                    <h3 id="p-name" style="margin:0;">Player Name</h3>
+                    <small id="p-uid-display" style="color:var(--primary);">UID: 000000</small>
+                </div>
             </div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:15px;">
-                <button class="btn" style="background:var(--success); color:#000;" onclick="showPage('deposit')">Deposit</button>
-                <button class="btn" onclick="showPage('withdraw')">Withdraw</button>
+            <div class="balance-box">
+                <div class="stat-item"><span>Wallet Balance</span><h3 id="u-bal">৳0</h3></div>
+                <div class="stat-item"><span>Match Joined</span><h3 id="u-count">0</h3></div>
             </div>
-            <button class="btn" style="background:#334155; margin-top:10px;" onclick="userLogout()">Logout Account</button>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                <button class="btn" style="background:var(--success);" onclick="showPage('wallet-system')">Wallet</button>
+                <button class="btn" style="background:#30363d;" onclick="userLogout()">Logout</button>
+            </div>
         </div>
-        <h3 style="font-family:'Orbitron'; font-size:14px;">MY MATCHES</h3>
+        <h4 style="font-family:'Orbitron';">My Registered Matches</h4>
         <div id="my-match-list"></div>
     </div>
 
-    <div id="withdraw" class="section">
-        <div class="glass-panel" style="max-width:400px; margin:auto;">
-            <h3>WITHDRAWAL</h3>
-            <input type="number" id="w-amt" placeholder="Amount (Min 100)">
-            <input type="text" id="w-num" placeholder="Account Number">
-            <button class="btn" onclick="sendWit()">Send Request</button>
-        </div>
-    </div>
+    <div id="wallet-system" class="section">
+        <div class="card">
+            <div class="tab-btn-group">
+                <button class="tab-btn active" id="dep-tab" onclick="toggleWallet('deposit')">Deposit</button>
+                <button class="tab-btn" id="wit-tab" onclick="toggleWallet('withdraw')">Withdraw</button>
+            </div>
 
-    <div id="deposit" class="section">
-        <div class="glass-panel" style="max-width:400px; margin:auto;">
-            <h3>REFILL</h3>
-            <p style="font-size:12px;">Send to: <b>01941686065</b></p>
-            <input type="number" id="d-amt" placeholder="Amount">
-            <input type="text" id="d-trx" placeholder="TrxID">
-            <button class="btn" onclick="sendDep()">Submit</button>
+            <div id="dep-panel">
+                <p style="font-size:12px; color:var(--accent);">Number: <b>01941686065</b> (Personal)</p>
+                <select id="d-method">
+                    <option>bKash</option>
+                    <option>Nagad</option>
+                    <option>Rocket</option>
+                </select>
+                <input type="number" id="d-amt" placeholder="Amount">
+                <input type="text" id="d-trx" placeholder="Transaction ID (TrxID)">
+                <button class="btn" onclick="sendDep()">Submit Deposit</button>
+            </div>
+
+            <div id="wit-panel" style="display:none;">
+                <input type="number" id="w-amt" placeholder="Amount (Min ৳100)">
+                <select id="w-method">
+                    <option>bKash</option>
+                    <option>Nagad</option>
+                    <option>Rocket</option>
+                </select>
+                <input type="text" id="w-num" placeholder="Account Number">
+                <button class="btn" onclick="sendWit()">Request Cashout</button>
+            </div>
         </div>
     </div>
 
     <div id="admin-login" class="section">
-        <div class="glass-panel" id="admin-auth" style="max-width:400px; margin:auto;">
-            <h3>ADMIN LOGIN</h3>
-            <input type="password" id="adminPass" placeholder="Enter Admin Key">
-            <button class="btn" onclick="loginAdmin()">Dashboard</button>
+        <div id="admin-auth" class="card" style="max-width:400px; margin:auto;">
+            <h2 style="font-family:'Orbitron';">ADMIN</h2>
+            <input type="password" id="adminPass" placeholder="Admin Secret Key">
+            <button class="btn" onclick="loginAdmin()">Login</button>
         </div>
         <div id="admin-dash" style="display:none;">
-            <div class="glass-panel">
-                <h4>NOTICE CONTROL</h4>
-                <input type="text" id="a-notice" placeholder="New Notice Message">
-                <button class="btn" onclick="updateNotice()">Update Notice</button>
+            <div class="card">
+                <h4>System Notice</h4>
+                <input type="text" id="a-notice" placeholder="Global Notice Text">
+                <button class="btn" onclick="updateNotice()">Update</button>
             </div>
-            <div class="glass-panel">
-                <h4>USER ACCOUNTS</h4>
-                <div style="overflow-x:auto;"><table id="user-table"><thead><tr><th>Name</th><th>UID</th><th>Balance</th><th>Action</th></tr></thead><tbody id="user-list-body"></tbody></table></div>
+            
+            <div class="card">
+                <h4>User Management</h4>
+                <div style="overflow-x:auto;">
+                    <table class="admin-table">
+                        <thead><tr><th>Name</th><th>UID</th><th>Balance</th><th>Action</th></tr></thead>
+                        <tbody id="user-list-body"></tbody>
+                    </table>
+                </div>
             </div>
-            <div class="glass-panel">
-                <h4>CREATE MATCH</h4>
-                <input type="text" id="m-name" placeholder="Title"><input type="number" id="m-fee" placeholder="Fee"><input type="number" id="m-prize" placeholder="Prize">
-                <button class="btn" onclick="createMatch()">Publish</button>
+
+            <div class="card">
+                <h4>Create New Match</h4>
+                <input type="text" id="m-name" placeholder="Match Title">
+                <input type="number" id="m-fee" placeholder="Entry Fee">
+                <input type="number" id="m-prize" placeholder="Prize Pool">
+                <input type="text" id="m-start" placeholder="Starting In (e.g. 30 Minutes)">
+                <button class="btn" onclick="createMatch()">Publish Match</button>
             </div>
+            
             <div id="a-match-list"></div>
-            <button class="btn" style="background:var(--danger);" onclick="location.reload()">Exit</button>
+            <button class="btn" style="background:var(--danger);" onclick="location.reload()">Exit Admin</button>
         </div>
     </div>
 </div>
@@ -140,7 +200,7 @@
     let dbUsers = JSON.parse(localStorage.getItem('shg_db_users')) || {};
     let user = JSON.parse(localStorage.getItem('shg_current_user')) || null;
     let matches = JSON.parse(localStorage.getItem('shg_matches')) || [];
-    let notice = localStorage.getItem('shg_notice') || "Welcome to SHG亗ESports!";
+    let notice = localStorage.getItem('shg_notice') || "Welcome to SHG亗ESports PRO!";
     let roomDB = JSON.parse(localStorage.getItem('shg_roomDB')) || {};
 
     function saveDB() {
@@ -152,13 +212,13 @@
     }
 
     function showPage(id) {
-        if(!user && !['setup-section','login-section','admin-login'].includes(id)) { id = 'setup-section'; }
+        if(!user && !['setup-section','login-section','admin-login'].includes(id)) id = 'setup-section';
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         if(user) {
             document.getElementById('p-name').innerText = user.name;
             document.getElementById('p-uid-display').innerText = "UID: " + user.uid;
-            document.getElementById('u-bal').innerText = user.balance;
+            document.getElementById('u-bal').innerText = "৳" + user.balance;
             document.getElementById('u-count').innerText = (user.joined_matches || []).length;
             document.getElementById('p-img').src = user.img || 'https://via.placeholder.com/100';
             document.getElementById('notice-display').innerText = notice;
@@ -169,33 +229,43 @@
         const name = document.getElementById('s-name').value;
         const uid = document.getElementById('s-uid').value;
         const pass = document.getElementById('s-pass').value;
-        if(!name || !uid || pass !== document.getElementById('s-confirm').value) return alert("Check fields!");
-        if(dbUsers[uid]) return alert("UID already exists!");
+        if(!name || !uid || pass !== document.getElementById('s-confirm').value) return alert("Verify fields!");
+        if(dbUsers[uid]) return alert("UID already taken!");
         dbUsers[uid] = { name, uid, pass, balance: 0, img: '', joined_matches: [] };
-        saveDB();
-        alert("Success! Login now.");
-        showPage('login-section');
+        saveDB(); alert("Registration Done!"); showPage('login-section');
     }
 
     function loginUser() {
         const uid = document.getElementById('l-uid').value;
         const pass = document.getElementById('l-pass').value;
         if(dbUsers[uid] && dbUsers[uid].pass === pass) {
-            user = dbUsers[uid];
-            saveDB();
-            showPage('home');
-        } else alert("Wrong UID/Password");
+            user = dbUsers[uid]; saveDB(); showPage('home'); renderMatches();
+        } else alert("Invalid Login!");
     }
 
     function userLogout() { user = null; saveDB(); location.reload(); }
 
+    function toggleWallet(type) {
+        if(type === 'deposit') {
+            document.getElementById('dep-panel').style.display = 'block';
+            document.getElementById('wit-panel').style.display = 'none';
+            document.getElementById('dep-tab').classList.add('active');
+            document.getElementById('wit-tab').classList.remove('active');
+        } else {
+            document.getElementById('dep-panel').style.display = 'none';
+            document.getElementById('wit-panel').style.display = 'block';
+            document.getElementById('wit-tab').classList.add('active');
+            document.getElementById('dep-tab').classList.remove('active');
+        }
+    }
+
     function uploadProfilePic(e) {
         const reader = new FileReader();
-        reader.onload = function() {
+        reader.onload = () => {
             user.img = reader.result;
             dbUsers[user.uid].img = reader.result;
             saveDB(); showPage('profile');
-        }
+        };
         reader.readAsDataURL(e.target.files[0]);
     }
 
@@ -207,28 +277,26 @@
         }
     }
 
-    function updateNotice() { notice = document.getElementById('a-notice').value; saveDB(); alert("Notice Updated!"); showPage('home'); }
-
     function renderAdminPanel() {
         const body = document.getElementById('user-list-body'); body.innerHTML = "";
         Object.values(dbUsers).forEach(u => {
-            body.innerHTML += `<tr><td>${u.name}</td><td>${u.uid}</td><td>৳${u.balance}</td><td><button onclick="editBal('${u.uid}')">Edit</button></td></tr>`;
+            body.innerHTML += `<tr><td>${u.name}</td><td>${u.uid}</td><td>৳${u.balance}</td><td><button onclick="editBal('${u.uid}')" style="color:var(--primary); background:none; border:none; cursor:pointer;">Edit</button></td></tr>`;
         });
         const mList = document.getElementById('a-match-list'); mList.innerHTML = "";
         matches.forEach(m => {
-            mList.innerHTML += `<div class="glass-panel">
+            mList.innerHTML += `<div class="card">
                 <b>${m.name}</b>
                 <input type="text" id="rid-${m.id}" value="${roomDB[m.id]?.rid || ''}" placeholder="Room ID">
-                <input type="text" id="rps-${m.id}" value="${roomDB[m.id]?.rps || ''}" placeholder="Pass">
-                <button onclick="saveRoom(${m.id})">Save Room Info</button>
-                <button style="background:red; margin-top:5px;" onclick="deleteMatch(${m.id})">Delete Match</button>
+                <input type="text" id="rps-${m.id}" value="${roomDB[m.id]?.rps || ''}" placeholder="Password">
+                <button class="btn" style="padding:5px;" onclick="saveRoom(${m.id})">Save Room</button>
+                <button class="btn" style="background:var(--danger); padding:5px;" onclick="deleteMatch(${m.id})">Delete</button>
             </div>`;
         });
     }
 
     function editBal(uid) {
-        const amt = prompt("New Balance for " + uid);
-        if(amt !== null) { 
+        const amt = prompt("Set balance for UID: " + uid);
+        if(amt !== null) {
             dbUsers[uid].balance = parseFloat(amt);
             if(user && user.uid === uid) user.balance = parseFloat(amt);
             saveDB(); renderAdminPanel();
@@ -237,48 +305,49 @@
 
     function createMatch() {
         const id = Date.now();
-        matches.push({ id, name: document.getElementById('m-name').value, fee: document.getElementById('m-fee').value, prize: document.getElementById('m-prize').value });
+        matches.push({ id, name: document.getElementById('m-name').value, fee: document.getElementById('m-fee').value, prize: document.getElementById('m-prize').value, start: document.getElementById('m-start').value });
         roomDB[id] = { rid: '', rps: '' };
+        saveDB(); renderMatches(); renderAdminPanel();
+    }
+
+    function deleteMatch(id) {
+        matches = matches.filter(m => m.id !== id);
+        Object.values(dbUsers).forEach(u => u.joined_matches = (u.joined_matches || []).filter(mId => mId !== id));
+        if(user) user.joined_matches = (user.joined_matches || []).filter(mId => mId !== id);
         saveDB(); renderMatches(); renderAdminPanel();
     }
 
     function saveRoom(id) {
         roomDB[id] = { rid: document.getElementById('rid-'+id).value, rps: document.getElementById('rps-'+id).value };
-        saveDB(); alert("Room Info Saved!");
-    }
-
-    function deleteMatch(id) {
-        matches = matches.filter(m => m.id !== id);
-        Object.values(dbUsers).forEach(u => {
-            u.joined_matches = (u.joined_matches || []).filter(mId => mId !== id);
-        });
-        if(user) user.joined_matches = (user.joined_matches || []).filter(mId => mId !== id);
-        saveDB(); renderMatches(); renderAdminPanel(); renderMyMatches();
+        saveDB(); alert("Room ID/Pass Updated!");
     }
 
     function renderMatches() {
         const cont = document.getElementById('match-display-container'); cont.innerHTML = "";
         matches.forEach(m => {
-            cont.innerHTML += `<div class="match-card">
-                <h3>${m.name}</h3>
-                <div class="m-grid">
-                    <div class="m-item">Fee: ৳${m.fee}</div>
-                    <div class="m-item">Prize: ৳${m.prize}</div>
+            cont.innerHTML += `<div class="card">
+                <div class="match-label">STARTING: ${m.start}</div>
+                <h3 style="margin-top:20px; font-family:'Orbitron'; color:var(--primary);">${m.name}</h3>
+                <div class="match-info-grid">
+                    <div class="info-pill"><span>Entry Fee</span> <b>৳${m.fee}</b></div>
+                    <div class="info-pill"><span>Prize Pool</span> <b>৳${m.prize}</b></div>
+                    <div class="info-pill"><span>Type</span> <b>SQUAD</b></div>
+                    <div class="info-pill"><span>Map</span> <b>BERMUDA</b></div>
                 </div>
-                <button class="btn" style="margin-top:10px;" onclick="joinMatch(${m.id})">Join Now</button>
+                <button class="btn" onclick="joinMatch(${m.id})">Join Match</button>
             </div>`;
         });
     }
 
     function joinMatch(id) {
         const m = matches.find(x => x.id === id);
-        if(user.balance < m.fee) return alert("Low Balance!");
-        if(user.joined_matches.includes(id)) return alert("Already joined!");
+        if(user.balance < m.fee) return alert("Low Balance! Please Deposit.");
+        if(user.joined_matches.includes(id)) return alert("Already Joined!");
         user.balance -= m.fee;
         user.joined_matches.push(id);
         dbUsers[user.uid] = user;
         saveDB(); renderMatches(); renderMyMatches(); showPage('profile');
-        alert("Joined Successfully!");
+        alert("Match Joined Successfully!");
     }
 
     function renderMyMatches() {
@@ -286,18 +355,20 @@
         (user.joined_matches || []).forEach(mId => {
             const m = matches.find(x => x.id === mId);
             if(m) {
-                cont.innerHTML += `<div class="match-card" style="border-left-color:var(--success);">
+                cont.innerHTML += `<div class="card" style="border-left:4px solid var(--success);">
                     <b>${m.name}</b>
-                    <div style="background:#064e3b; padding:10px; border-radius:5px; margin-top:5px; font-size:12px;">
-                        Room ID: ${roomDB[mId]?.rid || 'TBA'} | Pass: ${roomDB[mId]?.rps || 'TBA'}
+                    <div style="background:#161b22; padding:10px; border-radius:8px; margin-top:10px; font-size:12px;">
+                        Room ID: <span style="color:var(--success)">${roomDB[mId]?.rid || 'TBA'}</span><br>
+                        Password: <span style="color:var(--success)">${roomDB[mId]?.rps || 'TBA'}</span>
                     </div>
                 </div>`;
             }
         });
     }
 
-    function sendWit() { alert("Request Sent to Admin!"); showPage('profile'); }
-    function sendDep() { alert("Deposit Request Sent!"); showPage('profile'); }
+    function updateNotice() { notice = document.getElementById('a-notice').value; saveDB(); alert("Notice Updated!"); }
+    function sendWit() { alert("Withdraw request submitted!"); showPage('profile'); }
+    function sendDep() { alert("Deposit request submitted!"); showPage('profile'); }
 
     window.onload = () => { if(user) { showPage('home'); renderMatches(); renderMyMatches(); } };
 </script>
