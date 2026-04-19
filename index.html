@@ -167,7 +167,42 @@
     let user = null; let balance = 0; let revenue = 0;
     let matches = []; let registrations = []; let deposits = [];
     let roomDB = {}; let activeMatchId = null;
+// Data save korar function
+function syncStorage() {
+    localStorage.setItem('shg_user', JSON.stringify(user));
+    localStorage.setItem('shg_balance', balance.toString());
+    localStorage.setItem('shg_matches', JSON.stringify(matches));
+    localStorage.setItem('shg_registrations', JSON.stringify(registrations));
+    localStorage.setItem('shg_roomDB', JSON.stringify(roomDB));
+    localStorage.setItem('shg_deposits', JSON.stringify(deposits));
+    localStorage.setItem('shg_revenue', revenue.toString());
+}
 
+// Website load houar shomoy data firiye anar function
+function loadSavedData() {
+    const savedUser = localStorage.getItem('shg_user');
+    if (savedUser) {
+        user = JSON.parse(savedUser);
+        balance = parseFloat(localStorage.getItem('shg_balance')) || 0;
+        matches = JSON.parse(localStorage.getItem('shg_matches')) || [];
+        registrations = JSON.parse(localStorage.getItem('shg_registrations')) || [];
+        roomDB = JSON.parse(localStorage.getItem('shg_roomDB')) || {};
+        deposits = JSON.parse(localStorage.getItem('shg_deposits')) || [];
+        revenue = parseFloat(localStorage.getItem('shg_revenue')) || 0;
+
+        // Profile updates
+        document.getElementById('p-name').innerText = user.name;
+        document.getElementById('p-uid-display').innerText = "UID: " + user.uid;
+        
+        // Render existing content
+        renderMatches();
+        renderMyMatches();
+        showPage('home'); // Auto-login effect
+    }
+}
+
+// App start holei load function call hobe
+window.onload = loadSavedData;
     function showPage(id) {
         if(!user && id !== 'setup-section' && id !== 'admin-login') { id = 'setup-section'; }
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
@@ -178,7 +213,7 @@
     }
 
     // --- Profile Logic ---
-    function setupAccount() {
+    function setupAccount() {syncStorage()
         const name = document.getElementById('s-name').value;
         const uid = document.getElementById('s-uid').value;
         const phone = document.getElementById('s-phone').value;
@@ -191,7 +226,7 @@
     }
 
     // --- Admin Side ---
-    function loginAdmin() {
+    function loginAdmin() {syncStorage()
         if(document.getElementById('adminPass').value === "shg123") {
             document.getElementById('admin-auth').style.display = 'none';
             document.getElementById('admin-dash').style.display = 'block';
@@ -199,7 +234,7 @@
         }
     }
 
-    function createMatch() {
+    function createMatch() {syncStorage()
         const name = document.getElementById('m-name').value;
         const fee = parseFloat(document.getElementById('m-fee').value);
         const prize = document.getElementById('m-prize').value;
@@ -215,7 +250,7 @@
         alert("Tournament Published!");
     }
 
-    function renderAdminTools() {
+    function renderAdminTools() {syncStorage()
         const rc = document.getElementById('a-room-controls'); rc.innerHTML = "";
         matches.forEach(m => {
             rc.innerHTML += `<div style="background:#1e293b; padding:10px; border-radius:8px; margin-bottom:10px;">
@@ -237,19 +272,19 @@
         });
     }
 
-    function saveRoom(id) {
+    function saveRoom(id) {syncStorage()
         roomDB[id].rid = document.getElementById(`rid-${id}`).value;
         roomDB[id].rps = document.getElementById(`rps-${id}`).value;
         alert("Room Updated!"); renderMyMatches();
     }
 
-    function approvePayment(i) {
+    function approvePayment(i) {syncStorage()
         balance += deposits[i].amt; deposits.splice(i, 1);
         renderAdminTools(); showPage('admin-login'); alert("Balance Added!");
     }
 
     // --- Player Side ---
-    function sendPaymentRequest() {
+    function sendPaymentRequest() {syncStorage()
         const amt = parseFloat(document.getElementById('d-amt').value);
         const trx = document.getElementById('d-trx').value;
         if(amt && trx) {
@@ -260,7 +295,7 @@
         }
     }
 
-    function renderMatches() {
+    function renderMatches() {syncStorage()
         const container = document.getElementById('match-display-container');
         container.innerHTML = "";
         matches.forEach(m => {
@@ -281,7 +316,7 @@
         });
     }
 
-    function openJoinPage(id) {
+    function openJoinPage(id) {syncStorage()
         activeMatchId = id;
         const m = matches.find(x => x.id === id);
         document.getElementById('j-title').innerText = "Join: " + m.name;
@@ -292,7 +327,7 @@
         showPage('join-page');
     }
 
-    function processRegistration() {
+    function processRegistration() {syncStorage()
         const m = matches.find(x => x.id === activeMatchId);
         if(balance < m.fee) return alert("Insufficient Balance!");
         if(registrations.find(r => r.mId === activeMatchId)) return alert("Already Joined!");
@@ -307,7 +342,7 @@
         renderMyMatches();
     }
 
-    function renderMyMatches() {
+    function renderMyMatches() {syncStorage()
         const container = document.getElementById('my-match-list');
         if(registrations.length === 0) return;
         container.innerHTML = "";
