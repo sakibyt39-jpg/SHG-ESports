@@ -714,14 +714,37 @@
     }, 1000);
 
     window.onload = () => {
-        if(app.db.current) {
-            showPage('home-page');
-            app.updateUI();
-        } else {
-            showPage('auth-page');
-        }
-    };
-</script>
+if (app.db.current) {
+                showPage('home-page');
+                app.updateUI();
+            } else {
+                showPage('auth-page');
+            }
+        };
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCXeBxPtMScUNyoctZ61g7eUNy...", // Apnar puru key ti ekhane thakbe
+            authDomain: "shgesports-15815.firebaseapp.com",
+            projectId: "shgesports-15815",
+            storageBucket: "shgesports-15815.appspot.com",
+            messagingSenderId: "899657492968",
+            appId: "1:899657492968:web:5f9a897f47ea...",
+            measurementId: "G-NTG8VCBYLM"
+        };
+
+        // Initialize Firebase
+        const firebaseApp = initializeApp(firebaseConfig);
+        const db = getFirestore(firebaseApp);
+
+        // Database connect holo kina check korar jonno window-te expose kora
+        window.db = db;
+        console.log("Firebase Connected Successfully!");
+    </script>
 </body>
 </html>
 
