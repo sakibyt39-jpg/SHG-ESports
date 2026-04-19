@@ -80,6 +80,7 @@
                 </div>
             </div>
             <button class="btn" style="margin-top:20px; background:var(--success); color:#000;" onclick="showPage('deposit')">Add Money</button>
+            <button class="btn" style="margin-top:10px; background:#444;" onclick="userLogout()">Logout Profile</button>
         </div>
     </div>
 
@@ -148,13 +149,13 @@
                 <h4>Joined Players:</h4>
                 <div style="overflow-x:auto;"><table id="a-player-table"><thead><tr><th>Name</th><th>UID</th><th>Match</th></tr></thead><tbody></tbody></table></div>
             </div>
-            <button class="btn" style="background:var(--danger);" onclick="location.reload()">Logout</button>
+            <button class="btn" style="background:var(--danger);" onclick="location.reload()">Logout Admin</button>
         </div>
     </div>
 </div>
 
 <script>
-    // --- State Management with LocalStorage ---
+    // --- Initial State Load ---
     let user = JSON.parse(localStorage.getItem('shg_user')) || null;
     let balance = parseFloat(localStorage.getItem('shg_balance')) || 0;
     let revenue = parseFloat(localStorage.getItem('shg_revenue')) || 0;
@@ -162,7 +163,6 @@
     let registrations = JSON.parse(localStorage.getItem('shg_registrations')) || [];
     let deposits = JSON.parse(localStorage.getItem('shg_deposits')) || [];
     let roomDB = JSON.parse(localStorage.getItem('shg_roomDB')) || {};
-    let activeMatchId = null;
 
     function syncStorage() {
         localStorage.setItem('shg_user', JSON.stringify(user));
@@ -189,7 +189,6 @@
         }
     }
 
-    // Initialize App
     window.onload = () => {
         if(user) showPage('home');
         renderMatches();
@@ -204,8 +203,15 @@
         if(!name || !uid || !phone) return alert("Fill all info!");
         user = { name, uid, phone };
         syncStorage();
-        alert("Account Setup Complete!");
         showPage('home');
+    }
+
+    function userLogout() {
+        if(confirm("Logout korle abar setup kora lagbe. Proceed?")) {
+            localStorage.removeItem('shg_user');
+            user = null;
+            location.reload();
+        }
     }
 
     function loginAdmin() {
@@ -229,15 +235,30 @@
         matches.push({ id, name, fee, prize, time, desc, timeLeft: timer * 60 });
         roomDB[id] = { rid: "TBA", rps: "TBA" };
         syncStorage();
-        renderMatches(); renderAdminTools();
-        alert("Tournament Published!");
+        renderMatches(); 
+        renderAdminTools();
+        alert("Published!");
+    }
+
+    function deleteMatch(id) {
+        if(confirm("Dilit korle oita ar firye ana jabe na. Delete?")) {
+            matches = matches.filter(m => m.id !== id);
+            delete roomDB[id];
+            syncStorage();
+            renderMatches();
+            renderAdminTools();
+        }
     }
 
     function renderAdminTools() {
-        const rc = document.getElementById('a-room-controls'); rc.innerHTML = "";
+        const rc = document.getElementById('a-room-controls'); 
+        rc.innerHTML = "";
         matches.forEach(m => {
-            rc.innerHTML += `<div style="background:#1e293b; padding:10px; border-radius:8px; margin-bottom:10px;">
-                <strong>${m.name}</strong>
+            rc.innerHTML += `<div style="background:#1e293b; padding:10px; border-radius:8px; margin-bottom:10px; border-left: 3px solid var(--danger);">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <strong>${m.name}</strong>
+                    <button onclick="deleteMatch(${m.id})" style="color:var(--danger); background:none; border:none; cursor:pointer;">DILIT 🗑️</button>
+                </div>
                 <div style="display:flex; gap:5px; margin-top:5px;">
                     <input type="text" id="rid-${m.id}" value="${roomDB[m.id].rid}" placeholder="Room ID" style="margin:0;">
                     <input type="text" id="rps-${m.id}" value="${roomDB[m.id].rps}" placeholder="Pass" style="margin:0;">
@@ -250,7 +271,7 @@
         deposits.forEach((d, i) => {
             dc.innerHTML += `<div style="display:flex; justify-content:space-between; padding:8px; border-bottom:1px solid #334155;">
                 <span>৳${d.amt} (${d.trx})</span>
-                <button onclick="approvePayment(${i})" style="color:var(--success); background:none; border:none; cursor:pointer; font-weight:bold;">Approve</button>
+                <button onclick="approvePayment(${i})" style="color:var(--success); background:none; border:none; cursor:pointer;">Approve</button>
             </div>`;
         });
     }
@@ -259,7 +280,7 @@
         roomDB[id].rid = document.getElementById(`rid-${id}`).value;
         roomDB[id].rps = document.getElementById(`rps-${id}`).value;
         syncStorage();
-        alert("Room Updated!"); 
+        alert("Updated!"); 
         renderMyMatches();
     }
 
@@ -269,7 +290,6 @@
         syncStorage();
         renderAdminTools(); 
         showPage('admin-login'); 
-        alert("Balance Added!");
     }
 
     function sendPaymentRequest() {
@@ -278,7 +298,7 @@
         if(amt && trx) {
             deposits.push({ amt, trx });
             syncStorage();
-            alert("Request Sent! Admin is checking.");
+            alert("Sent to Admin!");
             showPage('profile');
         }
     }
@@ -291,7 +311,7 @@
                 <div class="match-card">
                     <div class="m-header">
                         <h3 class="m-title">${m.name}</h3>
-                        <div class="m-timer">LIVE</div>
+                        <div class="m-timer">ACTIVE</div>
                     </div>
                     <div class="m-grid">
                         <div class="m-item">🏆 Prize: ৳${m.prize}</div>
@@ -305,8 +325,8 @@
     }
 
     function openJoinPage(id) {
-        activeMatchId = id;
         const m = matches.find(x => x.id === id);
+        activeMatchId = id;
         document.getElementById('j-title').innerText = "Join: " + m.name;
         document.getElementById('j-fee-info').innerText = "Entry Fee: ৳" + m.fee;
         document.getElementById('j-desc-info').innerText = m.desc || "Regular";
@@ -346,11 +366,10 @@
                     <div class="room-box">
                         🆔 Room ID: ${room.rid} <br> 🔑 Password: ${room.rps}
                     </div>
-                    <small style="color:#94a3b8; font-size:10px;">* Refresh if ID/Pass is TBA</small>
                 </div>`;
         });
     }
 </script>
 </body>
-</html>
+    </html>
 
