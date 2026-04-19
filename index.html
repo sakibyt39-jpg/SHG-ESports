@@ -19,12 +19,10 @@
         .active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Profile & Stats Header */
         .profile-card { background: linear-gradient(135deg, #0f172a, #1e293b); border: 1px solid var(--primary); border-radius: 20px; padding: 25px; text-align: center; margin-bottom: 25px; border-bottom: 5px solid var(--primary); }
         .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px; }
         .stat-box { background: rgba(255,255,255,0.05); padding: 10px; border-radius: 12px; border: 1px solid #334155; }
 
-        /* Match Card Ultra */
         .match-card { background: var(--card); border: 1px solid #1e293b; border-radius: 18px; padding: 20px; margin-bottom: 20px; position: relative; border-left: 5px solid var(--primary); transition: 0.3s; }
         .m-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
         .m-title { font-size: 18px; font-weight: 700; color: var(--primary); margin: 0; }
@@ -32,7 +30,6 @@
         .m-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 12px; margin-bottom: 15px; }
         .m-item { background: #1e293b; padding: 10px; border-radius: 8px; border: 1px solid #334155; }
 
-        /* Admin Board & Inputs */
         .glass-panel { background: #0f172a; padding: 25px; border-radius: 15px; border: 1px solid #334155; margin-bottom: 20px; }
         input, textarea { width: 100%; padding: 12px; margin: 8px 0; background: #1e293b; border: 1px solid #334155; color: white; border-radius: 8px; box-sizing: border-box; }
         .btn { background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; width: 100%; text-transform: uppercase; font-family: 'Orbitron'; }
@@ -57,7 +54,6 @@
 </nav>
 
 <div class="container">
-
     <div id="setup-section" class="section active">
         <div class="glass-panel" style="max-width: 450px; margin: auto;">
             <h2 style="text-align:center; font-family:'Orbitron';">SETUP PROFILE</h2>
@@ -73,7 +69,6 @@
             <div style="font-size:45px; margin-bottom:10px;">👤</div>
             <h2 id="p-name" style="margin:0; font-family:'Orbitron'; color:var(--primary);">Player Name</h2>
             <p id="p-uid-display" style="color:#94a3b8; font-size:12px;">UID: 00000000</p>
-            
             <div class="stats-row">
                 <div class="stat-box">
                     <small>WALLET</small><br>
@@ -107,7 +102,7 @@
 
     <div id="my-matches" class="section">
         <h2 style="font-family:'Orbitron';">🎯 REGISTERED MATCHES</h2>
-        <div id="my-match-list"><p style="color:#64748b;">Join a match to see info here.</p></div>
+        <div id="my-match-list"></div>
     </div>
 
     <div id="deposit" class="section">
@@ -126,13 +121,11 @@
             <input type="password" id="adminPass" placeholder="Enter Key">
             <button class="btn" onclick="loginAdmin()">Dashboard</button>
         </div>
-
         <div id="admin-dash" style="display:none;">
             <div class="glass-panel" style="text-align:center; border-color:var(--success);">
                 <small>TOTAL REVENUE</small>
                 <div style="font-size:32px; color:var(--success); font-weight:bold;">৳ <span id="a-rev">0.00</span></div>
             </div>
-
             <div class="glass-panel">
                 <h3>+ CREATE TOURNAMENT</h3>
                 <input type="text" id="m-name" placeholder="Match Title">
@@ -147,7 +140,6 @@
                 <textarea id="m-desc" placeholder="Match Info / Map / Rules" rows="2"></textarea>
                 <button class="btn" onclick="createMatch()">Publish Match</button>
             </div>
-
             <div class="glass-panel">
                 <h3>🛠 ROOM & DEPOSIT SYNC</h3>
                 <div id="a-room-controls"></div>
@@ -159,74 +151,64 @@
             <button class="btn" style="background:var(--danger);" onclick="location.reload()">Logout</button>
         </div>
     </div>
-
 </div>
 
 <script>
-    // State
-    let user = null; let balance = 0; let revenue = 0;
-    let matches = []; let registrations = []; let deposits = [];
-    let roomDB = {}; let activeMatchId = null;
-// Data save korar function
-function syncStorage() {
-    localStorage.setItem('shg_user', JSON.stringify(user));
-    localStorage.setItem('shg_balance', balance.toString());
-    localStorage.setItem('shg_matches', JSON.stringify(matches));
-    localStorage.setItem('shg_registrations', JSON.stringify(registrations));
-    localStorage.setItem('shg_roomDB', JSON.stringify(roomDB));
-    localStorage.setItem('shg_deposits', JSON.stringify(deposits));
-    localStorage.setItem('shg_revenue', revenue.toString());
-}
+    // --- State Management with LocalStorage ---
+    let user = JSON.parse(localStorage.getItem('shg_user')) || null;
+    let balance = parseFloat(localStorage.getItem('shg_balance')) || 0;
+    let revenue = parseFloat(localStorage.getItem('shg_revenue')) || 0;
+    let matches = JSON.parse(localStorage.getItem('shg_matches')) || [];
+    let registrations = JSON.parse(localStorage.getItem('shg_registrations')) || [];
+    let deposits = JSON.parse(localStorage.getItem('shg_deposits')) || [];
+    let roomDB = JSON.parse(localStorage.getItem('shg_roomDB')) || {};
+    let activeMatchId = null;
 
-// Website load houar shomoy data firiye anar function
-function loadSavedData() {
-    const savedUser = localStorage.getItem('shg_user');
-    if (savedUser) {
-        user = JSON.parse(savedUser);
-        balance = parseFloat(localStorage.getItem('shg_balance')) || 0;
-        matches = JSON.parse(localStorage.getItem('shg_matches')) || [];
-        registrations = JSON.parse(localStorage.getItem('shg_registrations')) || [];
-        roomDB = JSON.parse(localStorage.getItem('shg_roomDB')) || {};
-        deposits = JSON.parse(localStorage.getItem('shg_deposits')) || [];
-        revenue = parseFloat(localStorage.getItem('shg_revenue')) || 0;
-
-        // Profile updates
-        document.getElementById('p-name').innerText = user.name;
-        document.getElementById('p-uid-display').innerText = "UID: " + user.uid;
-        
-        // Render existing content
-        renderMatches();
-        renderMyMatches();
-        showPage('home'); // Auto-login effect
+    function syncStorage() {
+        localStorage.setItem('shg_user', JSON.stringify(user));
+        localStorage.setItem('shg_balance', balance.toString());
+        localStorage.setItem('shg_revenue', revenue.toString());
+        localStorage.setItem('shg_matches', JSON.stringify(matches));
+        localStorage.setItem('shg_registrations', JSON.stringify(registrations));
+        localStorage.setItem('shg_deposits', JSON.stringify(deposits));
+        localStorage.setItem('shg_roomDB', JSON.stringify(roomDB));
     }
-}
 
-// App start holei load function call hobe
-window.onload = loadSavedData;
     function showPage(id) {
         if(!user && id !== 'setup-section' && id !== 'admin-login') { id = 'setup-section'; }
         document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
+        
         document.getElementById('u-bal').innerText = balance.toFixed(2);
         document.getElementById('u-count').innerText = registrations.length;
         document.getElementById('a-rev').innerText = revenue.toFixed(2);
+
+        if(user) {
+            document.getElementById('p-name').innerText = user.name;
+            document.getElementById('p-uid-display').innerText = "UID: " + user.uid;
+        }
     }
 
-    // --- Profile Logic ---
-    function setupAccount() {syncStorage()
+    // Initialize App
+    window.onload = () => {
+        if(user) showPage('home');
+        renderMatches();
+        renderMyMatches();
+        renderAdminTools();
+    };
+
+    function setupAccount() {
         const name = document.getElementById('s-name').value;
         const uid = document.getElementById('s-uid').value;
         const phone = document.getElementById('s-phone').value;
         if(!name || !uid || !phone) return alert("Fill all info!");
         user = { name, uid, phone };
-        document.getElementById('p-name').innerText = name;
-        document.getElementById('p-uid-display').innerText = "UID: " + uid;
+        syncStorage();
         alert("Account Setup Complete!");
         showPage('home');
     }
 
-    // --- Admin Side ---
-    function loginAdmin() {syncStorage()
+    function loginAdmin() {
         if(document.getElementById('adminPass').value === "shg123") {
             document.getElementById('admin-auth').style.display = 'none';
             document.getElementById('admin-dash').style.display = 'block';
@@ -234,7 +216,7 @@ window.onload = loadSavedData;
         }
     }
 
-    function createMatch() {syncStorage()
+    function createMatch() {
         const name = document.getElementById('m-name').value;
         const fee = parseFloat(document.getElementById('m-fee').value);
         const prize = document.getElementById('m-prize').value;
@@ -246,11 +228,12 @@ window.onload = loadSavedData;
         const id = Date.now();
         matches.push({ id, name, fee, prize, time, desc, timeLeft: timer * 60 });
         roomDB[id] = { rid: "TBA", rps: "TBA" };
+        syncStorage();
         renderMatches(); renderAdminTools();
         alert("Tournament Published!");
     }
 
-    function renderAdminTools() {syncStorage()
+    function renderAdminTools() {
         const rc = document.getElementById('a-room-controls'); rc.innerHTML = "";
         matches.forEach(m => {
             rc.innerHTML += `<div style="background:#1e293b; padding:10px; border-radius:8px; margin-bottom:10px;">
@@ -272,30 +255,35 @@ window.onload = loadSavedData;
         });
     }
 
-    function saveRoom(id) {syncStorage()
+    function saveRoom(id) {
         roomDB[id].rid = document.getElementById(`rid-${id}`).value;
         roomDB[id].rps = document.getElementById(`rps-${id}`).value;
-        alert("Room Updated!"); renderMyMatches();
+        syncStorage();
+        alert("Room Updated!"); 
+        renderMyMatches();
     }
 
-    function approvePayment(i) {syncStorage()
-        balance += deposits[i].amt; deposits.splice(i, 1);
-        renderAdminTools(); showPage('admin-login'); alert("Balance Added!");
+    function approvePayment(i) {
+        balance += deposits[i].amt; 
+        deposits.splice(i, 1);
+        syncStorage();
+        renderAdminTools(); 
+        showPage('admin-login'); 
+        alert("Balance Added!");
     }
 
-    // --- Player Side ---
-    function sendPaymentRequest() {syncStorage()
+    function sendPaymentRequest() {
         const amt = parseFloat(document.getElementById('d-amt').value);
         const trx = document.getElementById('d-trx').value;
         if(amt && trx) {
             deposits.push({ amt, trx });
+            syncStorage();
             alert("Request Sent! Admin is checking.");
-            renderAdminTools(); // Prototype sync
             showPage('profile');
         }
     }
 
-    function renderMatches() {syncStorage()
+    function renderMatches() {
         const container = document.getElementById('match-display-container');
         container.innerHTML = "";
         matches.forEach(m => {
@@ -303,7 +291,7 @@ window.onload = loadSavedData;
                 <div class="match-card">
                     <div class="m-header">
                         <h3 class="m-title">${m.name}</h3>
-                        <div class="m-timer" id="timer-${m.id}">${formatTime(m.timeLeft)}</div>
+                        <div class="m-timer">LIVE</div>
                     </div>
                     <div class="m-grid">
                         <div class="m-item">🏆 Prize: ৳${m.prize}</div>
@@ -316,7 +304,7 @@ window.onload = loadSavedData;
         });
     }
 
-    function openJoinPage(id) {syncStorage()
+    function openJoinPage(id) {
         activeMatchId = id;
         const m = matches.find(x => x.id === id);
         document.getElementById('j-title').innerText = "Join: " + m.name;
@@ -327,27 +315,31 @@ window.onload = loadSavedData;
         showPage('join-page');
     }
 
-    function processRegistration() {syncStorage()
+    function processRegistration() {
         const m = matches.find(x => x.id === activeMatchId);
         if(balance < m.fee) return alert("Insufficient Balance!");
         if(registrations.find(r => r.mId === activeMatchId)) return alert("Already Joined!");
 
         balance -= m.fee; revenue += m.fee;
         registrations.push({ mId: activeMatchId, name: m.name });
+        syncStorage();
         
         document.querySelector('#a-player-table tbody').innerHTML += `<tr><td>${user.name}</td><td>${user.uid}</td><td>${m.name}</td></tr>`;
         
         alert("Registration Success!");
-        showPage('my-matches');
         renderMyMatches();
+        showPage('my-matches');
     }
 
-    function renderMyMatches() {syncStorage()
+    function renderMyMatches() {
         const container = document.getElementById('my-match-list');
-        if(registrations.length === 0) return;
+        if(registrations.length === 0) {
+            container.innerHTML = '<p style="color:#64748b;">Join a match to see info here.</p>';
+            return;
+        }
         container.innerHTML = "";
         registrations.forEach(r => {
-            const room = roomDB[r.mId];
+            const room = roomDB[r.mId] || {rid: "TBA", rps: "TBA"};
             container.innerHTML += `
                 <div class="match-card">
                     <strong>${r.name}</strong>
@@ -358,23 +350,7 @@ window.onload = loadSavedData;
                 </div>`;
         });
     }
-
-    function formatTime(sec) {
-        const min = Math.floor(sec / 60);
-        const s = sec % 60;
-        return `${min < 10 ? '0'+min : min}:${s < 10 ? '0'+s : s}`;
-    }
-
-    setInterval(() => {
-        matches.forEach(m => {
-            if(m.timeLeft > 0) {
-                m.timeLeft--;
-                const el = document.getElementById(`timer-${m.id}`);
-                if(el) el.innerText = formatTime(m.timeLeft);
-            }
-        });
-    }, 1000);
 </script>
-
 </body>
-  </html>
+</html>
+
