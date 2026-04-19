@@ -453,18 +453,34 @@
             this.db.current = null;
             this.save();
             location.reload();
-        },
+        }
+        
+        ,createMatch: async function() {
+    const n = document.getElementById('am-name').value, 
+          f = document.getElementById('am-fee').value, 
+          p = document.getElementById('am-prize').value, 
+          t = document.getElementById('am-time').value;
 
-        /* --- Match Logic --- */
-        createMatch: function() {
-            const n = document.getElementById('am-name').value, f = document.getElementById('am-fee').value, p = document.getElementById('am-prize').value, t = document.getElementById('am-time').value;
-            if(!n || !f || !p || !t) return alert("Fill Match Info!");
-            
-            this.db.matches.push({ id: Date.now(), title: n, fee: f, prize: p, time: t, roomId: "TBA", roomPass: "TBA" });
-            this.save();
-            this.renderAdmin();
-            alert("Match Live!");
-        },
+    if(!n || !f || !p || !t) return alert("Sop match info thik moton din!");
+
+    try {
+        const { collection, addDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
+        
+        const matchData = { 
+            title: n, fee: f, prize: p, time: t, 
+            roomId: "TBA", roomPass: "TBA", 
+            timestamp: new Date().getTime() 
+        };
+
+        await addDoc(collection(window.db, "matches"), matchData);
+        alert("Match Firebase-e Live hoyeche!");
+        this.renderAdmin();
+    } catch (e) {
+        alert("Error: " + e.message);
+    }
+},
+
+
 
         deleteMatch: function(id) {
             if(confirm("Delete this match?")) {
@@ -474,26 +490,31 @@
                 this.renderMatches();
             }
         },
+        
+        joinMatch: async function(mid) {
+    const m = this.db.matches.find(x => x.id == mid);
+    if(this.db.current.balance < m.fee) return alert("Taka nai, age deposit koren!");
 
-        joinMatch: function(mid) {
-            const m = this.db.matches.find(x => x.id == mid);
-            if(this.db.registrations.some(r => r.mid == mid && r.uUid == this.db.current.uid)) return alert("Already Joined!");
-            if(this.db.current.balance < m.fee) return alert("Insufficient Balance!");
+    try {
+        const { collection, addDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
+        
+        await addDoc(collection(window.db, "registrations"), {
+            mid: mid,
+            uUid: this.db.current.uid,
+            uName: this.db.current.name,
+            mTitle: m.title,
+            time: new Date().getTime()
+        });
 
-            this.db.current.balance -= parseFloat(m.fee);
-            this.db.users[this.db.current.uid].balance = this.db.current.balance;
-            this.db.settings.revenue += parseFloat(m.fee);
+        alert("Successfully Joined!");
+    } catch (e) {
+        alert("Join hoy nai!");
+    }
+},
+
+ 
             
-            this.db.registrations.push({ 
-                mid: mid, 
-                uUid: this.db.current.uid, 
-                uName: this.db.current.name,
-                mTitle: m.title 
-            });
-            
-            this.save();
-            alert("Success! Room details will appear on the match card.");
-        },
+
 
         /* --- Admin Logic --- */
         adminLogin: function() {
@@ -760,6 +781,15 @@ if (app.db.current) {
         // Database connect holo kina check korar jonno window-te expose kora
         window.db = db;
         console.log("Firebase Connected Successfully!");
+        
+        import { collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+// Firestore theke auto match data ana
+const q = query(collection(window.db, "matches"), orderBy("timestamp", "desc"));
+onSnapshot(q, (snapshot) => {
+    app.db.matches = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    app.renderMatches(); // Screen auto update hobe
+});
     </script>
 </body>
 </html>
