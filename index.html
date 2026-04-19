@@ -79,7 +79,10 @@
                     <strong id="u-count" style="font-size:22px;">0</strong>
                 </div>
             </div>
-            <button class="btn" style="margin-top:20px; background:var(--success); color:#000;" onclick="showPage('deposit')">Add Money</button>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:20px;">
+                <button class="btn" style="background:var(--success); color:#000;" onclick="showPage('deposit')">Add Money</button>
+                <button class="btn" style="background:var(--primary);" onclick="showPage('withdraw')">Withdraw</button>
+            </div>
             <button class="btn" style="margin-top:10px; background:#444;" onclick="userLogout()">Logout Profile</button>
         </div>
     </div>
@@ -87,6 +90,17 @@
     <div id="home" class="section">
         <h2 style="font-family:'Orbitron'; font-size:18px;">🔥 ACTIVE TOURNAMENTS</h2>
         <div id="match-display-container"></div>
+    </div>
+
+    <div id="withdraw" class="section">
+        <div class="glass-panel" style="max-width:400px; margin:auto;">
+            <h3 style="color:var(--primary);">CASH OUT</h3>
+            <p style="font-size:12px; color:#94a3b8;">Minimum Withdraw: ৳100</p>
+            <input type="number" id="w-amt" placeholder="Amount (৳)">
+            <input type="text" id="w-method" placeholder="Method (bKash/Nagad)">
+            <input type="text" id="w-num" placeholder="Account Number">
+            <button class="btn" onclick="sendWithdrawRequest()">Request Withdraw</button>
+        </div>
     </div>
 
     <div id="join-page" class="section">
@@ -142,10 +156,15 @@
                 <button class="btn" onclick="createMatch()">Publish Match</button>
             </div>
             <div class="glass-panel">
-                <h3>🛠 ROOM & DEPOSIT SYNC</h3>
+                <h3>🛠 ROOM & REQUESTS</h3>
                 <div id="a-room-controls"></div>
-                <h4>Pending Deposits:</h4>
+                
+                <h4 style="color:var(--primary);">Withdraw Requests:</h4>
+                <div id="a-withdraws"></div>
+
+                <h4 style="color:var(--success);">Pending Deposits:</h4>
                 <div id="a-deposits"></div>
+
                 <h4>Joined Players:</h4>
                 <div style="overflow-x:auto;"><table id="a-player-table"><thead><tr><th>Name</th><th>UID</th><th>Match</th></tr></thead><tbody></tbody></table></div>
             </div>
@@ -155,14 +174,15 @@
 </div>
 
 <script>
-    // --- Initial State Load ---
     let user = JSON.parse(localStorage.getItem('shg_user')) || null;
     let balance = parseFloat(localStorage.getItem('shg_balance')) || 0;
     let revenue = parseFloat(localStorage.getItem('shg_revenue')) || 0;
     let matches = JSON.parse(localStorage.getItem('shg_matches')) || [];
     let registrations = JSON.parse(localStorage.getItem('shg_registrations')) || [];
     let deposits = JSON.parse(localStorage.getItem('shg_deposits')) || [];
+    let withdraws = JSON.parse(localStorage.getItem('shg_withdraws')) || [];
     let roomDB = JSON.parse(localStorage.getItem('shg_roomDB')) || {};
+    let activeMatchId = null;
 
     function syncStorage() {
         localStorage.setItem('shg_user', JSON.stringify(user));
@@ -171,6 +191,7 @@
         localStorage.setItem('shg_matches', JSON.stringify(matches));
         localStorage.setItem('shg_registrations', JSON.stringify(registrations));
         localStorage.setItem('shg_deposits', JSON.stringify(deposits));
+        localStorage.setItem('shg_withdraws', JSON.stringify(withdraws));
         localStorage.setItem('shg_roomDB', JSON.stringify(roomDB));
     }
 
@@ -207,7 +228,7 @@
     }
 
     function userLogout() {
-        if(confirm("Logout korle abar setup kora lagbe. Proceed?")) {
+        if(confirm("Logout?")) {
             localStorage.removeItem('shg_user');
             user = null;
             location.reload();
@@ -222,6 +243,20 @@
         }
     }
 
+    // Withdraw Logic
+    function sendWithdrawRequest() {
+        const amt = parseFloat(document.getElementById('w-amt').value);
+        const method = document.getElementById('w-method').value;
+        const num = document.getElementById('w-num').value;
+        if(amt < 100) return alert("Min withdraw ৳100");
+        if(balance < amt) return alert("Insufficient balance!");
+        
+        withdraws.push({ amt, method, num, status: 'pending' });
+        syncStorage();
+        alert("Withdraw Request Sent!");
+        showPage('profile');
+    }
+
     function createMatch() {
         const name = document.getElementById('m-name').value;
         const fee = parseFloat(document.getElementById('m-fee').value);
@@ -232,30 +267,29 @@
 
         if(!name || isNaN(fee)) return alert("Set Name and Fee!");
         const id = Date.now();
-        matches.push({ id, name, fee, prize, time, desc, timeLeft: timer * 60 });
+        matches.push({ id, name, fee, prize, time, desc });
         roomDB[id] = { rid: "TBA", rps: "TBA" };
         syncStorage();
-        renderMatches(); 
-        renderAdminTools();
-        alert("Published!");
+        renderMatches(); renderAdminTools();
     }
 
     function deleteMatch(id) {
-        if(confirm("Dilit korle oita ar firye ana jabe na. Delete?")) {
+        if(confirm("Delete this match? It will also remove from player lists.")) {
             matches = matches.filter(m => m.id !== id);
+            registrations = registrations.filter(r => r.mId !== id); // Player list theke delete
             delete roomDB[id];
             syncStorage();
             renderMatches();
+            renderMyMatches();
             renderAdminTools();
         }
     }
 
     function renderAdminTools() {
-        const rc = document.getElementById('a-room-controls'); 
-        rc.innerHTML = "";
+        const rc = document.getElementById('a-room-controls'); rc.innerHTML = "";
         matches.forEach(m => {
             rc.innerHTML += `<div style="background:#1e293b; padding:10px; border-radius:8px; margin-bottom:10px; border-left: 3px solid var(--danger);">
-                <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div style="display:flex; justify-content:space-between;">
                     <strong>${m.name}</strong>
                     <button onclick="deleteMatch(${m.id})" style="color:var(--danger); background:none; border:none; cursor:pointer;">DILIT 🗑️</button>
                 </div>
@@ -274,13 +308,35 @@
                 <button onclick="approvePayment(${i})" style="color:var(--success); background:none; border:none; cursor:pointer;">Approve</button>
             </div>`;
         });
+
+        const wc = document.getElementById('a-withdraws'); wc.innerHTML = "";
+        withdraws.forEach((w, i) => {
+            wc.innerHTML += `<div style="display:flex; justify-content:space-between; padding:8px; border-bottom:1px solid #334155;">
+                <span>৳${w.amt} (${w.method}: ${w.num})</span>
+                <button onclick="approveWithdraw(${i})" style="color:var(--primary); background:none; border:none; cursor:pointer;">Approve</button>
+            </div>`;
+        });
+    }
+
+    function approveWithdraw(i) {
+        const amt = withdraws[i].amt;
+        if(balance >= amt) {
+            balance -= amt; // Player er balance theke minus hobe
+            withdraws.splice(i, 1);
+            syncStorage();
+            renderAdminTools();
+            showPage('admin-login');
+            alert("Withdraw Approved! Balance Deducted.");
+        } else {
+            alert("Player has insufficient balance now!");
+        }
     }
 
     function saveRoom(id) {
         roomDB[id].rid = document.getElementById(`rid-${id}`).value;
         roomDB[id].rps = document.getElementById(`rps-${id}`).value;
         syncStorage();
-        alert("Updated!"); 
+        alert("Room Updated!"); 
         renderMyMatches();
     }
 
@@ -325,8 +381,8 @@
     }
 
     function openJoinPage(id) {
-        const m = matches.find(x => x.id === id);
         activeMatchId = id;
+        const m = matches.find(x => x.id === id);
         document.getElementById('j-title').innerText = "Join: " + m.name;
         document.getElementById('j-fee-info').innerText = "Entry Fee: ৳" + m.fee;
         document.getElementById('j-desc-info').innerText = m.desc || "Regular";
@@ -343,9 +399,6 @@
         balance -= m.fee; revenue += m.fee;
         registrations.push({ mId: activeMatchId, name: m.name });
         syncStorage();
-        
-        document.querySelector('#a-player-table tbody').innerHTML += `<tr><td>${user.name}</td><td>${user.uid}</td><td>${m.name}</td></tr>`;
-        
         alert("Registration Success!");
         renderMyMatches();
         showPage('my-matches');
@@ -354,7 +407,7 @@
     function renderMyMatches() {
         const container = document.getElementById('my-match-list');
         if(registrations.length === 0) {
-            container.innerHTML = '<p style="color:#64748b;">Join a match to see info here.</p>';
+            container.innerHTML = '<p style="color:#64748b;">No active matches.</p>';
             return;
         }
         container.innerHTML = "";
