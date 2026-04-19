@@ -414,32 +414,35 @@
         },
 
         register: async function() {
-    const n = document.getElementById('r-name').value;
-    const u = document.getElementById('r-uid').value;
-    const p = document.getElementById('r-pass').value;
+            console.log("Register Button Clicked!"); // Eta check korar jonno
+            
+            const n = document.getElementById('r-name').value;
+            const u = document.getElementById('r-uid').value;
+            const p = document.getElementById('r-pass').value;
 
-    if(!n || !u || !p) return alert("Sob field puron koren!");
+            if(!n || !u || !p) {
+                alert("Sob ghor puron koren!");
+                return;
+            }
 
-    try {
-        // Firestore import logic
-        const { doc, setDoc, getFirestore } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
-        const db = getFirestore();
-        
-        const userRef = doc(db, "users", u);
-        const userData = { name: n, uid: u, pass: p, balance: 0, rank: "SOLDIER" };
-        
-        await setDoc(userRef, userData);
-        
-        this.db.current = userData;
-        localStorage.setItem('shg_session', JSON.stringify(userData));
-        alert("Account Created Successfully!");
-        showPage('home-page');
-        this.updateUI();
-    } catch (error) {
-        console.error("Firebase Error: ", error);
-        alert("Registration Failed! Firestore Rules check koren.");
-    }
-}
+            try {
+                const { doc, setDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
+                
+                // window.db define kora thakte hobe
+                const userRef = doc(window.db, "users", u);
+                const userData = { name: n, uid: u, pass: p, balance: 0, rank: "SOLDIER" };
+                
+                await setDoc(userRef, userData);
+                
+                this.db.current = userData;
+                localStorage.setItem('shg_session', JSON.stringify(userData));
+                alert("Account Created!");
+                showPage('home-page');
+            } catch (error) {
+                alert("Firebase Error: " + error.message);
+                console.error(error);
+            }
+        },
 
         login: function() {
             const u = document.getElementById('l-uid').value, p = document.getElementById('l-pass').value;
