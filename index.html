@@ -1,9 +1,9 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NIK TOP UP | Ultimate ESports Management</title>
+    <title>NIK TOP UP | Ultimate Cloud Gaming</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -14,232 +14,250 @@
         :root {
             --primary: #00d4ff;
             --secondary: #7000ff;
-            --accent: #ff0055;
-            --bg: #020617;
-            --glass: rgba(15, 23, 42, 0.8);
-            --neon-glow: 0 0 15px rgba(0, 212, 255, 0.4);
+            --bg: #020612;
+            --glass: rgba(10, 15, 30, 0.85);
+            --neon-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
         }
 
-        * { -webkit-tap-highlight-color: transparent; }
-        body { font-family: 'Rajdhani', sans-serif; background: var(--bg); color: #f1f5f9; overflow-x: hidden; }
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--bg);
+            color: #f1f5f9;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 212, 255, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(112, 0, 255, 0.05) 0%, transparent 40%);
+        }
+
+        .font-orbit { font-family: 'Orbitron', sans-serif; }
+        .glass { background: var(--glass); backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .neon-btn { background: linear-gradient(135deg, var(--primary), var(--secondary)); box-shadow: var(--neon-shadow); transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .neon-btn:active { transform: scale(0.95); }
         
-        /* Premium Aesthetics */
-        .glass { background: var(--glass); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .neon-text { text-shadow: var(--neon-glow); color: var(--primary); }
-        .neon-border { border: 1px solid var(--primary); box-shadow: var(--neon-glow); }
-        
-        /* Page Transitions */
-        .page { display: none; min-height: 100vh; padding-bottom: 100px; animation: pageIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        /* Smooth Page Transitions */
+        .page { display: none; min-height: 100vh; padding-bottom: 110px; animation: fadeInUp 0.5s ease-out; }
         .active { display: block; }
-        @keyframes pageIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Custom Components */
-        .match-card { background: linear-gradient(145deg, rgba(30, 41, 59, 0.5), rgba(15, 23, 42, 0.8)); border-radius: 24px; transition: 0.3s; }
-        .match-card:active { transform: scale(0.98); }
-        .stat-card { background: rgba(255,255,255,0.02); border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); }
+        /* Card Effects */
+        .premium-card { background: linear-gradient(160deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.01) 100%); border-radius: 28px; border: 1px solid rgba(255,255,255,0.05); }
+        .nav-active { color: var(--primary) !important; filter: drop-shadow(0 0 8px var(--primary)); }
 
-        /* Scrollbar */
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
-        
-        input, select { background: rgba(0,0,0,0.3) !important; border: 1px solid rgba(255,255,255,0.1) !important; color: white !important; }
+        /* Form Inputs */
+        input, select { background: rgba(0,0,0,0.4) !important; border: 1px solid rgba(255,255,255,0.1) !important; color: white !important; }
+        input:focus { border-color: var(--primary) !important; }
     </style>
 </head>
 <body>
 
-    <div id="splash" class="fixed inset-0 z-[100] bg-[#020617] flex flex-col items-center justify-center">
-        <div class="relative w-24 h-24 mb-6">
-            <div class="absolute inset-0 border-4 border-cyan-500/20 rounded-full"></div>
-            <div class="absolute inset-0 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>
-            <div class="absolute inset-4 bg-cyan-500/10 rounded-full flex items-center justify-center font-bold text-cyan-500 font-orbit">NIK</div>
+    <div id="splash" class="fixed inset-0 z-[200] bg-[#020612] flex flex-col items-center justify-center">
+        <div class="relative w-32 h-32 mb-8">
+            <div class="absolute inset-0 border-b-4 border-cyan-500 rounded-full animate-spin"></div>
+            <div class="absolute inset-2 border-t-4 border-purple-500 rounded-full animate-spin-slow" style="animation-duration: 3s"></div>
+            <div class="absolute inset-0 flex items-center justify-center font-orbit font-bold text-2xl text-cyan-400">NIK</div>
         </div>
-        <h1 class="text-2xl font-bold tracking-[0.3em] neon-text font-orbit">NIK TOP UP</h1>
+        <h2 class="text-xl font-orbit tracking-[0.5em] animate-pulse">SYSTEM LOADING</h2>
     </div>
 
     <div id="auth-page" class="page flex items-center justify-center p-6">
         <div class="w-full max-w-md">
-            <div class="text-center mb-10">
-                <h2 class="text-5xl font-orbit font-bold mb-2">ESPORTS</h2>
-                <p class="text-gray-500 tracking-[0.5em] text-xs uppercase">The Next Generation</p>
+            <div class="text-center mb-12">
+                <h1 class="text-6xl font-orbit font-bold mb-2 tracking-tighter italic">NIK <span class="text-cyan-500">UP</span></h1>
+                <p class="text-gray-500 uppercase tracking-widest text-xs font-bold">Bangladesh's #1 Esports Network</p>
             </div>
 
-            <div class="glass rounded-[2.5rem] p-8">
-                <div class="flex bg-black/40 rounded-2xl p-1.5 mb-8 border border-white/5">
-                    <button id="tab-l" onclick="switchAuth('login')" class="flex-1 py-3 rounded-xl bg-cyan-500 font-bold transition-all">LOGIN</button>
-                    <button id="tab-r" onclick="switchAuth('reg')" class="flex-1 py-3 rounded-xl font-bold transition-all text-gray-500">SIGNUP</button>
+            <div class="glass p-10 rounded-[3rem] shadow-2xl">
+                <div class="flex bg-black/50 rounded-2xl p-1.5 mb-10 border border-white/5">
+                    <button id="t-login" onclick="switchAuth('login')" class="flex-1 py-3 rounded-xl bg-cyan-500 font-bold transition-all">SIGN IN</button>
+                    <button id="t-reg" onclick="switchAuth('reg')" class="flex-1 py-3 rounded-xl font-bold transition-all text-gray-500">SIGN UP</button>
                 </div>
 
-                <div id="l-form" class="space-y-5">
-                    <div class="relative">
-                        <i class="fas fa-id-badge absolute left-4 top-5 text-gray-500"></i>
-                        <input id="l-uid" type="text" placeholder="Free Fire UID" class="w-full pl-12 p-4 rounded-2xl outline-none">
+                <div id="login-box" class="space-y-6">
+                    <div class="space-y-2">
+                        <label class="text-[10px] text-gray-500 uppercase ml-2 font-bold tracking-widest">Player UID</label>
+                        <input id="l-uid" type="text" placeholder="Enter Game ID" class="w-full p-4 rounded-2xl outline-none transition-all">
                     </div>
-                    <div class="relative">
-                        <i class="fas fa-key absolute left-4 top-5 text-gray-500"></i>
-                        <input id="l-pass" type="password" placeholder="Password" class="w-full pl-12 p-4 rounded-2xl outline-none">
+                    <div class="space-y-2">
+                        <label class="text-[10px] text-gray-500 uppercase ml-2 font-bold tracking-widest">Access Key</label>
+                        <input id="l-pass" type="password" placeholder="••••••••" class="w-full p-4 rounded-2xl outline-none">
                     </div>
-                    <button onclick="app.login()" class="w-full bg-cyan-500 py-4 rounded-2xl font-bold text-lg shadow-lg shadow-cyan-500/20 active:scale-95 transition">SIGN IN</button>
+                    <button onclick="app.login()" class="w-full neon-btn py-5 rounded-2xl font-bold text-lg shadow-xl shadow-cyan-500/20">ENTER BATTLEFIELD</button>
                 </div>
 
-                <div id="r-form" class="hidden space-y-5">
-                    <input id="r-name" type="text" placeholder="Player Name" class="w-full p-4 rounded-2xl outline-none">
+                <div id="reg-box" class="hidden space-y-6">
+                    <input id="r-name" type="text" placeholder="Full Legal Name" class="w-full p-4 rounded-2xl outline-none">
                     <input id="r-uid" type="text" placeholder="Free Fire UID" class="w-full p-4 rounded-2xl outline-none">
-                    <input id="r-pass" type="password" placeholder="Set Password" class="w-full p-4 rounded-2xl outline-none">
-                    <button onclick="app.register()" class="w-full bg-cyan-500 py-4 rounded-2xl font-bold text-lg">JOIN ELITE</button>
+                    <input id="r-pass" type="password" placeholder="Create Access Key" class="w-full p-4 rounded-2xl outline-none">
+                    <button onclick="app.register()" class="w-full neon-btn py-5 rounded-2xl font-bold text-lg">INITIALIZE ACCOUNT</button>
                 </div>
             </div>
         </div>
     </div>
 
     <div id="home-page" class="page">
-        <header class="p-6 flex justify-between items-center glass border-b border-white/5 sticky top-0 z-50">
+        <header class="p-6 flex justify-between items-center sticky top-0 z-[100] glass border-b border-white/5">
             <div class="flex items-center gap-4">
-                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-cyan-600 to-blue-900 flex items-center justify-center border border-cyan-400/30">
-                    <i class="fas fa-user-ninja"></i>
+                <div class="w-14 h-14 rounded-2xl bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center">
+                    <i class="fas fa-user-shield text-cyan-400 text-2xl"></i>
                 </div>
                 <div>
-                    <h3 id="u-name" class="font-bold text-xl leading-tight">Loading...</h3>
-                    <p class="text-[10px] text-cyan-400 font-bold uppercase tracking-widest">Active Member</p>
+                    <h2 id="u-name" class="text-xl font-bold tracking-tight">Syncing...</h2>
+                    <div class="flex items-center gap-2">
+                        <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                        <span class="text-[10px] text-gray-500 font-bold uppercase tracking-widest">Server: Dhaka-01</span>
+                    </div>
                 </div>
             </div>
-            <div onclick="showPage('wallet-page')" class="bg-cyan-500/5 px-4 py-2 rounded-2xl border border-cyan-500/20 flex flex-col items-end cursor-pointer">
-                <span class="text-[9px] text-gray-500 uppercase">My Wallet</span>
-                <span id="u-balance" class="font-bold text-lg text-cyan-400">0.00 ৳</span>
+            <div onclick="showPage('wallet-page')" class="bg-black/50 px-5 py-2.5 rounded-2xl border border-white/10 text-right cursor-pointer">
+                <p class="text-[9px] text-gray-500 font-bold uppercase">Balance</p>
+                <p id="u-balance" class="text-xl font-orbit font-bold text-cyan-400">0.00</p>
             </div>
         </header>
 
-        <main class="p-6 space-y-8">
-            <div class="grid grid-cols-2 gap-4">
-                <div class="stat-card p-5 text-center">
-                    <p class="text-[10px] text-gray-500 uppercase font-bold mb-1">Total Matches</p>
-                    <h4 class="text-2xl font-bold font-orbit">0</h4>
-                </div>
-                <div class="stat-card p-5 text-center">
-                    <p class="text-[10px] text-gray-500 uppercase font-bold mb-1">Kills Count</p>
-                    <h4 class="text-2xl font-bold font-orbit text-red-500">0</h4>
+        <main class="p-6 space-y-10">
+            <div class="w-full h-52 rounded-[3rem] bg-gradient-to-br from-cyan-600 via-blue-900 to-black p-10 relative overflow-hidden flex flex-col justify-center">
+                <div class="absolute top-0 right-0 p-6 opacity-20"><i class="fas fa-gun text-9xl -rotate-12"></i></div>
+                <p class="text-xs font-bold text-cyan-300 mb-2 tracking-[0.3em] uppercase">Season Match</p>
+                <h3 class="text-3xl font-orbit font-bold leading-tight mb-4">GRAND FINALE<br>TOURNAMENT</h3>
+                <div class="flex gap-4">
+                    <button class="bg-white text-black px-6 py-2 rounded-xl text-xs font-bold">JOIN NOW</button>
+                    <button class="bg-white/10 px-6 py-2 rounded-xl text-xs font-bold border border-white/20">DETAILS</button>
                 </div>
             </div>
 
-            <div class="w-full h-44 rounded-[2.5rem] bg-gradient-to-br from-blue-900 to-black p-8 relative overflow-hidden flex flex-col justify-end">
-                <div class="absolute top-0 right-0 p-4 opacity-10"><i class="fas fa-shield-halved text-9xl"></i></div>
-                <h2 class="text-2xl font-bold mb-1">MEGA TOURNAMENT</h2>
-                <p class="text-xs text-gray-400">Registration is now open for Season 5</p>
-                <div class="mt-4 flex gap-2">
-                    <div class="w-8 h-1 bg-cyan-500 rounded-full"></div>
-                    <div class="w-2 h-1 bg-white/20 rounded-full"></div>
+            <div class="grid grid-cols-3 gap-4">
+                <div class="premium-card p-4 text-center">
+                    <p class="text-[9px] text-gray-500 uppercase font-bold mb-1">Wins</p>
+                    <h4 class="text-xl font-orbit font-bold">0</h4>
+                </div>
+                <div class="premium-card p-4 text-center">
+                    <p class="text-[9px] text-gray-500 uppercase font-bold mb-1">Kills</p>
+                    <h4 class="text-xl font-orbit font-bold text-red-500">0</h4>
+                </div>
+                <div class="premium-card p-4 text-center">
+                    <p class="text-[9px] text-gray-500 uppercase font-bold mb-1">Matches</p>
+                    <h4 class="text-xl font-orbit font-bold text-cyan-500">0</h4>
                 </div>
             </div>
 
             <div>
                 <div class="flex justify-between items-center mb-6">
-                    <h3 class="font-orbit font-bold text-lg flex items-center gap-2">
-                        <span class="w-1.5 h-6 bg-cyan-500 rounded-full"></span>
-                        LIVE TOURNAMENTS
+                    <h3 class="text-lg font-orbit font-bold flex items-center gap-3">
+                        <span class="w-1 h-8 bg-cyan-500 rounded-full"></span>
+                        LIVE ARENA
                     </h3>
-                    <i class="fas fa-sliders text-gray-500"></i>
+                    <button class="text-xs text-gray-500 font-bold border-b border-gray-800">VIEW ALL</button>
                 </div>
-                <div id="match-container" class="space-y-4">
-                    <div class="p-8 text-center text-gray-600">Syncing with cloud...</div>
-                </div>
+                <div id="match-list" class="space-y-5">
+                    </div>
             </div>
         </main>
     </div>
 
     <div id="wallet-page" class="page p-6">
-        <div class="flex items-center gap-4 mb-8">
-            <button onclick="showPage('home-page')" class="w-12 h-12 rounded-2xl glass flex items-center justify-center"><i class="fas fa-arrow-left"></i></button>
-            <h2 class="text-2xl font-orbit font-bold">WALLET</h2>
+        <div class="flex items-center gap-4 mb-10">
+            <button onclick="showPage('home-page')" class="w-14 h-14 rounded-2xl glass flex items-center justify-center"><i class="fas fa-chevron-left"></i></button>
+            <h2 class="text-2xl font-orbit font-bold uppercase tracking-widest">Cloud Wallet</h2>
         </div>
 
-        <div class="glass p-10 rounded-[3rem] border-b-8 border-cyan-500 mb-8 text-center">
-            <p class="text-gray-500 text-sm uppercase mb-3">Available Balance</p>
-            <h1 id="u-balance-big" class="text-6xl font-orbit font-bold">0</h1>
-            <div class="mt-6 inline-flex bg-cyan-500/10 px-4 py-2 rounded-full text-cyan-400 text-xs font-bold uppercase tracking-widest">Secure Cloud Storage</div>
+        <div class="glass p-12 rounded-[4rem] text-center border-b-8 border-cyan-500 mb-10">
+            <p class="text-gray-500 text-sm font-bold uppercase mb-4 tracking-widest">Current Holdings</p>
+            <h1 id="w-balance" class="text-7xl font-orbit font-bold mb-6 italic">0</h1>
+            <div class="inline-flex items-center gap-3 bg-cyan-500/10 px-6 py-2.5 rounded-full text-cyan-400 font-bold text-xs uppercase tracking-tighter">
+                <i class="fas fa-shield-check"></i> SSL Encrypted Storage
+            </div>
         </div>
 
-        <div class="glass p-8 rounded-[2.5rem] space-y-5">
-            <h3 class="font-bold text-lg mb-2">Deposit Funds</h3>
-            <select id="pay-type" class="w-full p-4 rounded-2xl outline-none appearance-none">
-                <option value="Bkash">Bkash (Personal)</option>
-                <option value="Nagad">Nagad (Personal)</option>
-            </select>
-            <input id="pay-amt" type="number" placeholder="Amount (Min: 10৳)" class="w-full p-4 rounded-2xl outline-none">
-            <input id="pay-info" type="text" placeholder="Sender Number / Transaction ID" class="w-full p-4 rounded-2xl outline-none">
-            
-            <div class="bg-blue-500/10 p-5 rounded-2xl border border-blue-500/20">
-                <p class="text-[10px] text-blue-400 uppercase font-bold mb-1">Payment Target:</p>
+        <div class="premium-card p-10 space-y-8">
+            <div class="space-y-4">
+                <h4 class="font-bold flex items-center gap-3"><i class="fas fa-plus-circle text-cyan-500"></i> Add Funds</h4>
+                <select id="p-method" class="w-full p-4 rounded-2xl outline-none">
+                    <option value="Bkash">Bkash (Personal)</option>
+                    <option value="Nagad">Nagad (Personal)</option>
+                </select>
+                <input id="p-amt" type="number" placeholder="Enter Amount (Min 10৳)" class="w-full p-4 rounded-2xl outline-none">
+                <input id="p-info" type="text" placeholder="Transaction ID or Sender Number" class="w-full p-4 rounded-2xl outline-none">
+            </div>
+
+            <div class="bg-black/50 p-6 rounded-3xl border border-white/5">
+                <div class="flex justify-between items-center mb-3">
+                    <p class="text-[10px] text-gray-500 font-bold uppercase">Official Admin Number</p>
+                    <span class="text-[10px] text-green-500 font-bold">● ACTIVE</span>
+                </div>
                 <div class="flex justify-between items-center">
-                    <p class="font-bold text-xl">01XXXXXXXXX</p>
-                    <button class="text-xs bg-blue-500 px-3 py-1 rounded-lg">COPY</button>
+                    <p class="text-2xl font-bold font-orbit">017XXXXXXXX</p>
+                    <button class="bg-cyan-500/20 text-cyan-400 px-4 py-1.5 rounded-xl text-xs font-bold">COPY</button>
                 </div>
             </div>
 
-            <button onclick="app.deposit()" class="w-full bg-cyan-500 py-4 rounded-2xl font-bold text-lg shadow-xl shadow-cyan-500/20">CONFIRM DEPOSIT</button>
+            <button onclick="app.submitDeposit()" class="w-full neon-btn py-5 rounded-2xl font-bold text-xl shadow-2xl">INITIATE DEPOSIT</button>
         </div>
     </div>
 
     <div id="admin-page" class="page p-6">
-        <div class="flex justify-between items-center mb-8">
-            <h2 class="text-2xl font-orbit font-bold text-red-500">ADMIN CONTROL</h2>
-            <div class="bg-red-500/10 px-4 py-1 rounded-full text-[10px] text-red-500 font-bold uppercase">System Admin</div>
-        </div>
+        <h2 class="text-3xl font-orbit font-bold mb-10 text-red-500">COMMAND CENTER</h2>
         
-        <div class="space-y-6">
-            <div class="glass p-6 rounded-[2.5rem] border border-red-500/20">
-                <h3 class="font-bold mb-4 flex items-center gap-2"><i class="fas fa-plus-circle text-red-500"></i> New Match</h3>
+        <div class="space-y-8">
+            <div class="premium-card p-8 border border-red-500/20">
+                <h3 class="font-bold mb-6 flex items-center gap-3"><i class="fas fa-folder-plus text-red-500"></i> New Operation</h3>
                 <div class="space-y-4">
-                    <input id="am-title" type="text" placeholder="Tournament Title" class="w-full p-4 rounded-2xl">
+                    <input id="adm-title" type="text" placeholder="Match Title" class="w-full p-4 rounded-2xl">
                     <div class="grid grid-cols-2 gap-4">
-                        <input id="am-fee" type="number" placeholder="Entry Fee" class="w-full p-4 rounded-2xl">
-                        <input id="am-prize" type="number" placeholder="Prize Pool" class="w-full p-4 rounded-2xl">
+                        <input id="adm-fee" type="number" placeholder="Entry Fee" class="w-full p-4 rounded-2xl">
+                        <input id="adm-prize" type="number" placeholder="Prize Pool" class="w-full p-4 rounded-2xl">
                     </div>
-                    <input id="am-time" type="text" placeholder="Match Time (e.g. 10:30 PM)" class="w-full p-4 rounded-2xl">
-                    <button onclick="app.adminCreateMatch()" class="w-full bg-red-600 py-4 rounded-2xl font-bold">PUBLISH MATCH</button>
+                    <input id="adm-time" type="text" placeholder="Match Time (Ex: 09:30 PM)" class="w-full p-4 rounded-2xl">
+                    <button onclick="app.createMatch()" class="w-full bg-red-600 py-4 rounded-2xl font-bold shadow-xl shadow-red-600/20">PUBLISH TO CLOUD</button>
                 </div>
             </div>
 
-            <div class="glass p-6 rounded-[2.5rem]">
-                <h3 class="font-bold mb-4">Pending Deposits</h3>
-                <div id="admin-pay-list" class="space-y-3">
-                    <p class="text-gray-600 text-center py-4 italic">No pending requests</p>
+            <div class="glass p-8 rounded-[3rem]">
+                <h3 class="font-bold mb-6">Pending Transactions</h3>
+                <div id="adm-pay-list" class="space-y-4 text-center text-gray-600 py-10">
+                    <i class="fas fa-inbox text-4xl mb-4 opacity-20"></i>
+                    <p>No active requests found</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <nav id="nav-bar" class="fixed bottom-0 w-full glass border-t border-white/5 p-5 flex justify-around items-center rounded-t-[3rem] z-50">
-        <button onclick="showPage('home-page')" class="nav-btn text-2xl text-cyan-400 transition-all"><i class="fas fa-home"></i></button>
-        <button onclick="showPage('matches-page')" class="nav-btn text-2xl text-gray-500"><i class="fas fa-gamepad"></i></button>
-        <button onclick="showPage('wallet-page')" class="nav-btn text-2xl text-gray-500"><i class="fas fa-wallet"></i></button>
-        <button onclick="showPage('profile-page')" class="nav-btn text-2xl text-gray-500"><i class="fas fa-user-gear"></i></button>
-        <button onclick="showPage('admin-page')" class="nav-btn text-2xl text-gray-900"><i class="fas fa-shield-halved"></i></button>
+    <nav id="nav-bar" class="fixed bottom-0 w-full glass border-t border-white/5 p-6 flex justify-around items-center rounded-t-[3.5rem] z-[150]">
+        <button onclick="showPage('home-page')" class="nav-i text-2xl text-gray-500 transition-all"><i class="fas fa-home-alt"></i></button>
+        <button onclick="showPage('history-page')" class="nav-i text-2xl text-gray-500 transition-all"><i class="fas fa-list-check"></i></button>
+        <button onclick="showPage('wallet-page')" class="nav-i text-2xl text-gray-500 transition-all"><i class="fas fa-wallet"></i></button>
+        <button onclick="showPage('admin-page')" class="nav-i text-3xl text-gray-800 transition-all"><i class="fas fa-shield-halved"></i></button>
     </nav>
 
     <script>
-        // UI Navigation
+        // UI Navigation Engine
         function showPage(id) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            const target = document.getElementById(id);
-            if(target) target.classList.add('active');
+            const p = document.getElementById(id);
+            if(p) p.classList.add('active');
+
+            // Nav Highlight
+            const navIcons = document.querySelectorAll('.nav-i');
+            navIcons.forEach(i => i.classList.remove('nav-active'));
+            const idx = ['home-page', 'history-page', 'wallet-page', 'admin-page'].indexOf(id);
+            if(idx !== -1) navIcons[idx].classList.add('nav-active');
             
-            // Nav Visuals
+            // Toggle nav bar
             document.getElementById('nav-bar').style.display = (id === 'auth-page') ? 'none' : 'flex';
-            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.replace('text-cyan-400', 'text-gray-500'));
-            
-            const btnIdx = ['home-page', 'matches-page', 'wallet-page', 'profile-page', 'admin-page'].indexOf(id);
-            if(btnIdx !== -1) document.querySelectorAll('.nav-btn')[btnIdx].classList.replace('text-gray-500', 'text-cyan-400');
         }
 
-        function switchAuth(type) {
-            document.getElementById('l-form').classList.toggle('hidden', type === 'reg');
-            document.getElementById('r-form').classList.toggle('hidden', type === 'login');
-            document.getElementById('tab-l').className = type === 'login' ? 'flex-1 py-3 rounded-xl bg-cyan-500 font-bold' : 'flex-1 py-3 rounded-xl font-bold text-gray-500';
-            document.getElementById('tab-r').className = type === 'reg' ? 'flex-1 py-3 rounded-xl bg-cyan-500 font-bold' : 'flex-1 py-3 rounded-xl font-bold text-gray-500';
+        function switchAuth(mode) {
+            document.getElementById('login-box').classList.toggle('hidden', mode === 'reg');
+            document.getElementById('reg-box').classList.toggle('hidden', mode === 'login');
+            document.getElementById('t-login').className = mode === 'login' ? 'flex-1 py-3 rounded-xl bg-cyan-500 font-bold transition-all' : 'flex-1 py-3 rounded-xl font-bold transition-all text-gray-500';
+            document.getElementById('t-reg').className = mode === 'reg' ? 'flex-1 py-3 rounded-xl bg-cyan-500 font-bold transition-all' : 'flex-1 py-3 rounded-xl font-bold transition-all text-gray-500';
         }
 
-        // The App Logic
+        // The Master App Object
         const app = {
-            state: { user: JSON.parse(localStorage.getItem('shg_session')), matches: [] },
+            state: {
+                user: JSON.parse(localStorage.getItem('shg_session')) || null,
+                matches: []
+            },
 
             init: function() {
                 setTimeout(() => {
@@ -248,143 +266,103 @@
                         document.getElementById('splash').style.display = 'none';
                         if(this.state.user) {
                             showPage('home-page');
-                            this.startSync();
+                            this.syncData();
                         } else {
                             showPage('auth-page');
                         }
                     }, 500);
-                }, 2000);
+                }, 2500);
             },
 
-            // Authentication
             register: async function() {
-                const n = document.getElementById('r-name').value, 
-                      u = document.getElementById('r-uid').value, 
-                      p = document.getElementById('r-pass').value;
-
-                if(!n || !u || !p) return alert("Fill all fields!");
+                const n = document.getElementById('r-name').value, u = document.getElementById('r-uid').value, p = document.getElementById('r-pass').value;
+                if(!n || !u || !p) return alert("All fields are mandatory!");
 
                 try {
                     const { doc, setDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
-                    const userData = { name: n, uid: u, pass: p, balance: 0, rank: "SOLDIER", total_wins: 0, timestamp: Date.now() };
-                    
-                    await setDoc(doc(window.db, "users", u), userData);
-                    this.state.user = userData;
-                    localStorage.setItem('shg_session', JSON.stringify(userData));
+                    const data = { name: n, uid: u, pass: p, balance: 0, rank: "SOLDIER", wins: 0, kills: 0, timestamp: Date.now() };
+                    await setDoc(doc(window.db, "users", u), data);
+                    this.state.user = data;
+                    localStorage.setItem('shg_session', JSON.stringify(data));
                     location.reload();
-                } catch(e) { alert("Registration Failed! Firestore error."); }
+                } catch(e) { alert("Registration Failed! Firestore Error."); }
             },
 
             login: async function() {
-                const u = document.getElementById('l-uid').value, 
-                      p = document.getElementById('l-pass').value;
-
+                const u = document.getElementById('l-uid').value, p = document.getElementById('l-pass').value;
                 try {
                     const { doc, getDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
                     const snap = await getDoc(doc(window.db, "users", u));
-
                     if(snap.exists() && snap.data().pass === p) {
                         this.state.user = snap.data();
                         localStorage.setItem('shg_session', JSON.stringify(this.state.user));
                         location.reload();
-                    } else {
-                        alert("Invalid Credentials!");
-                    }
-                } catch(e) { alert("Login failed! Check connection."); }
+                    } else { alert("UID or Password Mismatch!"); }
+                } catch(e) { alert("Login connection failed!"); }
             },
 
-            // Wallet
-            deposit: async function() {
-                const m = document.getElementById('pay-type').value,
-                      a = document.getElementById('pay-amt').value,
-                      i = document.getElementById('pay-info').value;
-
-                if(!a || a < 10) return alert("Minimum deposit 10৳");
-                if(!i) return alert("Transaction info missing!");
-
+            submitDeposit: async function() {
+                const m = document.getElementById('p-method').value, a = document.getElementById('p-amt').value, i = document.getElementById('p-info').value;
+                if(!a || !i) return alert("Fill deposit info!");
                 try {
                     const { collection, addDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
-                    await addDoc(collection(window.db, "payments"), {
-                        uid: this.state.user.uid,
-                        method: m,
-                        amount: parseFloat(a),
-                        info: i,
-                        status: "Pending",
-                        time: new Date().toLocaleString()
-                    });
-                    alert("Deposit request submitted! Admin will verify soon.");
+                    await addDoc(collection(window.db, "payments"), { uid: this.state.user.uid, method: m, amount: parseFloat(a), info: i, status: "Pending", time: new Date().toLocaleString() });
+                    alert("Deposit Logged! Admin will verify soon.");
                     showPage('home-page');
-                } catch(e) { alert("Error sending request!"); }
+                } catch(e) { alert("Cloud error!"); }
             },
 
-            // Admin Actions
-            adminCreateMatch: async function() {
-                const t = document.getElementById('am-title').value,
-                      f = document.getElementById('am-fee').value,
-                      p = document.getElementById('am-prize').value,
-                      tm = document.getElementById('am-time').value;
-
-                if(!t || !f) return alert("Match details required!");
-
+            createMatch: async function() {
+                const t = document.getElementById('adm-title').value, f = document.getElementById('adm-fee').value, p = document.getElementById('adm-prize').value, tm = document.getElementById('adm-time').value;
+                if(!t || !f) return alert("Fill Match Info!");
                 try {
                     const { collection, addDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
-                    await addDoc(collection(window.db, "matches"), {
-                        title: t, fee: parseFloat(f), prize: parseFloat(p), time: tm, timestamp: Date.now()
-                    });
-                    alert("Tournament published successfully!");
-                    document.querySelectorAll('#admin-page input').forEach(i => i.value = "");
-                } catch(e) { alert("Publish failed!"); }
+                    await addDoc(collection(window.db, "matches"), { title: t, fee: parseFloat(f), prize: parseFloat(p), time: tm, status: "OPEN", timestamp: Date.now() });
+                    alert("Match Published!");
+                    document.querySelectorAll('#admin-page input').forEach(inp => inp.value = "");
+                } catch(e) { alert("Admin sync failed!"); }
             },
 
-            // Rendering Match List
             renderMatches: function() {
-                const container = document.getElementById('match-container');
-                if(this.state.matches.length === 0) {
-                    container.innerHTML = `<div class="p-10 text-center text-gray-600">No active matches found.</div>`;
-                    return;
-                }
+                const list = document.getElementById('match-list');
+                if(!this.state.matches.length) { list.innerHTML = `<p class='text-center text-gray-700 py-10'>Searching for missions...</p>`; return; }
                 
-                container.innerHTML = this.state.matches.map(m => `
-                    <div class="match-card p-6 border-l-4 border-cyan-500">
-                        <div class="flex justify-between items-start mb-5">
+                list.innerHTML = this.state.matches.map(m => `
+                    <div class="premium-card p-6 border-l-[6px] border-cyan-500 flex flex-col gap-5">
+                        <div class="flex justify-between items-start">
                             <div>
-                                <h4 class="font-bold text-xl tracking-wide">${m.title}</h4>
-                                <p class="text-xs text-gray-500 uppercase mt-1"><i class="far fa-clock mr-1 text-cyan-500"></i> ${m.time}</p>
+                                <h4 class="text-xl font-bold tracking-wide">${m.title}</h4>
+                                <p class="text-[10px] text-gray-500 uppercase tracking-widest mt-1"><i class="far fa-clock mr-1 text-cyan-400"></i> ${m.time}</p>
                             </div>
-                            <div class="bg-cyan-500/10 px-4 py-2 rounded-xl text-right">
-                                <span class="block text-[10px] text-cyan-400 font-bold uppercase">Entry Fee</span>
-                                <span class="text-lg font-bold">৳${m.fee}</span>
-                            </div>
-                        </div>
-                        <div class="grid grid-cols-3 gap-2 mb-5">
-                            <div class="bg-black/20 p-2 rounded-xl text-center">
-                                <p class="text-[8px] text-gray-500 uppercase">Prize Pool</p>
-                                <p class="text-xs font-bold text-yellow-500">৳${m.prize}</p>
-                            </div>
-                            <div class="bg-black/20 p-2 rounded-xl text-center">
-                                <p class="text-[8px] text-gray-500 uppercase">Type</p>
-                                <p class="text-xs font-bold">SOLO</p>
-                            </div>
-                            <div class="bg-black/20 p-2 rounded-xl text-center">
-                                <p class="text-[8px] text-gray-500 uppercase">Map</p>
-                                <p class="text-xs font-bold">BERMUDA</p>
+                            <div class="text-right">
+                                <span class="text-[9px] text-gray-500 font-bold uppercase block">Entry Fee</span>
+                                <span class="text-xl font-bold font-orbit text-cyan-400">৳${m.fee}</span>
                             </div>
                         </div>
-                        <button onclick="app.joinMatch('${m.id}')" class="w-full bg-white/5 hover:bg-cyan-500 py-3 rounded-2xl text-sm font-bold transition-all border border-white/5">JOIN TOURNAMENT</button>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="bg-black/40 p-3 rounded-2xl flex items-center justify-center gap-3">
+                                <i class="fas fa-trophy text-yellow-500"></i>
+                                <div class="text-left"><p class="text-[8px] text-gray-500 uppercase leading-none">Pool</p><p class="text-sm font-bold">৳${m.prize}</p></div>
+                            </div>
+                            <div class="bg-black/40 p-3 rounded-2xl flex items-center justify-center gap-3">
+                                <i class="fas fa-users text-cyan-500"></i>
+                                <div class="text-left"><p class="text-[8px] text-gray-500 uppercase leading-none">Status</p><p class="text-sm font-bold">${m.status}</p></div>
+                            </div>
+                        </div>
+                        <button onclick="app.joinMatch('${m.id}')" class="w-full bg-white/5 hover:bg-cyan-500 py-3 rounded-2xl text-sm font-bold transition-all border border-white/5">JOIN MISSION</button>
                     </div>
                 `).join('');
             }
         };
 
-        // Initialize on Load
-        window.addEventListener('DOMContentLoaded', () => app.init());
+        window.onload = () => app.init();
     </script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
         import { getFirestore, collection, onSnapshot, query, orderBy, doc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
-        // CONFIG (Replace with your actual keys if needed)
+        // 🔥 APNAR FIREBASE CONFIG EKHANE BOSHARE HOBE 🔥
         const firebaseConfig = {
             apiKey: "AIzaSyCXeBxPtMScUNyoctZ61g7eUNy-...", 
             authDomain: "shgesports-15815.firebaseapp.com",
@@ -397,29 +375,32 @@
 
         const fApp = initializeApp(firebaseConfig);
         const db = getFirestore(fApp);
-        window.db = db; // Make global
+        window.db = db;
 
-        // 1. SYNC MATCHES (REAL-TIME)
+        // Cloud Synchronization Listeners
+        
+        // 1. Live Match Feed
         const qMatches = query(collection(db, "matches"), orderBy("timestamp", "desc"));
         onSnapshot(qMatches, (snapshot) => {
             app.state.matches = snapshot.docs.map(d => ({id: d.id, ...d.data()}));
             app.renderMatches();
         });
 
-        // 2. SYNC USER DATA (REAL-TIME BALANCE)
+        // 2. Real-time User Balance & Level
         if(app.state.user) {
             onSnapshot(doc(db, "users", app.state.user.uid), (d) => {
                 if(d.exists()) {
-                    app.state.user = d.data();
-                    localStorage.setItem('shg_session', JSON.stringify(app.state.user));
+                    const data = d.data();
+                    app.state.user = data;
+                    localStorage.setItem('shg_session', JSON.stringify(data));
                     
-                    // Update UI Elements
-                    document.getElementById('u-name').innerText = app.state.user.name;
-                    document.getElementById('u-balance').innerText = app.state.user.balance + ".00 ৳";
-                    document.getElementById('u-balance-big').innerText = app.state.user.balance;
+                    // Live UI Updates
+                    document.getElementById('u-name').innerText = data.name;
+                    document.getElementById('u-balance').innerText = data.balance.toFixed(2);
+                    document.getElementById('w-balance').innerText = data.balance.toFixed(0);
                 }
             });
         }
     </script>
 </body>
-</html>
+                 </html>
