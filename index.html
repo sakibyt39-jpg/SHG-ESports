@@ -1,261 +1,278 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SHG亗ESports | Premium ESports Platform</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>NIK TOP UP | Ultimate ESports Management</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;600;700&display=swap');
         
         :root {
             --primary: #00d4ff;
             --secondary: #7000ff;
-            --bg: #030812;
-            --glass: rgba(255, 255, 255, 0.03);
-            --neon-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+            --accent: #ff0055;
+            --bg: #020617;
+            --glass: rgba(15, 23, 42, 0.8);
+            --neon-glow: 0 0 15px rgba(0, 212, 255, 0.4);
         }
 
-        body {
-            font-family: 'Rajdhani', sans-serif;
-            background: var(--bg);
-            color: #e0e6ed;
-            overflow-x: hidden;
-            background-image: radial-gradient(circle at 50% 50%, #0a192f 0%, #030812 100%);
-        }
-
-        .font-orbit { font-family: 'Orbitron', sans-serif; }
+        * { -webkit-tap-highlight-color: transparent; }
+        body { font-family: 'Rajdhani', sans-serif; background: var(--bg); color: #f1f5f9; overflow-x: hidden; }
         
-        /* UI Components */
-        .glass { background: var(--glass); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        .neon-btn { background: linear-gradient(90deg, var(--primary), var(--secondary)); box-shadow: var(--neon-shadow); transition: 0.3s; }
-        .neon-btn:hover { transform: scale(1.02); filter: brightness(1.1); }
+        /* Premium Aesthetics */
+        .glass { background: var(--glass); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .neon-text { text-shadow: var(--neon-glow); color: var(--primary); }
+        .neon-border { border: 1px solid var(--primary); box-shadow: var(--neon-glow); }
         
-        .page { display: none; min-height: 100vh; padding-bottom: 100px; animation: slideUp 0.4s ease-out; }
+        /* Page Transitions */
+        .page { display: none; min-height: 100vh; padding-bottom: 100px; animation: pageIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
         .active { display: block; }
+        @keyframes pageIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        /* Custom Components */
+        .match-card { background: linear-gradient(145deg, rgba(30, 41, 59, 0.5), rgba(15, 23, 42, 0.8)); border-radius: 24px; transition: 0.3s; }
+        .match-card:active { transform: scale(0.98); }
+        .stat-card { background: rgba(255,255,255,0.02); border-radius: 20px; border: 1px solid rgba(255,255,255,0.05); }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
-
-        input, select { background: rgba(255,255,255,0.05) !important; border: 1px solid rgba(255,255,255,0.1) !important; color: white !important; transition: 0.3s; }
-        input:focus { border-color: var(--primary) !important; box-shadow: 0 0 10px rgba(0, 212, 255, 0.2); }
+        
+        input, select { background: rgba(0,0,0,0.3) !important; border: 1px solid rgba(255,255,255,0.1) !important; color: white !important; }
     </style>
 </head>
 <body>
 
-    <div id="splash" class="fixed inset-0 z-[100] bg-[#030812] flex flex-col items-center justify-center">
-        <div class="w-20 h-20 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-        <h1 class="text-2xl font-orbit font-bold text-cyan-400 tracking-widest animate-pulse">NIK TOP UP</h1>
+    <div id="splash" class="fixed inset-0 z-[100] bg-[#020617] flex flex-col items-center justify-center">
+        <div class="relative w-24 h-24 mb-6">
+            <div class="absolute inset-0 border-4 border-cyan-500/20 rounded-full"></div>
+            <div class="absolute inset-0 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>
+            <div class="absolute inset-4 bg-cyan-500/10 rounded-full flex items-center justify-center font-bold text-cyan-500 font-orbit">NIK</div>
+        </div>
+        <h1 class="text-2xl font-bold tracking-[0.3em] neon-text font-orbit">NIK TOP UP</h1>
     </div>
 
-    <div id="auth-page" class="page flex items-center justify-center p-4">
-        <div class="glass w-full max-w-md p-8 rounded-[2.5rem] border-t-2 border-cyan-500/50">
-            <div class="text-center mb-8">
-                <h2 class="text-4xl font-orbit font-bold text-white mb-2">WELCOME</h2>
-                <p class="text-gray-500 text-sm tracking-widest">CONNECT TO THE FUTURE</p>
+    <div id="auth-page" class="page flex items-center justify-center p-6">
+        <div class="w-full max-w-md">
+            <div class="text-center mb-10">
+                <h2 class="text-5xl font-orbit font-bold mb-2">ESPORTS</h2>
+                <p class="text-gray-500 tracking-[0.5em] text-xs uppercase">The Next Generation</p>
             </div>
 
-            <div class="flex bg-black/40 rounded-2xl p-1.5 mb-8 border border-white/5">
-                <button id="tab-login" onclick="switchAuth('login')" class="flex-1 py-3 rounded-xl bg-cyan-600 font-bold">LOGIN</button>
-                <button id="tab-reg" onclick="switchAuth('reg')" class="flex-1 py-3 rounded-xl font-bold">SIGNUP</button>
-            </div>
-
-            <div id="login-section" class="space-y-5">
-                <div class="relative">
-                    <i class="fas fa-id-card absolute left-4 top-1/2 -translate-y-1/2 text-cyan-500"></i>
-                    <input id="l-uid" type="text" placeholder="Free Fire UID" class="w-full pl-12 p-4 rounded-2xl outline-none">
+            <div class="glass rounded-[2.5rem] p-8">
+                <div class="flex bg-black/40 rounded-2xl p-1.5 mb-8 border border-white/5">
+                    <button id="tab-l" onclick="switchAuth('login')" class="flex-1 py-3 rounded-xl bg-cyan-500 font-bold transition-all">LOGIN</button>
+                    <button id="tab-r" onclick="switchAuth('reg')" class="flex-1 py-3 rounded-xl font-bold transition-all text-gray-500">SIGNUP</button>
                 </div>
-                <div class="relative">
-                    <i class="fas fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-cyan-500"></i>
-                    <input id="l-pass" type="password" placeholder="Password" class="w-full pl-12 p-4 rounded-2xl outline-none">
-                </div>
-                <button onclick="app.login()" class="w-full neon-btn py-4 rounded-2xl font-bold text-lg">LOG IN</button>
-            </div>
 
-            <div id="reg-section" class="hidden space-y-5">
-                <input id="r-name" type="text" placeholder="Full Name" class="w-full p-4 rounded-2xl outline-none">
-                <input id="r-uid" type="text" placeholder="Game UID" class="w-full p-4 rounded-2xl outline-none">
-                <input id="r-pass" type="password" placeholder="Create Password" class="w-full p-4 rounded-2xl outline-none">
-                <button onclick="app.register()" class="w-full neon-btn py-4 rounded-2xl font-bold text-lg">CREATE ACCOUNT</button>
+                <div id="l-form" class="space-y-5">
+                    <div class="relative">
+                        <i class="fas fa-id-badge absolute left-4 top-5 text-gray-500"></i>
+                        <input id="l-uid" type="text" placeholder="Free Fire UID" class="w-full pl-12 p-4 rounded-2xl outline-none">
+                    </div>
+                    <div class="relative">
+                        <i class="fas fa-key absolute left-4 top-5 text-gray-500"></i>
+                        <input id="l-pass" type="password" placeholder="Password" class="w-full pl-12 p-4 rounded-2xl outline-none">
+                    </div>
+                    <button onclick="app.login()" class="w-full bg-cyan-500 py-4 rounded-2xl font-bold text-lg shadow-lg shadow-cyan-500/20 active:scale-95 transition">SIGN IN</button>
+                </div>
+
+                <div id="r-form" class="hidden space-y-5">
+                    <input id="r-name" type="text" placeholder="Player Name" class="w-full p-4 rounded-2xl outline-none">
+                    <input id="r-uid" type="text" placeholder="Free Fire UID" class="w-full p-4 rounded-2xl outline-none">
+                    <input id="r-pass" type="password" placeholder="Set Password" class="w-full p-4 rounded-2xl outline-none">
+                    <button onclick="app.register()" class="w-full bg-cyan-500 py-4 rounded-2xl font-bold text-lg">JOIN ELITE</button>
+                </div>
             </div>
         </div>
     </div>
 
     <div id="home-page" class="page">
-        <header class="p-6 sticky top-0 z-40 glass border-b border-white/5 flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-500 to-purple-600 flex items-center justify-center font-bold text-xl">N</div>
+        <header class="p-6 flex justify-between items-center glass border-b border-white/5 sticky top-0 z-50">
+            <div class="flex items-center gap-4">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-cyan-600 to-blue-900 flex items-center justify-center border border-cyan-400/30">
+                    <i class="fas fa-user-ninja"></i>
+                </div>
                 <div>
-                    <h3 id="u-name" class="font-bold text-lg leading-tight">...</h3>
-                    <p class="text-[10px] text-cyan-400 tracking-widest uppercase">Elite Member</p>
+                    <h3 id="u-name" class="font-bold text-xl leading-tight">Loading...</h3>
+                    <p class="text-[10px] text-cyan-400 font-bold uppercase tracking-widest">Active Member</p>
                 </div>
             </div>
-            <div onclick="showPage('wallet-page')" class="bg-black/40 px-4 py-2 rounded-2xl border border-white/10 flex flex-col items-end cursor-pointer">
-                <span class="text-[9px] text-gray-500 uppercase">Balance</span>
-                <span id="u-balance" class="font-bold text-cyan-400">0.00 ৳</span>
+            <div onclick="showPage('wallet-page')" class="bg-cyan-500/5 px-4 py-2 rounded-2xl border border-cyan-500/20 flex flex-col items-end cursor-pointer">
+                <span class="text-[9px] text-gray-500 uppercase">My Wallet</span>
+                <span id="u-balance" class="font-bold text-lg text-cyan-400">0.00 ৳</span>
             </div>
         </header>
 
         <main class="p-6 space-y-8">
-            <div class="w-full h-40 rounded-[2rem] bg-gradient-to-r from-blue-900 to-purple-900 relative overflow-hidden flex items-center p-8">
-                <div class="relative z-10">
-                    <h2 class="text-2xl font-bold">Season 15</h2>
-                    <p class="text-sm opacity-70">Register now for Mega Prize!</p>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="stat-card p-5 text-center">
+                    <p class="text-[10px] text-gray-500 uppercase font-bold mb-1">Total Matches</p>
+                    <h4 class="text-2xl font-bold font-orbit">0</h4>
                 </div>
-                <i class="fas fa-trophy absolute -right-4 -bottom-4 text-8xl opacity-10 rotate-12"></i>
-            </div>
-
-            <div class="grid grid-cols-4 gap-4">
-                <div onclick="showPage('wallet-page')" class="flex flex-col items-center gap-2">
-                    <div class="w-14 h-14 rounded-2xl glass flex items-center justify-center text-cyan-400"><i class="fas fa-plus"></i></div>
-                    <span class="text-xs">Deposit</span>
-                </div>
-                <div class="flex flex-col items-center gap-2">
-                    <div class="w-14 h-14 rounded-2xl glass flex items-center justify-center text-purple-400"><i class="fas fa-history"></i></div>
-                    <span class="text-xs">History</span>
-                </div>
-                <div class="flex flex-col items-center gap-2">
-                    <div class="w-14 h-14 rounded-2xl glass flex items-center justify-center text-yellow-400"><i class="fas fa-gift"></i></div>
-                    <span class="text-xs">Rewards</span>
-                </div>
-                <div onclick="window.open('https://wa.me/YOURNUMBER')" class="flex flex-col items-center gap-2">
-                    <div class="w-14 h-14 rounded-2xl glass flex items-center justify-center text-green-400"><i class="fab fa-whatsapp"></i></div>
-                    <span class="text-xs">Support</span>
+                <div class="stat-card p-5 text-center">
+                    <p class="text-[10px] text-gray-500 uppercase font-bold mb-1">Kills Count</p>
+                    <h4 class="text-2xl font-bold font-orbit text-red-500">0</h4>
                 </div>
             </div>
 
-            <section>
-                <div class="flex justify-between items-center mb-5">
+            <div class="w-full h-44 rounded-[2.5rem] bg-gradient-to-br from-blue-900 to-black p-8 relative overflow-hidden flex flex-col justify-end">
+                <div class="absolute top-0 right-0 p-4 opacity-10"><i class="fas fa-shield-halved text-9xl"></i></div>
+                <h2 class="text-2xl font-bold mb-1">MEGA TOURNAMENT</h2>
+                <p class="text-xs text-gray-400">Registration is now open for Season 5</p>
+                <div class="mt-4 flex gap-2">
+                    <div class="w-8 h-1 bg-cyan-500 rounded-full"></div>
+                    <div class="w-2 h-1 bg-white/20 rounded-full"></div>
+                </div>
+            </div>
+
+            <div>
+                <div class="flex justify-between items-center mb-6">
                     <h3 class="font-orbit font-bold text-lg flex items-center gap-2">
                         <span class="w-1.5 h-6 bg-cyan-500 rounded-full"></span>
-                        LIVE MATCHES
+                        LIVE TOURNAMENTS
                     </h3>
-                    <span class="text-xs text-cyan-400 animate-pulse font-bold">● LIVE NOW</span>
+                    <i class="fas fa-sliders text-gray-500"></i>
                 </div>
                 <div id="match-container" class="space-y-4">
-                    </div>
-            </section>
+                    <div class="p-8 text-center text-gray-600">Syncing with cloud...</div>
+                </div>
+            </div>
         </main>
     </div>
 
     <div id="wallet-page" class="page p-6">
         <div class="flex items-center gap-4 mb-8">
-            <button onclick="showPage('home-page')" class="w-10 h-10 rounded-xl glass flex items-center justify-center"><i class="fas fa-chevron-left"></i></button>
-            <h2 class="text-xl font-bold">WALLET CENTER</h2>
+            <button onclick="showPage('home-page')" class="w-12 h-12 rounded-2xl glass flex items-center justify-center"><i class="fas fa-arrow-left"></i></button>
+            <h2 class="text-2xl font-orbit font-bold">WALLET</h2>
         </div>
 
-        <div class="glass p-8 rounded-[2.5rem] border-b-4 border-cyan-500 mb-8 text-center">
-            <p class="text-gray-500 text-sm uppercase mb-2">Available Funds</p>
-            <h1 id="u-balance-big" class="text-5xl font-orbit font-bold text-white mb-4">0</h1>
-            <p class="text-xs text-cyan-400">Cloud Synchronized ✅</p>
+        <div class="glass p-10 rounded-[3rem] border-b-8 border-cyan-500 mb-8 text-center">
+            <p class="text-gray-500 text-sm uppercase mb-3">Available Balance</p>
+            <h1 id="u-balance-big" class="text-6xl font-orbit font-bold">0</h1>
+            <div class="mt-6 inline-flex bg-cyan-500/10 px-4 py-2 rounded-full text-cyan-400 text-xs font-bold uppercase tracking-widest">Secure Cloud Storage</div>
         </div>
 
-        <div class="glass p-6 rounded-[2rem] space-y-5">
-            <h3 class="font-bold">Add Money</h3>
-            <select id="dep-method" class="w-full p-4 rounded-2xl outline-none">
+        <div class="glass p-8 rounded-[2.5rem] space-y-5">
+            <h3 class="font-bold text-lg mb-2">Deposit Funds</h3>
+            <select id="pay-type" class="w-full p-4 rounded-2xl outline-none appearance-none">
                 <option value="Bkash">Bkash (Personal)</option>
                 <option value="Nagad">Nagad (Personal)</option>
             </select>
-            <input id="dep-amount" type="number" placeholder="Enter Amount (৳)" class="w-full p-4 rounded-2xl outline-none">
-            <input id="dep-info" type="text" placeholder="Transaction ID or Last 4 Digits" class="w-full p-4 rounded-2xl outline-none">
-            <button onclick="app.submitDeposit()" class="w-full neon-btn py-4 rounded-2xl font-bold">REQUEST DEPOSIT</button>
+            <input id="pay-amt" type="number" placeholder="Amount (Min: 10৳)" class="w-full p-4 rounded-2xl outline-none">
+            <input id="pay-info" type="text" placeholder="Sender Number / Transaction ID" class="w-full p-4 rounded-2xl outline-none">
+            
+            <div class="bg-blue-500/10 p-5 rounded-2xl border border-blue-500/20">
+                <p class="text-[10px] text-blue-400 uppercase font-bold mb-1">Payment Target:</p>
+                <div class="flex justify-between items-center">
+                    <p class="font-bold text-xl">01XXXXXXXXX</p>
+                    <button class="text-xs bg-blue-500 px-3 py-1 rounded-lg">COPY</button>
+                </div>
+            </div>
+
+            <button onclick="app.deposit()" class="w-full bg-cyan-500 py-4 rounded-2xl font-bold text-lg shadow-xl shadow-cyan-500/20">CONFIRM DEPOSIT</button>
         </div>
     </div>
 
     <div id="admin-page" class="page p-6">
-        <h2 class="text-2xl font-orbit font-bold mb-8 text-red-500">SYSTEM CONTROL</h2>
-        
-        <div class="glass p-6 rounded-[2rem] mb-8 space-y-4 border border-red-500/20">
-            <h3 class="font-bold border-b border-white/10 pb-2">Launch New Tournament</h3>
-            <input id="adm-m-title" type="text" placeholder="Tournament Name" class="w-full p-3 rounded-xl">
-            <div class="grid grid-cols-2 gap-4">
-                <input id="adm-m-fee" type="number" placeholder="Entry Fee" class="w-full p-3 rounded-xl">
-                <input id="adm-m-prize" type="number" placeholder="Total Prize" class="w-full p-3 rounded-xl">
-            </div>
-            <input id="adm-m-time" type="text" placeholder="Date & Time (e.g. 9:00 PM)" class="w-full p-3 rounded-xl">
-            <button onclick="app.createMatch()" class="w-full bg-red-600 py-3 rounded-xl font-bold">PUBLISH TO CLOUD</button>
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-2xl font-orbit font-bold text-red-500">ADMIN CONTROL</h2>
+            <div class="bg-red-500/10 px-4 py-1 rounded-full text-[10px] text-red-500 font-bold uppercase">System Admin</div>
         </div>
-
-        <div class="glass p-6 rounded-[2rem]">
-            <h3 class="font-bold mb-4">Pending Requests</h3>
-            <div id="admin-pay-list" class="space-y-3">
+        
+        <div class="space-y-6">
+            <div class="glass p-6 rounded-[2.5rem] border border-red-500/20">
+                <h3 class="font-bold mb-4 flex items-center gap-2"><i class="fas fa-plus-circle text-red-500"></i> New Match</h3>
+                <div class="space-y-4">
+                    <input id="am-title" type="text" placeholder="Tournament Title" class="w-full p-4 rounded-2xl">
+                    <div class="grid grid-cols-2 gap-4">
+                        <input id="am-fee" type="number" placeholder="Entry Fee" class="w-full p-4 rounded-2xl">
+                        <input id="am-prize" type="number" placeholder="Prize Pool" class="w-full p-4 rounded-2xl">
+                    </div>
+                    <input id="am-time" type="text" placeholder="Match Time (e.g. 10:30 PM)" class="w-full p-4 rounded-2xl">
+                    <button onclick="app.adminCreateMatch()" class="w-full bg-red-600 py-4 rounded-2xl font-bold">PUBLISH MATCH</button>
                 </div>
+            </div>
+
+            <div class="glass p-6 rounded-[2.5rem]">
+                <h3 class="font-bold mb-4">Pending Deposits</h3>
+                <div id="admin-pay-list" class="space-y-3">
+                    <p class="text-gray-600 text-center py-4 italic">No pending requests</p>
+                </div>
+            </div>
         </div>
     </div>
 
-    <nav id="nav-bar" class="fixed bottom-0 w-full glass border-t border-white/10 p-5 flex justify-around items-center rounded-t-[2.5rem] z-[50]">
-        <button onclick="showPage('home-page')" class="nav-icon text-2xl text-cyan-400"><i class="fas fa-home"></i></button>
-        <button onclick="showPage('matches-page')" class="nav-icon text-2xl text-gray-500"><i class="fas fa-trophy"></i></button>
-        <button onclick="showPage('wallet-page')" class="nav-icon text-2xl text-gray-500"><i class="fas fa-wallet"></i></button>
-        <button onclick="showPage('admin-page')" class="nav-icon text-2xl text-gray-800"><i class="fas fa-user-shield"></i></button>
+    <nav id="nav-bar" class="fixed bottom-0 w-full glass border-t border-white/5 p-5 flex justify-around items-center rounded-t-[3rem] z-50">
+        <button onclick="showPage('home-page')" class="nav-btn text-2xl text-cyan-400 transition-all"><i class="fas fa-home"></i></button>
+        <button onclick="showPage('matches-page')" class="nav-btn text-2xl text-gray-500"><i class="fas fa-gamepad"></i></button>
+        <button onclick="showPage('wallet-page')" class="nav-btn text-2xl text-gray-500"><i class="fas fa-wallet"></i></button>
+        <button onclick="showPage('profile-page')" class="nav-btn text-2xl text-gray-500"><i class="fas fa-user-gear"></i></button>
+        <button onclick="showPage('admin-page')" class="nav-btn text-2xl text-gray-900"><i class="fas fa-shield-halved"></i></button>
     </nav>
 
     <script>
-        // Global UI Handlers
+        // UI Navigation
         function showPage(id) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
+            const target = document.getElementById(id);
+            if(target) target.classList.add('active');
             
-            // Nav visibility
+            // Nav Visuals
             document.getElementById('nav-bar').style.display = (id === 'auth-page') ? 'none' : 'flex';
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.replace('text-cyan-400', 'text-gray-500'));
             
-            // Nav active color
-            document.querySelectorAll('.nav-icon').forEach(i => i.classList.replace('text-cyan-400', 'text-gray-500'));
-            const index = ['home-page', 'matches-page', 'wallet-page', 'admin-page'].indexOf(id);
-            if(index !== -1) document.querySelectorAll('.nav-icon')[index].classList.replace('text-gray-500', 'text-cyan-400');
+            const btnIdx = ['home-page', 'matches-page', 'wallet-page', 'profile-page', 'admin-page'].indexOf(id);
+            if(btnIdx !== -1) document.querySelectorAll('.nav-btn')[btnIdx].classList.replace('text-gray-500', 'text-cyan-400');
         }
 
         function switchAuth(type) {
-            document.getElementById('login-section').classList.toggle('hidden', type === 'reg');
-            document.getElementById('reg-section').classList.toggle('hidden', type === 'login');
-            document.getElementById('tab-login').className = type === 'login' ? 'flex-1 py-3 rounded-xl bg-cyan-600 font-bold' : 'flex-1 py-3 rounded-xl font-bold';
-            document.getElementById('tab-reg').className = type === 'reg' ? 'flex-1 py-3 rounded-xl bg-cyan-600 font-bold' : 'flex-1 py-3 rounded-xl font-bold';
+            document.getElementById('l-form').classList.toggle('hidden', type === 'reg');
+            document.getElementById('r-form').classList.toggle('hidden', type === 'login');
+            document.getElementById('tab-l').className = type === 'login' ? 'flex-1 py-3 rounded-xl bg-cyan-500 font-bold' : 'flex-1 py-3 rounded-xl font-bold text-gray-500';
+            document.getElementById('tab-r').className = type === 'reg' ? 'flex-1 py-3 rounded-xl bg-cyan-500 font-bold' : 'flex-1 py-3 rounded-xl font-bold text-gray-500';
         }
 
-        // The Master App Logic
+        // The App Logic
         const app = {
-            state: {
-                user: JSON.parse(localStorage.getItem('shg_session')) || null,
-                matches: []
-            },
+            state: { user: JSON.parse(localStorage.getItem('shg_session')), matches: [] },
 
-            // [Firebase Powered Functions]
             init: function() {
                 setTimeout(() => {
-                    document.getElementById('splash').style.display = 'none';
-                    if(this.state.user) {
-                        showPage('home-page');
-                        this.syncUser();
-                    } else {
-                        showPage('auth-page');
-                    }
+                    document.getElementById('splash').style.opacity = '0';
+                    setTimeout(() => {
+                        document.getElementById('splash').style.display = 'none';
+                        if(this.state.user) {
+                            showPage('home-page');
+                            this.startSync();
+                        } else {
+                            showPage('auth-page');
+                        }
+                    }, 500);
                 }, 2000);
             },
 
+            // Authentication
             register: async function() {
                 const n = document.getElementById('r-name').value, 
                       u = document.getElementById('r-uid').value, 
                       p = document.getElementById('r-pass').value;
 
-                if(!n || !u || !p) return alert("Please fill all fields!");
+                if(!n || !u || !p) return alert("Fill all fields!");
 
                 try {
                     const { doc, setDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
-                    const userData = { name: n, uid: u, pass: p, balance: 0, rank: "SOLDIER", totalMatches: 0 };
+                    const userData = { name: n, uid: u, pass: p, balance: 0, rank: "SOLDIER", total_wins: 0, timestamp: Date.now() };
                     
                     await setDoc(doc(window.db, "users", u), userData);
                     this.state.user = userData;
                     localStorage.setItem('shg_session', JSON.stringify(userData));
                     location.reload();
-                } catch(e) { alert("Registration failed! Check internet."); }
+                } catch(e) { alert("Registration Failed! Firestore error."); }
             },
 
             login: async function() {
@@ -273,15 +290,17 @@
                     } else {
                         alert("Invalid Credentials!");
                     }
-                } catch(e) { alert("Login failed!"); }
+                } catch(e) { alert("Login failed! Check connection."); }
             },
 
-            submitDeposit: async function() {
-                const m = document.getElementById('dep-method').value,
-                      a = document.getElementById('dep-amount').value,
-                      i = document.getElementById('dep-info').value;
+            // Wallet
+            deposit: async function() {
+                const m = document.getElementById('pay-type').value,
+                      a = document.getElementById('pay-amt').value,
+                      i = document.getElementById('pay-info').value;
 
-                if(!a || !i) return alert("Enter amount & info!");
+                if(!a || a < 10) return alert("Minimum deposit 10৳");
+                if(!i) return alert("Transaction info missing!");
 
                 try {
                     const { collection, addDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
@@ -291,62 +310,83 @@
                         amount: parseFloat(a),
                         info: i,
                         status: "Pending",
-                        timestamp: Date.now()
+                        time: new Date().toLocaleString()
                     });
-                    alert("Request submitted! Wait for admin approval.");
+                    alert("Deposit request submitted! Admin will verify soon.");
                     showPage('home-page');
                 } catch(e) { alert("Error sending request!"); }
             },
 
-            createMatch: async function() {
-                const t = document.getElementById('adm-m-title').value,
-                      f = document.getElementById('adm-m-fee').value,
-                      p = document.getElementById('adm-m-prize').value,
-                      tm = document.getElementById('adm-m-time').value;
+            // Admin Actions
+            adminCreateMatch: async function() {
+                const t = document.getElementById('am-title').value,
+                      f = document.getElementById('am-fee').value,
+                      p = document.getElementById('am-prize').value,
+                      tm = document.getElementById('am-time').value;
 
-                if(!t || !f) return alert("Fill data!");
+                if(!t || !f) return alert("Match details required!");
 
                 try {
                     const { collection, addDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
                     await addDoc(collection(window.db, "matches"), {
-                        title: t, fee: parseFloat(f), prize: parseFloat(p), time: tm, timestamp: Date.now(), players: 0
+                        title: t, fee: parseFloat(f), prize: parseFloat(p), time: tm, timestamp: Date.now()
                     });
-                    alert("Tournament is now LIVE!");
+                    alert("Tournament published successfully!");
                     document.querySelectorAll('#admin-page input').forEach(i => i.value = "");
-                } catch(e) { alert("Failed to publish!"); }
+                } catch(e) { alert("Publish failed!"); }
             },
 
+            // Rendering Match List
             renderMatches: function() {
                 const container = document.getElementById('match-container');
+                if(this.state.matches.length === 0) {
+                    container.innerHTML = `<div class="p-10 text-center text-gray-600">No active matches found.</div>`;
+                    return;
+                }
+                
                 container.innerHTML = this.state.matches.map(m => `
-                    <div class="glass p-5 rounded-[2rem] border-l-4 border-cyan-500 relative">
-                        <div class="flex justify-between items-start mb-4">
+                    <div class="match-card p-6 border-l-4 border-cyan-500">
+                        <div class="flex justify-between items-start mb-5">
                             <div>
-                                <h4 class="font-bold text-lg">${m.title}</h4>
-                                <p class="text-xs text-gray-500 uppercase tracking-tighter">${m.time}</p>
+                                <h4 class="font-bold text-xl tracking-wide">${m.title}</h4>
+                                <p class="text-xs text-gray-500 uppercase mt-1"><i class="far fa-clock mr-1 text-cyan-500"></i> ${m.time}</p>
                             </div>
-                            <div class="text-right">
-                                <p class="text-xs text-gray-500 uppercase">Entry</p>
-                                <p class="font-bold text-cyan-400">৳${m.fee}</p>
+                            <div class="bg-cyan-500/10 px-4 py-2 rounded-xl text-right">
+                                <span class="block text-[10px] text-cyan-400 font-bold uppercase">Entry Fee</span>
+                                <span class="text-lg font-bold">৳${m.fee}</span>
                             </div>
                         </div>
-                        <div class="flex justify-between items-center bg-black/20 p-3 rounded-2xl">
-                            <div class="text-center"><p class="text-[9px] uppercase text-gray-500">Prize Pool</p><p class="text-sm font-bold text-yellow-500">৳${m.prize}</p></div>
-                            <div class="text-center"><p class="text-[9px] uppercase text-gray-500">Players</p><p class="text-sm font-bold">24/48</p></div>
-                            <button onclick="app.joinMatch('${m.id}')" class="bg-cyan-500 px-6 py-2 rounded-xl text-xs font-bold text-black">JOIN</button>
+                        <div class="grid grid-cols-3 gap-2 mb-5">
+                            <div class="bg-black/20 p-2 rounded-xl text-center">
+                                <p class="text-[8px] text-gray-500 uppercase">Prize Pool</p>
+                                <p class="text-xs font-bold text-yellow-500">৳${m.prize}</p>
+                            </div>
+                            <div class="bg-black/20 p-2 rounded-xl text-center">
+                                <p class="text-[8px] text-gray-500 uppercase">Type</p>
+                                <p class="text-xs font-bold">SOLO</p>
+                            </div>
+                            <div class="bg-black/20 p-2 rounded-xl text-center">
+                                <p class="text-[8px] text-gray-500 uppercase">Map</p>
+                                <p class="text-xs font-bold">BERMUDA</p>
+                            </div>
                         </div>
+                        <button onclick="app.joinMatch('${m.id}')" class="w-full bg-white/5 hover:bg-cyan-500 py-3 rounded-2xl text-sm font-bold transition-all border border-white/5">JOIN TOURNAMENT</button>
                     </div>
                 `).join('');
             }
         };
+
+        // Initialize on Load
+        window.addEventListener('DOMContentLoaded', () => app.init());
     </script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
         import { getFirestore, collection, onSnapshot, query, orderBy, doc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
+        // CONFIG (Replace with your actual keys if needed)
         const firebaseConfig = {
-            apiKey: "AIzaSyCXeBxPtMScUNyoctZ61g7eUNy-...", // Apnar nijer key ekhane bosiye diben
+            apiKey: "AIzaSyCXeBxPtMScUNyoctZ61g7eUNy-...", 
             authDomain: "shgesports-15815.firebaseapp.com",
             projectId: "shgesports-15815",
             storageBucket: "shgesports-15815.appspot.com",
@@ -357,32 +397,29 @@
 
         const fApp = initializeApp(firebaseConfig);
         const db = getFirestore(fApp);
-        window.db = db;
+        window.db = db; // Make global
 
-        // Start App
-        app.init();
-
-        // 1. Real-time Match Updates
+        // 1. SYNC MATCHES (REAL-TIME)
         const qMatches = query(collection(db, "matches"), orderBy("timestamp", "desc"));
         onSnapshot(qMatches, (snapshot) => {
             app.state.matches = snapshot.docs.map(d => ({id: d.id, ...d.data()}));
             app.renderMatches();
         });
 
-        // 2. Real-time User Balance & Data Updates
+        // 2. SYNC USER DATA (REAL-TIME BALANCE)
         if(app.state.user) {
             onSnapshot(doc(db, "users", app.state.user.uid), (d) => {
                 if(d.exists()) {
                     app.state.user = d.data();
                     localStorage.setItem('shg_session', JSON.stringify(app.state.user));
                     
-                    // UI Updates
+                    // Update UI Elements
                     document.getElementById('u-name').innerText = app.state.user.name;
-                    document.getElementById('u-balance').innerText = app.state.user.balance + " ৳";
+                    document.getElementById('u-balance').innerText = app.state.user.balance + ".00 ৳";
                     document.getElementById('u-balance-big').innerText = app.state.user.balance;
                 }
             });
         }
     </script>
 </body>
-        </html>
+</html>
