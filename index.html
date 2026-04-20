@@ -3,224 +3,503 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SHG亗ESPORTS | Cloud Management</title>
+    <title>SHG亗ESPORTS | The Ultimate Battle Hub</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@500;700&display=swap');
-        
-        :root { --sky: #00eeff; --bg: #030712; --glass: rgba(255, 255, 255, 0.03); }
-        body { background: var(--bg); color: #e2e8f0; font-family: 'Rajdhani', sans-serif; }
-        .font-orbit { font-family: 'Orbitron', sans-serif; }
-        .sky-border { border: 1px solid rgba(0, 238, 255, 0.2); }
-        .glass { background: var(--glass); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        
-        .page { display: none; padding-top: 80px; padding-bottom: 120px; animation: fadeIn 0.4s ease; }
-        .active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Rajdhani:wght@300;400;500;600;700&display=swap');
 
-        input, select { background: rgba(0,0,0,0.5) !important; border: 1px solid rgba(0, 238, 255, 0.2) !important; color: white !important; border-radius: 12px !important; }
-        .nav-active { color: var(--sky); filter: drop-shadow(0 0 8px var(--sky)); }
+        /* --- THEME CONFIG --- */
+        :root {
+            --sky: #00eeff;
+            --sky-glow: rgba(0, 238, 255, 0.4);
+            --deep-black: #020617;
+            --glass: rgba(15, 23, 42, 0.8);
+            --card-border: rgba(255, 255, 255, 0.05);
+            --neon-red: #ff0055;
+        }
+
+        body {
+            background-color: var(--deep-black);
+            color: #f8fafc;
+            font-family: 'Rajdhani', sans-serif;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+            background-image: 
+                radial-gradient(circle at 0% 0%, rgba(0, 238, 255, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(0, 238, 255, 0.05) 0%, transparent 50%);
+        }
+
+        .font-orbit { font-family: 'Orbitron', sans-serif; }
+
+        /* --- ADVANCED UI UTILITIES --- */
+        .glass { background: var(--glass); backdrop-filter: blur(20px); border: 1px solid var(--card-border); }
+        .sky-glow-text { text-shadow: 0 0 10px var(--sky-glow); color: var(--sky); }
+        .sky-btn { background: linear-gradient(135deg, #00eeff, #0088ff); color: #000; box-shadow: 0 0 20px var(--sky-glow); }
+        .sky-border { border: 1px solid var(--sky); }
+        .neon-box { box-shadow: inset 0 0 15px var(--sky-glow); border: 1px solid var(--sky); }
+
+        /* --- PAGE SYSTEM --- */
+        .page { display: none; min-height: 100vh; padding-bottom: 120px; animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .page.active { display: block; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- CUSTOM INPUTS --- */
+        input, select, textarea {
+            background: rgba(0,0,0,0.4) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            color: white !important;
+            transition: 0.3s;
+        }
+        input:focus { border-color: var(--sky) !important; box-shadow: 0 0 10px var(--sky-glow); }
+
+        /* --- NAV STYLING --- */
+        .nav-item { color: #64748b; transition: 0.3s; }
+        .nav-item.active { color: var(--sky); transform: translateY(-5px); }
+
+        /* --- SCROLLBAR --- */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: var(--sky); border-radius: 10px; }
+
+        /* --- BADGES --- */
+        .badge-verified { background: var(--sky); color: #000; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div id="loader" class="fixed inset-0 z-[2000] bg-black flex flex-col items-center justify-center">
-        <div class="w-16 h-16 border-4 border-sky-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-        <p class="font-orbit text-xs tracking-widest animate-pulse">SYNCING WITH FIREBASE...</p>
-    </div>
-
-    <header id="main-header" class="fixed top-0 w-full z-[100] glass px-6 py-4 flex justify-between items-center hidden">
-        <div class="flex items-center gap-3">
-            <h1 class="text-xl font-orbit font-bold tracking-tighter">SHG <span class="text-sky-400 italic">亗ESPORTS</span></h1>
+    <div id="shg-loader" class="fixed inset-0 z-[9999] bg-[#020617] flex flex-col items-center justify-center">
+        <div class="relative w-24 h-24 mb-6">
+            <div class="absolute inset-0 border-b-4 border-sky-400 rounded-full animate-spin"></div>
+            <div class="absolute inset-2 border-t-4 border-white/10 rounded-full animate-spin-slow"></div>
+            <div class="absolute inset-0 flex items-center justify-center font-orbit text-2xl font-bold italic sky-glow-text">SHG</div>
         </div>
-        <div onclick="showPage('wallet-page')" class="bg-sky-500/10 px-4 py-1.5 rounded-xl border border-sky-500/20 text-right cursor-pointer">
-            <p class="text-[8px] text-gray-500 uppercase font-bold leading-none">Wallet</p>
-            <p id="u-balance" class="text-lg font-bold text-sky-400">0 ৳</p>
-        </div>
-    </header>
-
-    <div id="auth-page" class="page active px-6 flex items-center justify-center min-h-screen pt-0">
-        <div class="w-full max-w-sm glass p-8 rounded-[2.5rem] sky-border">
-            <div class="text-center mb-8">
-                <h2 class="text-3xl font-orbit font-bold">WELCOME <span class="text-sky-400">BACK</span></h2>
-            </div>
-            <div class="space-y-4">
-                <input id="l-uid" type="text" placeholder="Game UID" class="w-full p-4 outline-none">
-                <input id="l-pass" type="password" placeholder="Password" class="w-full p-4 outline-none">
-                <button onclick="app.login()" class="w-full bg-sky-500 text-black py-4 rounded-2xl font-bold text-lg">LOGIN ACCOUNT</button>
-                <p class="text-center text-xs text-gray-500 uppercase tracking-widest mt-4">OR</p>
-                <button onclick="app.register()" class="w-full bg-white/5 border border-white/10 py-4 rounded-2xl font-bold">CREATE NEW ID</button>
+        <div class="text-center">
+            <p class="font-orbit tracking-[0.6em] text-xs mb-2">INITIALIZING CORE</p>
+            <div class="w-48 h-1 bg-white/10 rounded-full overflow-hidden">
+                <div id="load-bar" class="w-0 h-full bg-sky-500 transition-all duration-1000"></div>
             </div>
         </div>
     </div>
 
-    <div id="home-page" class="page px-6">
-        <div class="mb-8">
-            <h3 class="text-lg font-orbit font-bold flex items-center gap-3">
-                <span class="w-1.5 h-6 bg-sky-400 rounded-full"></span> LIVE TOURNAMENTS
-            </h3>
+    <div id="notice-overlay" class="fixed inset-0 z-[1000] bg-black/80 flex items-center justify-center hidden px-6">
+        <div class="glass max-w-md w-full p-8 rounded-[2rem] sky-border text-center">
+            <i class="fas fa-bullhorn text-4xl text-sky-400 mb-4"></i>
+            <h3 id="notice-title" class="text-2xl font-orbit font-bold mb-3">SYSTEM MESSAGE</h3>
+            <p id="notice-body" class="text-gray-400 mb-6 leading-relaxed"></p>
+            <button onclick="closeNotice()" class="sky-btn w-full py-3 rounded-xl font-bold">ACKNOWLEDGED</button>
         </div>
-        <div id="match-container" class="space-y-5">
+    </div>
+
+    <nav id="bottom-nav" class="fixed bottom-0 w-full glass z-[500] border-t border-white/5 p-5 rounded-t-[3rem] flex justify-around items-center hidden">
+        <button onclick="showPage('home-page')" class="nav-item active text-2xl"><i class="fas fa-house"></i><p class="text-[9px] font-bold mt-1">HOME</p></button>
+        <button onclick="showPage('matches-page')" class="nav-item text-2xl"><i class="fas fa-gamepad"></i><p class="text-[9px] font-bold mt-1">GAMES</p></button>
+        <button onclick="showPage('wallet-page')" class="nav-item text-2xl"><i class="fas fa-wallet"></i><p class="text-[9px] font-bold mt-1">WALLET</p></button>
+        <button onclick="showPage('leaderboard-page')" class="nav-item text-2xl"><i class="fas fa-trophy"></i><p class="text-[9px] font-bold mt-1">RANKS</p></button>
+        <button onclick="showPage('profile-page')" class="nav-item text-2xl"><i class="fas fa-user-gear"></i><p class="text-[9px] font-bold mt-1">PROFILE</p></button>
+    </nav>
+
+    <div id="auth-page" class="page active flex items-center justify-center p-6 pt-0">
+        <div class="w-full max-w-md">
+            <div class="text-center mb-12">
+                <h1 class="text-6xl font-orbit font-bold tracking-tighter italic">SHG <span class="text-sky-400">亗</span></h1>
+                <p class="text-[10px] text-gray-500 uppercase tracking-[0.5em] mt-2">Elite Esports Network</p>
             </div>
-    </div>
 
-    <div id="wallet-page" class="page px-6">
-        <div class="glass p-10 rounded-[3rem] text-center mb-8 sky-border">
-            <p class="text-gray-500 text-xs font-bold uppercase mb-2">Available Balance</p>
-            <h1 id="w-balance" class="text-6xl font-orbit font-bold italic">0</h1>
-        </div>
+            <div class="glass p-8 rounded-[3rem] shadow-2xl">
+                <div id="auth-toggle" class="flex bg-black/40 rounded-2xl p-1.5 mb-8 border border-white/5">
+                    <button id="btn-login" onclick="setAuth('login')" class="flex-1 py-3 rounded-xl bg-sky-500 text-black font-bold transition-all">SIGN IN</button>
+                    <button id="btn-reg" onclick="setAuth('reg')" class="flex-1 py-3 rounded-xl text-gray-500 font-bold transition-all">JOIN US</button>
+                </div>
 
-        <div class="grid grid-cols-2 gap-4 mb-8">
-            <button onclick="toggleFinance('deposit')" class="bg-sky-500 text-black py-4 rounded-2xl font-bold">DEPOSIT</button>
-            <button onclick="toggleFinance('withdraw')" class="glass py-4 rounded-2xl font-bold border-white/10 border">WITHDRAW</button>
-        </div>
-
-        <div id="deposit-box" class="glass p-6 rounded-3xl sky-border mb-6">
-            <h4 class="font-bold mb-4">Add Money (Bkash/Nagad)</h4>
-            <input id="d-amt" type="number" placeholder="Amount" class="w-full p-3 mb-3">
-            <input id="d-trx" type="text" placeholder="Transaction ID" class="w-full p-3 mb-4">
-            <button onclick="app.submitFinance('deposit')" class="w-full bg-sky-600/20 text-sky-400 border border-sky-400/30 py-3 rounded-xl font-bold">SUBMIT DEPOSIT</button>
-        </div>
-
-        <div id="withdraw-box" class="hidden glass p-6 rounded-3xl border-red-500/20 border mb-6">
-            <h4 class="font-bold mb-4 text-red-400">Request Withdrawal</h4>
-            <input id="w-amt" type="number" placeholder="Amount" class="w-full p-3 mb-3">
-            <input id="w-num" type="text" placeholder="Phone Number" class="w-full p-3 mb-4">
-            <button onclick="app.submitFinance('withdraw')" class="w-full bg-red-600/20 text-red-400 border border-red-400/30 py-3 rounded-xl font-bold">SUBMIT WITHDRAW</button>
-        </div>
-    </div>
-
-    <div id="admin-page" class="page px-6">
-        <h2 class="text-2xl font-orbit font-bold text-red-500 italic mb-8">ADMIN CONSOLE</h2>
-        
-        <div class="flex gap-4 mb-8 overflow-x-auto pb-2">
-            <button onclick="admTab('m')" class="whitespace-nowrap px-6 py-2 bg-sky-500 rounded-full text-black font-bold text-xs">MATCHES</button>
-            <button onclick="admTab('d')" class="whitespace-nowrap px-6 py-2 glass rounded-full text-xs">DEPOSITS</button>
-            <button onclick="admTab('w')" class="whitespace-nowrap px-6 py-2 glass rounded-full text-xs">WITHDRAWALS</button>
-        </div>
-
-        <div id="adm-matches" class="space-y-6">
-            <div class="glass p-6 rounded-3xl border-white/10 border">
-                <h4 class="font-bold mb-4">Create Tournament</h4>
-                <div class="space-y-3">
-                    <input id="am-title" type="text" placeholder="Title" class="w-full p-3">
-                    <div class="grid grid-cols-2 gap-3">
-                        <input id="am-fee" type="number" placeholder="Fee" class="w-full p-3">
-                        <input id="am-prize" type="number" placeholder="Prize" class="w-full p-3">
+                <div id="login-ui" class="space-y-6">
+                    <div class="relative">
+                        <i class="fas fa-fingerprint absolute left-4 top-5 text-sky-500/50"></i>
+                        <input id="l-uid" type="text" placeholder="Gamer ID (UID)" class="w-full pl-12 p-4 rounded-2xl outline-none">
                     </div>
-                    <button onclick="app.admAddMatch()" class="w-full bg-sky-500 text-black py-3 rounded-xl font-bold">POST MATCH</button>
+                    <div class="relative">
+                        <i class="fas fa-shield-halved absolute left-4 top-5 text-sky-500/50"></i>
+                        <input id="l-pass" type="password" placeholder="Access Key" class="w-full pl-12 p-4 rounded-2xl outline-none">
+                    </div>
+                    <button onclick="core.login()" class="w-full sky-btn py-4 rounded-2xl font-bold text-lg">AUTHENTICATE</button>
+                </div>
+
+                <div id="reg-ui" class="hidden space-y-6">
+                    <input id="r-name" type="text" placeholder="Full Name" class="w-full p-4 rounded-2xl outline-none">
+                    <input id="r-uid" type="text" placeholder="Free Fire UID" class="w-full p-4 rounded-2xl outline-none">
+                    <input id="r-pass" type="password" placeholder="Create Access Key" class="w-full p-4 rounded-2xl outline-none">
+                    <button onclick="core.register()" class="w-full sky-btn py-4 rounded-2xl font-bold text-lg">CREATE OPERATOR</button>
                 </div>
             </div>
         </div>
-
-        <div id="adm-deposits" class="hidden space-y-3"></div>
-        <div id="adm-withdraws" class="hidden space-y-3"></div>
     </div>
 
-    <nav id="bottom-nav" class="fixed bottom-0 w-full glass border-t border-white/5 p-6 flex justify-around items-center rounded-t-[3rem] z-[150] hidden">
-        <button onclick="showPage('home-page')" class="nav-i text-2xl text-sky-400"><i class="fas fa-gamepad"></i></button>
-        <button onclick="showPage('wallet-page')" class="nav-i text-2xl text-gray-500"><i class="fas fa-wallet"></i></button>
-        <button onclick="showPage('admin-page')" class="nav-i text-3xl text-gray-800"><i class="fas fa-shield-halved"></i></button>
-    </nav>
+    <div id="home-page" class="page">
+        <header class="p-6 sticky top-0 z-[100] glass border-b border-white/5 flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <div class="w-14 h-14 rounded-2xl bg-sky-500/10 border border-sky-500/30 flex items-center justify-center overflow-hidden">
+                    <img id="u-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=SHG" class="w-full h-full">
+                </div>
+                <div>
+                    <h3 class="flex items-center gap-2">
+                        <span id="u-name-display" class="font-bold text-xl leading-none">Gamer</span>
+                        <span class="badge-verified">PRO</span>
+                    </h3>
+                    <p class="text-[9px] text-sky-400 font-bold uppercase tracking-widest mt-1">Status: Operational</p>
+                </div>
+            </div>
+            <button onclick="showPage('admin-page')" id="admin-trigger" class="hidden w-12 h-12 glass rounded-full flex items-center justify-center text-red-500 border-red-500/20">
+                <i class="fas fa-terminal"></i>
+            </button>
+        </header>
+
+        <main class="p-6 space-y-10">
+            <div class="w-full h-52 rounded-[3.5rem] bg-gradient-to-br from-sky-600 via-blue-900 to-black p-10 relative overflow-hidden flex flex-col justify-center sky-border">
+                <div class="absolute -right-10 -top-10 w-40 h-40 bg-sky-400/20 rounded-full blur-3xl"></div>
+                <p class="text-xs font-bold text-sky-200 mb-2 tracking-[0.3em] uppercase">Current Credits</p>
+                <h1 class="text-6xl font-orbit font-bold italic mb-4">৳<span id="u-bal-val">0.00</span></h1>
+                <div class="flex gap-4">
+                    <button onclick="showPage('wallet-page')" class="bg-white text-black px-8 py-2.5 rounded-2xl text-xs font-bold font-orbit">DEPOSIT</button>
+                    <button onclick="showPage('wallet-page')" class="bg-white/10 px-8 py-2.5 rounded-2xl text-xs font-bold font-orbit border border-white/20">WITHDRAW</button>
+                </div>
+            </div>
+
+            <div>
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-orbit font-bold flex items-center gap-3">
+                        <span class="w-1 h-8 bg-sky-500 rounded-full"></span> COMMAND LOG
+                    </h3>
+                </div>
+                <div id="news-container" class="space-y-4">
+                    <div class="glass p-5 rounded-3xl flex items-center gap-4">
+                        <div class="w-12 h-12 bg-sky-500/20 rounded-xl flex items-center justify-center text-sky-400"><i class="fas fa-star"></i></div>
+                        <div>
+                            <p class="font-bold text-sm">Welcome to Season 15</p>
+                            <p class="text-xs text-gray-500">The battle begins today at 10 PM.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="text-lg font-orbit font-bold">FEATURED BATTLE</h3>
+                    <button onclick="showPage('matches-page')" class="text-xs text-sky-400 font-bold uppercase tracking-widest">See All</button>
+                </div>
+                <div id="featured-match" class="space-y-5">
+                    </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="matches-page" class="page px-6 pt-10">
+        <h2 class="text-3xl font-orbit font-bold mb-10 italic">BATTLE <span class="text-sky-400">ARENA</span></h2>
+        
+        <div class="flex gap-4 overflow-x-auto pb-6 no-scrollbar">
+            <button class="bg-sky-500 text-black px-6 py-2.5 rounded-full font-bold text-xs whitespace-nowrap">ALL GAMES</button>
+            <button class="glass px-6 py-2.5 rounded-full font-bold text-xs whitespace-nowrap text-gray-500">SOLO</button>
+            <button class="glass px-6 py-2.5 rounded-full font-bold text-xs whitespace-nowrap text-gray-500">SQUAD</button>
+            <button class="glass px-6 py-2.5 rounded-full font-bold text-xs whitespace-nowrap text-gray-500">CS-RANKED</button>
+        </div>
+
+        <div id="all-matches-grid" class="space-y-6">
+            <div class="text-center py-20 opacity-20">
+                <i class="fas fa-radar text-6xl mb-4"></i>
+                <p class="font-orbit text-sm">SCANNING FOR SIGNALS...</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="wallet-page" class="page px-6 pt-10">
+        <div class="flex items-center gap-4 mb-10">
+            <button onclick="showPage('home-page')" class="w-12 h-12 glass rounded-2xl flex items-center justify-center"><i class="fas fa-chevron-left"></i></button>
+            <h2 class="text-2xl font-orbit font-bold">CLOUD WALLET</h2>
+        </div>
+
+        <div class="glass p-12 rounded-[4rem] text-center mb-10 sky-border shadow-2xl shadow-sky-500/5 relative overflow-hidden">
+            <div class="absolute top-0 right-0 p-6 opacity-5"><i class="fas fa-wallet text-9xl"></i></div>
+            <p class="text-gray-500 text-xs font-bold uppercase mb-4 tracking-[0.5em]">Total Capital</p>
+            <h1 class="text-7xl font-orbit font-bold mb-4 italic">৳<span id="w-bal-val">0</span></h1>
+            <div class="inline-flex items-center gap-3 bg-green-500/10 px-6 py-2 rounded-full text-green-400 font-bold text-[10px] uppercase">
+                <i class="fas fa-lock"></i> SECURED BY SHG-ENCRYPTION
+            </div>
+        </div>
+
+        <div class="glass p-8 rounded-[3rem] space-y-8">
+            <div class="flex bg-black/40 rounded-2xl p-1.5 border border-white/5">
+                <button id="tab-dep" onclick="setFinance('dep')" class="flex-1 py-3 rounded-xl bg-sky-500 text-black font-bold transition-all">DEPOSIT</button>
+                <button id="tab-wd" onclick="setFinance('wd')" class="flex-1 py-3 rounded-xl text-gray-500 font-bold transition-all">WITHDRAW</button>
+            </div>
+
+            <div id="dep-box" class="space-y-5">
+                <div class="bg-sky-500/5 p-6 rounded-3xl border border-sky-500/10 mb-4">
+                    <p class="text-[10px] text-sky-400 uppercase font-bold mb-2">Admin Mobile Banking</p>
+                    <div class="flex justify-between items-center">
+                        <p id="admin-number" class="text-2xl font-orbit font-bold tracking-widest">01XXXXXXXXX</p>
+                        <button onclick="copyAdminNum()" class="bg-sky-500/20 text-sky-400 px-4 py-1.5 rounded-xl text-[10px] font-bold">COPY</button>
+                    </div>
+                </div>
+                <select id="d-method" class="w-full p-4 rounded-2xl outline-none">
+                    <option value="Bkash">Bkash (Personal)</option>
+                    <option value="Nagad">Nagad (Personal)</option>
+                    <option value="Rocket">Rocket (Personal)</option>
+                </select>
+                <input id="d-amt" type="number" placeholder="Enter Amount (৳)" class="w-full p-4 rounded-2xl outline-none">
+                <input id="d-trx" type="text" placeholder="Transaction ID / Sender Number" class="w-full p-4 rounded-2xl outline-none">
+                <button onclick="core.submitDeposit()" class="w-full sky-btn py-4 rounded-2xl font-bold text-lg">CONFIRM DEPOSIT</button>
+            </div>
+
+            <div id="wd-box" class="hidden space-y-5">
+                <div class="bg-red-500/5 p-6 rounded-3xl border border-red-500/10 mb-4">
+                    <p class="text-[10px] text-red-400 uppercase font-bold mb-1">Notice</p>
+                    <p class="text-xs text-gray-500 italic">Withdrawals take 1-2 hours to process.</p>
+                </div>
+                <input id="w-num" type="text" placeholder="Wallet Number" class="w-full p-4 rounded-2xl outline-none">
+                <input id="w-amt" type="number" placeholder="Amount (Min 100৳)" class="w-full p-4 rounded-2xl outline-none">
+                <button onclick="core.submitWithdraw()" class="w-full bg-red-600 text-white py-4 rounded-2xl font-bold text-lg shadow-xl shadow-red-600/20">REQUEST WITHDRAW</button>
+            </div>
+        </div>
+
+        <div class="mt-12">
+            <h3 class="font-orbit font-bold mb-6 flex items-center gap-2">
+                <i class="fas fa-clock-rotate-left text-sky-400"></i> TRANSACTION LOG
+            </h3>
+            <div id="trans-history" class="space-y-4">
+                </div>
+        </div>
+    </div>
+
+    <div id="admin-page" class="page px-6 pt-10">
+        <div class="flex justify-between items-center mb-10">
+            <h2 class="text-3xl font-orbit font-bold text-red-500 italic">ADMIN <span class="text-white">OS</span></h2>
+            <button onclick="showPage('home-page')" class="bg-white/5 px-4 py-2 rounded-xl text-xs font-bold border border-white/10">EXIT</button>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 mb-10">
+            <div class="glass p-6 rounded-3xl border-red-500/10">
+                <p class="text-[9px] text-gray-500 uppercase font-bold">Total Players</p>
+                <h4 id="adm-total-players" class="text-2xl font-orbit font-bold">0</h4>
+            </div>
+            <div class="glass p-6 rounded-3xl border-red-500/10">
+                <p class="text-[9px] text-gray-500 uppercase font-bold">Cloud Revenue</p>
+                <h4 id="adm-total-rev" class="text-2xl font-orbit font-bold text-green-500">৳0</h4>
+            </div>
+        </div>
+
+        <div class="space-y-12">
+            
+            <div class="glass p-8 rounded-[3rem] border-red-500/20">
+                <h3 class="font-bold mb-6 flex items-center gap-3"><i class="fas fa-plus-circle text-red-500"></i> ADD TOURNAMENT</h3>
+                <div class="space-y-4">
+                    <input id="am-title" type="text" placeholder="Match Title" class="w-full p-4 rounded-2xl">
+                    <div class="grid grid-cols-2 gap-4">
+                        <input id="am-fee" type="number" placeholder="Entry Fee" class="w-full p-4 rounded-2xl">
+                        <input id="am-prize" type="number" placeholder="Prize Pool" class="w-full p-4 rounded-2xl">
+                    </div>
+                    <input id="am-time" type="text" placeholder="Time (Ex: 09:30 PM)" class="w-full p-4 rounded-2xl">
+                    <input id="am-map" type="text" placeholder="Map (Bermuda/Purgatory)" class="w-full p-4 rounded-2xl">
+                    <button onclick="core.admCreateMatch()" class="w-full bg-red-600 text-white py-4 rounded-2xl font-bold">PUBLISH MATCH</button>
+                </div>
+            </div>
+
+            <div>
+                <h3 class="font-orbit font-bold mb-6 flex items-center gap-3"><i class="fas fa-money-bill-transfer text-green-500"></i> DEPOSIT REQUESTS</h3>
+                <div id="adm-dep-list" class="space-y-4">
+                    </div>
+            </div>
+
+            <div>
+                <h3 class="font-orbit font-bold mb-6 flex items-center gap-3"><i class="fas fa-hand-holding-dollar text-red-500"></i> WITHDRAW REQUESTS</h3>
+                <div id="adm-wd-list" class="space-y-4">
+                    </div>
+            </div>
+
+            <div class="glass p-8 rounded-[3rem]">
+                <h3 class="font-bold mb-6">GLOBAL NOTIFICATION</h3>
+                <input id="an-title" type="text" placeholder="Notice Title" class="w-full p-4 rounded-2xl mb-4">
+                <textarea id="an-body" placeholder="Message Body..." class="w-full p-4 rounded-2xl h-32 mb-4"></textarea>
+                <button onclick="core.admSendNotice()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold">SEND TO ALL PLAYERS</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="leaderboard-page" class="page px-6 pt-10">
+        <h2 class="text-3xl font-orbit font-bold mb-10 italic">TOP <span class="text-sky-400">OPERATORS</span></h2>
+        <div id="ranks-list" class="space-y-4">
+            </div>
+    </div>
+
+    <div id="profile-page" class="page px-6 pt-10">
+        <div class="glass p-10 rounded-[3rem] text-center sky-border mb-8">
+            <div class="w-32 h-32 bg-sky-500/10 rounded-full mx-auto mb-6 flex items-center justify-center p-2 border-2 border-sky-500/30">
+                <img id="p-avatar" src="https://api.dicebear.com/7.x/avataaars/svg?seed=SHG" class="w-full h-full rounded-full">
+            </div>
+            <h2 id="p-name" class="text-3xl font-orbit font-bold">...</h2>
+            <p id="p-uid" class="text-gray-500 font-bold mt-1 tracking-widest uppercase">UID: ...</p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 mb-10">
+            <button onclick="core.logout()" class="glass py-5 rounded-3xl font-bold text-red-500 border-red-500/20"><i class="fas fa-sign-out-alt mr-2"></i> LOGOUT</button>
+            <button class="glass py-5 rounded-3xl font-bold text-sky-400"><i class="fas fa-share-nodes mr-2"></i> INVITE</button>
+        </div>
+    </div>
+
 
     <script>
+        // UI Helpers
         function showPage(id) {
             document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             
-            // Toggle Header/Nav
-            const isAuth = (id === 'auth-page');
-            document.getElementById('main-header').classList.toggle('hidden', isAuth);
-            document.getElementById('bottom-nav').classList.toggle('hidden', isAuth);
+            // Nav Bar Update
+            document.getElementById('bottom-nav').style.display = (id === 'auth-page') ? 'none' : 'flex';
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(i => i.classList.remove('active'));
+            const idx = ['home-page', 'matches-page', 'wallet-page', 'leaderboard-page', 'profile-page'].indexOf(id);
+            if(idx !== -1) navItems[idx].classList.add('active');
+            window.scrollTo(0,0);
         }
 
-        function toggleFinance(mode) {
-            document.getElementById('deposit-box').classList.toggle('hidden', mode === 'withdraw');
-            document.getElementById('withdraw-box').classList.toggle('hidden', mode === 'deposit');
+        function setAuth(mode) {
+            document.getElementById('login-ui').classList.toggle('hidden', mode === 'reg');
+            document.getElementById('reg-ui').classList.toggle('hidden', mode === 'login');
+            document.getElementById('btn-login').className = mode === 'login' ? 'flex-1 py-3 rounded-xl bg-sky-500 text-black font-bold' : 'flex-1 py-3 rounded-xl text-gray-500 font-bold';
+            document.getElementById('btn-reg').className = mode === 'reg' ? 'flex-1 py-3 rounded-xl bg-sky-500 text-black font-bold' : 'flex-1 py-3 rounded-xl text-gray-500 font-bold';
         }
 
-        function admTab(t) {
-            document.getElementById('adm-matches').classList.toggle('hidden', t !== 'm');
-            document.getElementById('adm-deposits').classList.toggle('hidden', t !== 'd');
-            document.getElementById('adm-withdraws').classList.toggle('hidden', t !== 'w');
+        function setFinance(mode) {
+            document.getElementById('dep-box').classList.toggle('hidden', mode === 'wd');
+            document.getElementById('wd-box').classList.toggle('hidden', mode === 'dep');
+            document.getElementById('tab-dep').className = mode === 'dep' ? 'flex-1 py-3 rounded-xl bg-sky-500 text-black font-bold' : 'flex-1 py-3 rounded-xl text-gray-500 font-bold';
+            document.getElementById('tab-wd').className = mode === 'wd' ? 'flex-1 py-3 rounded-xl bg-sky-500 text-black font-bold' : 'flex-1 py-3 rounded-xl text-gray-500 font-bold';
         }
 
-        const app = {
-            state: { user: JSON.parse(localStorage.getItem('shg_auth')) || null },
+        function closeNotice() { document.getElementById('notice-overlay').classList.add('hidden'); }
+
+        const core = {
+            state: { user: JSON.parse(localStorage.getItem('shg_session')) || null, matches: [] },
 
             init: function() {
+                const bar = document.getElementById('load-bar');
+                setTimeout(() => bar.style.width = '40%', 200);
+                setTimeout(() => bar.style.width = '70%', 1000);
                 setTimeout(() => {
-                    document.getElementById('loader').style.display = 'none';
-                    if(this.state.user) { showPage('home-page'); this.sync(); }
+                    bar.style.width = '100%';
+                    setTimeout(() => {
+                        document.getElementById('shg-loader').style.opacity = '0';
+                        setTimeout(() => {
+                            document.getElementById('shg-loader').style.display = 'none';
+                            if(this.state.user) { showPage('home-page'); this.boot(); }
+                            else { showPage('auth-page'); }
+                        }, 500);
+                    }, 500);
                 }, 2000);
             },
 
-            // Cloud Functions
+            // Authentication
             register: async function() {
-                const u = document.getElementById('l-uid').value, p = document.getElementById('l-pass').value;
-                if(!u || !p) return alert("Fill data!");
-                const { doc, setDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
-                const data = { uid: u, pass: p, balance: 0, role: "player" };
-                await setDoc(doc(window.db, "users", u), data);
-                this.state.user = data;
-                localStorage.setItem('shg_auth', JSON.stringify(data));
-                location.reload();
+                const n = document.getElementById('r-name').value, u = document.getElementById('r-uid').value, p = document.getElementById('r-pass').value;
+                if(!n || !u || !p) return Swal.fire('Error', 'Complete all protocols!', 'error');
+                
+                try {
+                    const { doc, setDoc, getDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
+                    const check = await getDoc(doc(window.db, "users", u));
+                    if(check.exists()) return Swal.fire('Error', 'UID already registered!', 'error');
+
+                    const userData = { name: n, uid: u, pass: p, balance: 0, role: "player", kills: 0, wins: 0, time: Date.now() };
+                    await setDoc(doc(window.db, "users", u), userData);
+                    this.state.user = userData;
+                    localStorage.setItem('shg_session', JSON.stringify(userData));
+                    location.reload();
+                } catch(e) { Swal.fire('Cloud Error', 'Sync failed!', 'error'); }
             },
 
             login: async function() {
                 const u = document.getElementById('l-uid').value, p = document.getElementById('l-pass').value;
-                const { doc, getDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
-                const snap = await getDoc(doc(window.db, "users", u));
-                if(snap.exists() && snap.data().pass === p) {
-                    this.state.user = snap.data();
-                    localStorage.setItem('shg_auth', JSON.stringify(this.state.user));
-                    location.reload();
-                } else alert("Invalid ID/Pass");
+                try {
+                    const { doc, getDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
+                    const snap = await getDoc(doc(window.db, "users", u));
+                    if(snap.exists() && snap.data().pass === p) {
+                        this.state.user = snap.data();
+                        localStorage.setItem('shg_session', JSON.stringify(this.state.user));
+                        location.reload();
+                    } else { Swal.fire('Failed', 'Identity mismatch!', 'warning'); }
+                } catch(e) { console.log(e); }
             },
 
-            submitFinance: async function(type) {
-                const amt = document.getElementById(type === 'deposit' ? 'd-amt' : 'w-amt').value;
-                const info = document.getElementById(type === 'deposit' ? 'd-trx' : 'w-num').value;
-                if(!amt || !info) return alert("Fields missing!");
+            logout: function() { localStorage.clear(); location.reload(); },
 
-                const { collection, addDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
-                await addDoc(collection(window.db, type === 'deposit' ? "deposits" : "withdraws"), {
-                    uid: this.state.user.uid, amount: parseFloat(amt), info: info, status: "pending", time: Date.now()
-                });
-                alert("Request Sent to Admin!");
-                location.reload();
+            // Financials
+            submitDeposit: async function() {
+                const m = document.getElementById('d-method').value, a = document.getElementById('d-amt').value, t = document.getElementById('d-trx').value;
+                if(!a || !t) return Swal.fire('Protocol Breach', 'Fill financial fields!', 'error');
+
+                try {
+                    const { collection, addDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
+                    await addDoc(collection(window.db, "deposits"), {
+                        uid: this.state.user.uid, name: this.state.user.name, amount: parseFloat(a), method: m, trx: t, status: "pending", timestamp: Date.now()
+                    });
+                    Swal.fire('Logged', 'Deposit request sent to cloud.', 'success');
+                    showPage('home-page');
+                } catch(e) { console.log(e); }
             },
 
-            admAddMatch: async function() {
-                const t = document.getElementById('am-title').value, f = document.getElementById('am-fee').value, p = document.getElementById('am-prize').value;
-                const { collection, addDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
-                await addDoc(collection(window.db, "matches"), { title: t, fee: f, prize: p, time: Date.now() });
-                alert("Match Posted!");
+            submitWithdraw: async function() {
+                const n = document.getElementById('w-num').value, a = document.getElementById('w-amt').value;
+                if(!n || !a) return alert("Fill data!");
+                if(this.state.user.balance < a) return Swal.fire('Insufficient Funds', 'Hack detected or low balance!', 'error');
+
+                try {
+                    const { collection, addDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
+                    await addDoc(collection(window.db, "withdraws"), {
+                        uid: this.state.user.uid, name: this.state.user.name, amount: parseFloat(a), number: n, status: "pending", timestamp: Date.now()
+                    });
+                    Swal.fire('Success', 'Withdrawal request transmitted.', 'success');
+                    showPage('home-page');
+                } catch(e) { }
             },
 
-            approveFin: async function(col, id, uid, amt) {
+            // Admin Logic
+            admCreateMatch: async function() {
+                const t = document.getElementById('am-title').value, f = document.getElementById('am-fee').value, p = document.getElementById('am-prize').value, tm = document.getElementById('am-time').value, m = document.getElementById('am-map').value;
+                try {
+                    const { collection, addDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
+                    await addDoc(collection(window.db, "matches"), { title: t, fee: parseFloat(f), prize: parseFloat(p), time: tm, map: m, timestamp: Date.now(), status: "OPEN" });
+                    Swal.fire('Published', 'Match live on battlefield.', 'success');
+                } catch(e) { }
+            },
+
+            admApproveFin: async function(type, id, uid, amt) {
                 const { doc, updateDoc, increment, deleteDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
-                if(col === 'deposits') {
-                    await updateDoc(doc(window.db, "users", uid), { balance: increment(amt) });
-                } else {
-                    // Withdraw logic: subtract if approved
-                    await updateDoc(doc(window.db, "users", uid), { balance: increment(-amt) });
-                }
-                await deleteDoc(doc(window.db, col, id));
-                alert("Transaction Approved!");
+                try {
+                    if(type === 'deposits') {
+                        await updateDoc(doc(window.db, "users", uid), { balance: increment(amt) });
+                    } else {
+                        await updateDoc(doc(window.db, "users", uid), { balance: increment(-amt) });
+                    }
+                    await deleteDoc(doc(window.db, type, id));
+                    Swal.fire('Approved', 'Financial sync complete.', 'success');
+                } catch(e) { }
+            },
+
+            admSendNotice: async function() {
+                const t = document.getElementById('an-title').value, b = document.getElementById('an-body').value;
+                const { doc, setDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
+                await setDoc(doc(window.db, "system", "notice"), { title: t, body: b, timestamp: Date.now() });
+                Swal.fire('Broadcasted', 'Global message sent.', 'info');
             }
         };
 
-        window.onload = () => app.init();
+        window.onload = () => core.init();
     </script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-        import { getFirestore, collection, onSnapshot, query, orderBy, doc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+        import { getFirestore, collection, onSnapshot, query, orderBy, doc, limit } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
+        // 🔥 FIREBASE CONFIG 🔥
         const firebaseConfig = {
             apiKey: "AIzaSyCXeBxPtMScUNyoctZ61g7eUNy-...", 
             authDomain: "shgesports-15815.firebaseapp.com",
@@ -234,52 +513,103 @@
         const db = getFirestore(fApp);
         window.db = db;
 
-        // Listeners
-        if(app.state.user) {
-            // User Data Sync
-            onSnapshot(doc(db, "users", app.state.user.uid), (d) => {
-                const data = d.data();
-                document.getElementById('u-balance').innerText = data.balance + " ৳";
-                document.getElementById('w-balance').innerText = data.balance;
+        // REAL-TIME CLOUD LISTENERS
+        if(core.state.user) {
+            
+            // 1. User Balance & Role Sync
+            onSnapshot(doc(db, "users", core.state.user.uid), (d) => {
+                if(d.exists()) {
+                    const data = d.data();
+                    core.state.user = data;
+                    document.getElementById('u-bal-val').innerText = data.balance.toFixed(2);
+                    document.getElementById('w-bal-val').innerText = data.balance.toFixed(0);
+                    document.getElementById('u-name-display').innerText = data.name;
+                    document.getElementById('p-name').innerText = data.name;
+                    document.getElementById('p-uid').innerText = "UID: " + data.uid;
+                    if(data.role === 'admin') document.getElementById('admin-trigger').classList.remove('hidden');
+                }
             });
 
-            // Matches Sync
-            onSnapshot(collection(db, "matches"), (snap) => {
-                const cont = document.getElementById('match-container');
-                cont.innerHTML = snap.docs.map(doc => {
-                    const m = doc.data();
-                    return `
-                        <div class="glass p-6 rounded-3xl sky-border border-l-4 border-sky-500">
-                            <h4 class="text-xl font-orbit font-bold">${m.title}</h4>
-                            <div class="flex justify-between mt-4">
-                                <span class="text-gray-500 text-xs">Entry: ৳${m.fee}</span>
-                                <span class="text-sky-400 font-bold">Prize: ৳${m.prize}</span>
+            // 2. Global Notice Listener
+            onSnapshot(doc(db, "system", "notice"), (d) => {
+                if(d.exists()) {
+                    const n = d.data();
+                    document.getElementById('notice-title').innerText = n.title;
+                    document.getElementById('notice-body').innerText = n.body;
+                    document.getElementById('notice-overlay').classList.remove('hidden');
+                }
+            });
+
+            // 3. Match Engine
+            onSnapshot(query(collection(db, "matches"), orderBy("timestamp", "desc")), (snap) => {
+                const matches = snap.docs.map(d => ({id: d.id, ...d.data()}));
+                const grid = document.getElementById('all-matches-grid');
+                const featured = document.getElementById('featured-match');
+                
+                const html = matches.map(m => `
+                    <div class="glass p-6 rounded-[2.5rem] sky-border border-l-8 border-sky-500 relative group overflow-hidden">
+                        <div class="absolute -right-4 -top-4 opacity-10 group-hover:rotate-12 transition-all"><i class="fas fa-gun text-8xl"></i></div>
+                        <div class="flex justify-between items-start mb-6">
+                            <div>
+                                <h4 class="text-2xl font-orbit font-bold italic tracking-tighter">${m.title}</h4>
+                                <div class="flex gap-4 text-[10px] text-gray-500 font-bold uppercase mt-2">
+                                    <span><i class="far fa-clock text-sky-400"></i> ${m.time}</span>
+                                    <span><i class="fas fa-map text-sky-400"></i> ${m.map}</span>
+                                </div>
                             </div>
-                            <button class="w-full mt-4 bg-sky-500/10 border border-sky-500/30 py-2 rounded-xl text-xs font-bold text-sky-400">JOIN NOW</button>
+                            <div class="text-right">
+                                <p class="text-[9px] text-gray-500 font-bold uppercase">Prize Pool</p>
+                                <p class="text-2xl font-orbit font-bold text-sky-400">৳${m.prize}</p>
+                            </div>
                         </div>
-                    `;
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-black/40 p-4 rounded-2xl border border-white/5">
+                                <p class="text-[8px] text-gray-500 uppercase font-bold mb-1">Entry Fee</p>
+                                <p class="font-bold">৳${m.fee}</p>
+                            </div>
+                            <button onclick="Swal.fire('Joining...', 'Checking credentials', 'info')" class="sky-btn rounded-2xl font-bold font-orbit text-xs">JOIN MISSION</button>
+                        </div>
+                    </div>
+                `).join('');
+                grid.innerHTML = html;
+                if(matches.length > 0) featured.innerHTML = html.split('</div>')[0] + '</div>';
+            });
+
+            // 4. Admin Dashboard Listeners
+            onSnapshot(collection(db, "users"), (snap) => {
+                document.getElementById('adm-total-players').innerText = snap.docs.length;
+            });
+
+            onSnapshot(collection(db, "deposits"), (snap) => {
+                document.getElementById('adm-dep-list').innerHTML = snap.docs.map(d => {
+                    const data = d.data();
+                    return `
+                    <div class="glass p-5 rounded-3xl border-green-500/20 flex justify-between items-center">
+                        <div>
+                            <p class="font-bold text-sm text-sky-400">${data.name}</p>
+                            <p class="text-[10px] text-gray-500 italic">Method: ${data.method} | Trx: ${data.trx}</p>
+                            <p class="text-lg font-orbit font-bold">৳${data.amount}</p>
+                        </div>
+                        <button onclick="core.admApproveFin('deposits', '${d.id}', '${data.uid}', ${data.amount})" class="bg-green-600 text-white px-6 py-2 rounded-xl font-bold text-xs">APPROVE</button>
+                    </div>`;
                 }).join('');
             });
 
-            // Admin Logic Sync
-            onSnapshot(collection(db, "deposits"), (snap) => {
-                document.getElementById('adm-deposits').innerHTML = snap.docs.map(d => `
-                    <div class="glass p-4 rounded-2xl flex justify-between items-center">
-                        <div><p class="text-xs font-bold">${d.data().uid}</p><p class="text-sky-400 font-bold">৳${d.data().amount}</p></div>
-                        <button onclick="app.approveFin('deposits', '${d.id}', '${d.data().uid}', ${d.data().amount})" class="bg-green-600 px-4 py-1 rounded-lg text-[10px]">Approve</button>
-                    </div>
-                `).join('');
-            });
-
             onSnapshot(collection(db, "withdraws"), (snap) => {
-                document.getElementById('adm-withdraws').innerHTML = snap.docs.map(d => `
-                    <div class="glass p-4 rounded-2xl flex justify-between items-center border-red-500/20 border">
-                        <div><p class="text-xs font-bold">${d.data().uid}</p><p class="text-red-400 font-bold">৳${d.data().amount}</p></div>
-                        <button onclick="app.approveFin('withdraws', '${d.id}', '${d.data().uid}', ${d.data().amount})" class="bg-red-600 px-4 py-1 rounded-lg text-[10px]">Send Money</button>
-                    </div>
-                `).join('');
+                document.getElementById('adm-wd-list').innerHTML = snap.docs.map(d => {
+                    const data = d.data();
+                    return `
+                    <div class="glass p-5 rounded-3xl border-red-500/20 flex justify-between items-center">
+                        <div>
+                            <p class="font-bold text-sm text-red-400">${data.name}</p>
+                            <p class="text-[10px] text-gray-500 italic">Number: ${data.number}</p>
+                            <p class="text-lg font-orbit font-bold">৳${data.amount}</p>
+                        </div>
+                        <button onclick="core.admApproveFin('withdraws', '${d.id}', '${data.uid}', ${data.amount})" class="bg-red-600 text-white px-6 py-2 rounded-xl font-bold text-xs">SENT MONEY</button>
+                    </div>`;
+                }).join('');
             });
         }
     </script>
 </body>
-</html>
+                </html>
