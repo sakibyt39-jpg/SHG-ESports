@@ -3,27 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SHG亗ESPORTS | PRO PORTAL v3.0</title>
+    <title>SHG亗ESPORTS | ULTIMATE MASTER</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap');
 
         :root {
             --sky: #00eeff;
             --sky-dark: #0088ff;
-            --neon-bg: #020617;
-            --glass-lite: rgba(255, 255, 255, 0.03);
-            --glass-thick: rgba(15, 23, 42, 0.95);
+            --bg: #010413;
         }
 
-        /* --- GLOBAL RESET & THEME --- */
-        * { -webkit-tap-highlight-color: transparent; outline: none !important; }
         body {
-            background-color: var(--neon-bg);
+            background-color: var(--bg);
             color: #e2e8f0;
             font-family: 'Rajdhani', sans-serif;
             overflow-x: hidden;
@@ -33,70 +29,44 @@
         }
 
         .font-orbit { font-family: 'Orbitron', sans-serif; }
-        .sky-glow { text-shadow: 0 0 15px rgba(0, 238, 255, 0.6); color: var(--sky); }
-        .glass { background: var(--glass-lite); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .glass-dark { background: var(--glass-thick); backdrop-filter: blur(30px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        
-        /* --- DYNAMIC PAGE SYSTEM --- */
+        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .glass-dark { background: rgba(1, 4, 19, 0.95); backdrop-filter: blur(30px); border-top: 1px solid rgba(255, 255, 255, 0.05); }
+        .sky-text { color: var(--sky); text-shadow: 0 0 10px rgba(0, 238, 255, 0.5); }
+        .sky-btn { background: linear-gradient(135deg, var(--sky), var(--sky-dark)); color: #000; font-weight: 800; transition: 0.3s; box-shadow: 0 5px 15px rgba(0, 238, 255, 0.2); }
+        .sky-btn:active { transform: scale(0.95); }
+
         .app-view { display: none; min-height: 100vh; animation: pageIn 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
         .app-view.active { display: block; }
-        @keyframes pageIn { from { opacity: 0; transform: translateY(20px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        @keyframes pageIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- CUSTOM UI ELEMENTS --- */
-        .sky-btn {
-            background: linear-gradient(135deg, var(--sky), var(--sky-dark));
-            color: #000;
-            font-weight: 800;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(0, 238, 255, 0.2);
-        }
-        .sky-btn:active { transform: scale(0.95); box-shadow: 0 2px 5px rgba(0, 238, 255, 0.2); }
-        
-        .admin-card { border-left: 4px solid #ef4444; background: rgba(239, 68, 68, 0.03); }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-track { background: transparent; }
+        .nav-active i { color: var(--sky); transform: translateY(-5px) scale(1.1); filter: drop-shadow(0 0 8px var(--sky)); }
+        ::-webkit-scrollbar { width: 3px; }
         ::-webkit-scrollbar-thumb { background: var(--sky); border-radius: 10px; }
-
-        /* Nav Bar Animation */
-        .nav-icon { transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        .active-nav .nav-icon { transform: translateY(-8px) scale(1.2); color: var(--sky); filter: drop-shadow(0 0 8px var(--sky)); }
     </style>
 </head>
-<body class="antialiased">
+<body>
 
-    <div id="boot-screen" class="fixed inset-0 z-[9999] bg-[#010413] flex flex-col items-center justify-center">
-        <div class="relative w-28 h-28 mb-8">
+    <div id="boot-loader" class="fixed inset-0 z-[9999] bg-[#010413] flex flex-col items-center justify-center">
+        <div class="relative w-24 h-24 mb-6">
             <div class="absolute inset-0 border-4 border-sky-500/10 rounded-full"></div>
-            <div class="absolute inset-0 border-b-4 border-sky-400 rounded-full animate-spin"></div>
-            <div class="absolute inset-0 flex items-center justify-center">
-                <span class="font-orbit text-3xl font-bold italic sky-glow">SHG</span>
-            </div>
+            <div class="absolute inset-0 border-t-4 border-sky-400 rounded-full animate-spin"></div>
+            <div class="absolute inset-0 flex items-center justify-center font-orbit font-bold text-2xl sky-text">SHG</div>
         </div>
-        <div class="text-center">
-            <p id="boot-text" class="font-orbit tracking-[0.6em] text-[10px] text-sky-400/50 mb-2">LOADING CORE ASSETS</p>
-            <div class="w-48 h-1 bg-white/5 rounded-full overflow-hidden">
-                <div id="boot-progress" class="w-0 h-full bg-sky-500 transition-all duration-700"></div>
-            </div>
-        </div>
+        <p class="font-orbit tracking-[0.4em] text-[10px] sky-text animate-pulse">CONNECTING TO CORE DATABASE</p>
     </div>
 
     <header id="main-header" class="fixed top-0 w-full z-[1000] glass px-6 py-4 hidden">
         <div class="max-w-5xl mx-auto flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 sky-btn rounded-xl flex items-center justify-center font-orbit text-xl">亗</div>
-                <div class="leading-none">
-                    <h1 class="font-orbit font-bold text-lg tracking-tighter">SHG <span class="sky-glow">ESPORTS</span></h1>
-                    <p class="text-[8px] text-gray-500 font-bold tracking-[0.2em] uppercase">V3.0 Private Build</p>
-                </div>
+            <div class="flex items-center gap-2">
+                <div class="w-8 h-8 sky-btn rounded-lg flex items-center justify-center font-orbit">亗</div>
+                <h1 class="font-orbit font-bold text-lg">SHG <span class="sky-text">ESPORTS</span></h1>
             </div>
-            <div onclick="showView('wallet-view')" class="flex items-center gap-3 bg-black/40 px-4 py-2 rounded-2xl border border-sky-500/20 cursor-pointer group">
-                <div class="text-right">
-                    <p class="text-[8px] text-gray-500 font-bold uppercase leading-none">Wallet Balance</p>
-                    <p id="h-balance" class="font-bold text-sky-400 group-hover:scale-110 transition-transform">0 ৳</p>
+            <div onclick="show('wallet')" class="bg-black/60 px-4 py-1.5 rounded-xl border border-sky-500/20 cursor-pointer flex items-center gap-3">
+                <div class="text-right leading-none">
+                    <p class="text-[7px] text-gray-500 font-bold uppercase">Balance</p>
+                    <p id="h-bal" class="font-bold sky-text text-sm">0 ৳</p>
                 </div>
-                <i class="fas fa-plus-circle text-sky-500"></i>
+                <i class="fas fa-plus-circle text-sky-500 text-xs"></i>
             </div>
         </div>
     </header>
@@ -104,384 +74,298 @@
     <div id="auth-view" class="app-view active flex items-center justify-center p-6">
         <div class="w-full max-w-md">
             <div class="text-center mb-10">
-                <h2 class="text-5xl font-orbit font-bold italic mb-3">ELITE <span class="sky-text">ACCSES</span></h2>
-                <p class="text-xs text-gray-500 tracking-[0.4em] uppercase">Authorized Personnel Only</p>
+                <h2 class="text-5xl font-orbit font-bold italic sky-text mb-2">ACCESS</h2>
+                <p class="text-[10px] text-gray-500 tracking-[0.5em] uppercase">Private Operator Portal</p>
             </div>
-
-            <div class="glass-dark p-8 rounded-[3rem] shadow-2xl relative overflow-hidden border border-sky-500/10">
-                <div class="flex bg-black/60 rounded-2xl p-1.5 mb-8 border border-white/5">
-                    <button id="tab-login" onclick="toggleAuth('login')" class="flex-1 py-3 rounded-xl sky-btn text-xs">LOGIN</button>
-                    <button id="tab-reg" onclick="toggleAuth('reg')" class="flex-1 py-3 rounded-xl text-gray-500 font-bold text-xs transition-all">REGISTER</button>
+            <div class="glass p-8 rounded-[3rem] shadow-2xl">
+                <div class="flex bg-black/40 rounded-2xl p-1 mb-8 border border-white/5">
+                    <button id="t-login" onclick="toggleAuth('login')" class="flex-1 py-3 rounded-xl sky-btn text-[10px]">LOGIN</button>
+                    <button id="t-reg" onclick="toggleAuth('reg')" class="flex-1 py-3 rounded-xl text-gray-500 font-bold text-[10px]">REGISTER</button>
                 </div>
 
-                <div id="panel-login" class="space-y-5">
-                    <div class="space-y-1">
-                        <label class="text-[10px] text-gray-500 font-bold uppercase ml-4">Game UID</label>
-                        <input id="l-uid" type="text" placeholder="Enter UID" class="w-full p-4 rounded-2xl bg-black/40 border border-white/5 focus:border-sky-500 transition-all outline-none">
-                    </div>
-                    <div class="space-y-1">
-                        <label class="text-[10px] text-gray-500 font-bold uppercase ml-4">Access Password</label>
-                        <input id="l-pass" type="password" placeholder="••••••••" class="w-full p-4 rounded-2xl bg-black/40 border border-white/5 focus:border-sky-500 transition-all outline-none">
-                    </div>
-                    <button onclick="logic.login()" class="w-full sky-btn py-4 rounded-2xl text-lg shadow-sky-500/20 shadow-xl">AUTHENTICATE SYSTEM</button>
+                <div id="form-login" class="space-y-4">
+                    <input id="l-uid" type="text" placeholder="Free Fire UID" class="w-full p-4 rounded-2xl bg-black border border-white/5 outline-none focus:border-sky-500">
+                    <input id="l-pass" type="password" placeholder="Access Key" class="w-full p-4 rounded-2xl bg-black border border-white/5 outline-none focus:border-sky-500">
+                    <button onclick="logic.login()" class="w-full sky-btn py-4 rounded-2xl font-bold tracking-widest mt-4">INITIALIZE SYSTEM</button>
                 </div>
 
-                <div id="panel-reg" class="hidden space-y-5">
-                    <input id="r-name" type="text" placeholder="Full Name" class="w-full p-4 rounded-2xl bg-black/40 border border-white/5 outline-none">
-                    <input id="r-uid" type="text" placeholder="Free Fire UID" class="w-full p-4 rounded-2xl bg-black/40 border border-white/5 outline-none">
-                    <input id="r-pass" type="password" placeholder="Create Password" class="w-full p-4 rounded-2xl bg-black/40 border border-white/5 outline-none">
-                    <button onclick="logic.register()" class="w-full sky-btn py-4 rounded-2xl text-lg">CREATE OPERATOR</button>
+                <div id="form-reg" class="hidden space-y-4">
+                    <input id="r-name" type="text" placeholder="Full Name" class="w-full p-4 rounded-2xl bg-black border border-white/5 outline-none">
+                    <input id="r-uid" type="text" placeholder="In-Game UID" class="w-full p-4 rounded-2xl bg-black border border-white/5 outline-none">
+                    <input id="r-pass" type="password" placeholder="Set Access Key" class="w-full p-4 rounded-2xl bg-black border border-white/5 outline-none">
+                    <button onclick="logic.register()" class="w-full sky-btn py-4 rounded-2xl font-bold tracking-widest mt-4">CREATE OPERATOR</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="home-view" class="app-view px-6 pt-28 pb-32">
-        <div class="max-w-5xl mx-auto space-y-10">
-            <div class="relative w-full rounded-[3.5rem] p-10 overflow-hidden glass border border-sky-500/10 shadow-2xl">
-                <div class="absolute -right-10 -top-10 w-64 h-64 bg-sky-500/5 rounded-full blur-3xl"></div>
-                <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-8">
-                    <div>
-                        <p class="text-[10px] text-sky-400 font-bold tracking-[0.4em] uppercase mb-2">Operator Identity</p>
-                        <h2 id="u-name" class="text-5xl font-orbit font-bold italic leading-none mb-3">...</h2>
-                        <div class="flex items-center gap-4">
-                            <span class="bg-sky-500 text-black px-3 py-1 rounded-md text-[10px] font-bold uppercase">Ranked Elite</span>
-                            <span id="u-uid-label" class="text-gray-500 text-xs font-bold tracking-widest">UID: ...</span>
-                        </div>
+    <div id="home-view" class="app-view px-6 pt-24 pb-32">
+        <div class="max-w-4xl mx-auto space-y-8">
+            <div class="glass p-8 rounded-[3.5rem] border-l-8 border-sky-500 relative overflow-hidden">
+                <div class="absolute -right-10 -top-10 w-48 h-48 bg-sky-500/5 rounded-full blur-3xl"></div>
+                <p class="text-[10px] text-sky-400 font-bold uppercase tracking-[0.4em] mb-2">Operator Verified</p>
+                <h2 id="u-name" class="text-4xl font-orbit font-bold italic mb-6 leading-none">...</h2>
+                <div class="flex gap-4">
+                    <div class="bg-black/60 px-6 py-3 rounded-2xl border border-white/5 flex-1">
+                        <p class="text-[8px] text-gray-500 uppercase font-bold mb-1">Rank Status</p>
+                        <p class="text-lg font-bold">SOLDIER 亗</p>
                     </div>
-                    <div class="flex gap-4">
-                        <div class="bg-black/40 px-8 py-4 rounded-3xl border border-white/5 text-center min-w-[120px]">
-                            <p class="text-[8px] text-gray-500 font-bold uppercase mb-1">Matches</p>
-                            <p class="text-2xl font-orbit font-bold">12</p>
-                        </div>
-                        <div class="bg-sky-500/10 px-8 py-4 rounded-3xl border border-sky-500/20 text-center min-w-[120px]">
-                            <p class="text-[8px] text-sky-400 font-bold uppercase mb-1">Win Rate</p>
-                            <p class="text-2xl font-orbit font-bold sky-text">84%</p>
-                        </div>
+                    <div class="bg-sky-500/10 px-6 py-3 rounded-2xl border border-sky-500/20 flex-1">
+                        <p class="text-[8px] text-sky-400 uppercase font-bold mb-1">Available Credits</p>
+                        <p id="u-bal" class="text-lg font-bold">৳0</p>
                     </div>
                 </div>
             </div>
 
-            <div class="glass p-6 rounded-[2.5rem] flex items-start gap-5 border-l-4 border-sky-500">
-                <div class="w-12 h-12 rounded-2xl bg-sky-500/10 flex items-center justify-center text-sky-400 shrink-0"><i class="fas fa-bullhorn text-xl"></i></div>
-                <div>
-                    <h4 class="font-orbit font-bold text-xs mb-1 tracking-widest uppercase">System Broadcast</h4>
-                    <p id="sys-notice" class="text-gray-400 text-sm italic leading-relaxed">Connecting to broadcast server...</p>
-                </div>
+            <div class="glass p-5 rounded-3xl border-l-4 border-yellow-500 flex items-center gap-4">
+                <i class="fas fa-bullhorn text-yellow-500"></i>
+                <p id="sys-notice" class="text-sm text-gray-400 italic">Syncing broadcast system...</p>
             </div>
 
             <div>
                 <div class="flex justify-between items-end mb-6">
-                    <h3 class="text-2xl font-orbit font-bold italic tracking-tighter">BATTLE <span class="sky-text">MISSYONS</span></h3>
-                    <button onclick="showView('arena-view')" class="text-[10px] text-sky-400 font-bold uppercase tracking-widest border-b border-sky-500/30">View All Arena</button>
+                    <h3 class="text-2xl font-orbit font-bold italic tracking-tighter">BATTLE <span class="sky-text">ARENA</span></h3>
+                    <button onclick="show('arena')" class="text-[10px] text-sky-400 font-bold border-b border-sky-500/30">VIEW ALL</button>
                 </div>
-                <div id="home-match-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    </div>
+                <div id="match-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
             </div>
         </div>
     </div>
 
-    <div id="arena-view" class="app-view px-6 pt-28 pb-32">
-        <div class="max-w-5xl mx-auto">
-            <h2 class="text-4xl font-orbit font-bold mb-10 italic">TOURNAMENT <span class="sky-text">HUB</span></h2>
-            <div id="full-match-list" class="space-y-6">
-                </div>
-        </div>
-    </div>
-
-    <div id="wallet-view" class="app-view px-6 pt-28 pb-32">
-        <div class="max-w-2xl mx-auto space-y-8">
-            <div class="glass p-12 rounded-[4rem] text-center relative overflow-hidden border-2 border-sky-500/10 shadow-2xl">
-                <div class="absolute top-0 right-0 p-8 opacity-5"><i class="fas fa-vault text-9xl"></i></div>
+    <div id="wallet-view" class="app-view px-6 pt-24 pb-32">
+        <div class="max-w-md mx-auto space-y-8">
+            <div class="glass p-12 rounded-[4rem] text-center border-2 border-sky-500/10 relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-8 opacity-5"><i class="fas fa-vault text-8xl"></i></div>
                 <p class="text-gray-500 text-xs font-bold uppercase tracking-[0.5em] mb-4">Secured Balance</p>
-                <h1 class="text-7xl font-orbit font-bold italic sky-text mb-4">৳<span id="w-balance-val">0</span></h1>
-                <div class="inline-flex items-center gap-2 bg-green-500/10 px-6 py-2 rounded-full text-green-400 font-bold text-[10px] uppercase">
-                    <i class="fas fa-lock"></i> 256-Bit Encrypted
+                <h1 id="w-bal-xl" class="text-6xl font-orbit font-bold italic sky-text mb-2">৳0</h1>
+                <span class="text-[8px] font-bold bg-green-500/10 text-green-500 px-3 py-1 rounded-full uppercase tracking-widest"><i class="fas fa-shield-alt mr-1"></i> Encrypted</span>
+            </div>
+
+            <div class="glass p-8 rounded-[3rem] space-y-5">
+                <div class="bg-sky-500/10 p-5 rounded-2xl border border-sky-500/20 text-center">
+                    <p class="text-[9px] text-sky-400 font-bold uppercase mb-1">Official Bkash/Nagad</p>
+                    <p class="text-2xl font-orbit font-bold tracking-widest">01941686065</p>
+                </div>
+                <input id="d-amt" type="number" placeholder="Enter Amount (৳)" class="w-full p-4 rounded-2xl bg-black border border-white/5 outline-none">
+                <input id="d-trx" type="text" placeholder="Transaction ID (TrxID)" class="w-full p-4 rounded-2xl bg-black border border-white/5 outline-none">
+                <button onclick="logic.deposit()" class="w-full sky-btn py-4 rounded-2xl font-bold tracking-widest uppercase text-xs">Transmit Deposit Request</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="admin-view" class="app-view px-6 pt-24 pb-32">
+        <div class="max-w-6xl mx-auto space-y-10">
+            <div class="flex justify-between items-center">
+                <h2 class="text-4xl font-orbit font-bold text-red-500 italic">SYSTEM <span class="text-white">CORE</span></h2>
+                <div class="bg-red-500/10 p-4 rounded-2xl border border-red-500/20 text-right">
+                    <p class="text-[9px] text-gray-500 font-bold uppercase">Admin Revenue</p>
+                    <p id="adm-revenue" class="text-2xl font-bold sky-text">৳0</p>
                 </div>
             </div>
 
-            <div class="glass p-8 rounded-[3rem] space-y-6">
-                <div class="flex bg-black/60 rounded-2xl p-1.5 border border-white/5">
-                    <button id="tab-dp" onclick="toggleFinance('dp')" class="flex-1 py-3 rounded-xl sky-btn text-xs">DEPOSIT</button>
-                    <button id="tab-wd" onclick="toggleFinance('wd')" class="flex-1 py-3 rounded-xl text-gray-500 font-bold text-xs transition-all">WITHDRAW</button>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-2 space-y-6">
+                    <h3 class="font-orbit font-bold text-xl flex items-center gap-3"><i class="fas fa-users-cog text-sky-400"></i> OPERATOR DIRECTORY</h3>
+                    <div class="glass rounded-[3rem] overflow-hidden border border-white/5 overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead class="bg-white/5 text-[9px] uppercase text-gray-500 font-bold">
+                                <tr>
+                                    <th class="p-6">Operator Name</th>
+                                    <th class="p-6">UID</th>
+                                    <th class="p-6">Balance</th>
+                                    <th class="p-6">Control</th>
+                                </tr>
+                            </thead>
+                            <tbody id="adm-user-list" class="divide-y divide-white/5"></tbody>
+                        </table>
+                    </div>
                 </div>
 
-                <div id="sec-dp" class="space-y-5">
-                    <div class="bg-sky-500/5 p-6 rounded-3xl border border-sky-500/20">
-                        <p class="text-[10px] text-sky-400 font-bold uppercase mb-2">Master Bkash/Nagad/Rocket</p>
-                        <div class="flex justify-between items-center">
-                            <p class="text-2xl font-orbit font-bold tracking-[0.2em]">01941686065</p>
-                            <button onclick="logic.copy('01941686065')" class="bg-sky-500 text-black px-4 py-1.5 rounded-xl font-bold text-[10px]">COPY</button>
+                <div class="space-y-8">
+                    <div class="glass p-8 rounded-[3rem] border border-red-500/10">
+                        <h4 class="font-bold text-red-500 mb-6 uppercase text-xs tracking-widest">Publish New Battle</h4>
+                        <div class="space-y-3">
+                            <input id="m-title" type="text" placeholder="Match Title" class="w-full p-3 rounded-xl bg-black border border-white/5 text-sm">
+                            <input id="m-fee" type="number" placeholder="Entry Fee (৳)" class="w-full p-3 rounded-xl bg-black border border-white/5 text-sm">
+                            <input id="m-prize" type="number" placeholder="Prize Pool (৳)" class="w-full p-3 rounded-xl bg-black border border-white/5 text-sm">
+                            <button onclick="logic.admCreateMatch()" class="w-full sky-btn py-3 rounded-xl text-xs uppercase">Initialize Match</button>
                         </div>
                     </div>
-                    <select id="dp-method" class="w-full p-4 rounded-2xl bg-black/40 border border-white/5 outline-none">
-                        <option value="Bkash">Bkash Personal</option>
-                        <option value="Nagad">Nagad Personal</option>
-                        <option value="Rocket">Rocket Personal</option>
-                    </select>
-                    <input id="dp-amt" type="number" placeholder="Amount (৳)" class="w-full p-4 rounded-2xl bg-black/40 border border-white/5 outline-none">
-                    <input id="dp-trx" type="text" placeholder="Transaction ID" class="w-full p-4 rounded-2xl bg-black/40 border border-white/5 outline-none">
-                    <button onclick="logic.submitDeposit()" class="w-full sky-btn py-4 rounded-2xl font-bold">CONFIRM DEPOSIT</button>
-                </div>
 
-                <div id="sec-wd" class="hidden space-y-5">
-                    <input id="wd-num" type="text" placeholder="Wallet Number" class="w-full p-4 rounded-2xl bg-black/40 border border-white/5 outline-none">
-                    <input id="wd-amt" type="number" placeholder="Min 100 ৳" class="w-full p-4 rounded-2xl bg-black/40 border border-white/5 outline-none">
-                    <button onclick="logic.submitWithdraw()" class="w-full bg-red-600 text-white py-4 rounded-2xl font-bold shadow-xl shadow-red-600/10">SUBMIT REQUEST</button>
+                    <div class="glass p-8 rounded-[3rem] border border-white/5">
+                        <h4 class="font-bold sky-text mb-4 uppercase text-xs">Global Notice</h4>
+                        <textarea id="an-text" placeholder="Message for all players..." class="w-full p-4 rounded-2xl bg-black border border-white/5 text-xs h-24 mb-3"></textarea>
+                        <button onclick="logic.admSendNotice()" class="w-full bg-blue-600 py-3 rounded-xl text-[10px] font-bold uppercase">Broadcast</button>
+                    </div>
+
+                    <div class="space-y-4">
+                        <h4 class="font-bold text-xs uppercase text-gray-500">Deposit Queue</h4>
+                        <div id="adm-dp-queue" class="space-y-3"></div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="admin-view" class="app-view px-6 pt-28 pb-32">
-        <div class="max-w-5xl mx-auto space-y-12">
-            <div class="flex justify-between items-center">
-                <h2 class="text-4xl font-orbit font-bold text-red-500 italic">CORE <span class="text-white">CONTROL</span></h2>
-                <span class="bg-red-500/10 text-red-500 px-4 py-1 rounded-full text-[10px] font-bold border border-red-500/20 uppercase tracking-widest">Root Access</span>
-            </div>
-
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div class="glass p-6 rounded-3xl border-b-2 border-sky-500">
-                    <p class="text-[9px] text-gray-500 font-bold uppercase mb-1">Total Users</p>
-                    <p id="adm-st-users" class="text-2xl font-orbit font-bold">0</p>
-                </div>
-                <div class="glass p-6 rounded-3xl border-b-2 border-green-500">
-                    <p class="text-[9px] text-gray-500 font-bold uppercase mb-1">Revenue</p>
-                    <p id="adm-st-rev" class="text-2xl font-orbit font-bold">৳ 0</p>
-                </div>
-                <div class="glass p-6 rounded-3xl border-b-2 border-yellow-500">
-                    <p class="text-[9px] text-gray-500 font-bold uppercase mb-1">Active Matches</p>
-                    <p id="adm-st-matches" class="text-2xl font-orbit font-bold">0</p>
-                </div>
-                <div class="glass p-6 rounded-3xl border-b-2 border-red-500">
-                    <p class="text-[9px] text-gray-500 font-bold uppercase mb-1">Pending WD</p>
-                    <p id="adm-st-wd" class="text-2xl font-orbit font-bold">0</p>
-                </div>
-            </div>
-
-            <div class="space-y-12">
-                <div class="glass p-8 rounded-[3rem] border border-red-500/10">
-                    <h3 class="font-orbit font-bold text-xl mb-6 flex items-center gap-3"><i class="fas fa-plus-circle text-sky-400"></i> PUBLISH NEW MISSION</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <input id="am-title" type="text" placeholder="Tournament Name" class="w-full p-4 rounded-2xl bg-black/40 border border-white/5 outline-none">
-                        <input id="am-time" type="text" placeholder="Time (09:00 PM)" class="w-full p-4 rounded-2xl bg-black/40 border border-white/5 outline-none">
-                        <input id="am-fee" type="number" placeholder="Entry Fee" class="w-full p-4 rounded-2xl bg-black/40 border border-white/5 outline-none">
-                        <input id="am-prize" type="number" placeholder="Prize Pool" class="w-full p-4 rounded-2xl bg-black/40 border border-white/5 outline-none">
-                        <input id="am-map" type="text" placeholder="Map Name" class="w-full p-4 rounded-2xl bg-black/40 border border-white/5 outline-none">
-                        <button onclick="logic.admCreateMatch()" class="sky-btn rounded-2xl font-bold h-[58px]">INITIALIZE MATCH</button>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
-                    <div>
-                        <h4 class="font-orbit font-bold mb-6 sky-text tracking-widest"><i class="fas fa-clock mr-2"></i> DEPOSIT QUEUE</h4>
-                        <div id="adm-dp-list" class="space-y-4 max-h-[500px] overflow-y-auto pr-2 no-scrollbar">
-                            </div>
-                    </div>
-                    <div>
-                        <h4 class="font-orbit font-bold mb-6 text-red-400 tracking-widest"><i class="fas fa-clock mr-2"></i> WITHDRAW QUEUE</h4>
-                        <div id="adm-wd-list" class="space-y-4 max-h-[500px] overflow-y-auto pr-2 no-scrollbar">
-                            </div>
-                    </div>
-                </div>
-
-                <div class="glass p-8 rounded-[3rem] border border-white/5">
-                    <h4 class="font-orbit font-bold mb-6 flex items-center gap-3"><i class="fas fa-broadcast-tower text-sky-400"></i> TRANSMIT GLOBAL NOTICE</h4>
-                    <textarea id="an-text" placeholder="Enter important message for all players..." class="w-full p-6 rounded-3xl bg-black/40 border border-white/5 h-32 outline-none mb-4"></textarea>
-                    <button onclick="logic.admSendNotice()" class="w-full bg-blue-600 text-white py-4 rounded-2xl font-bold uppercase tracking-widest text-xs">Broadcast to All Devices</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="profile-view" class="app-view px-6 pt-28 pb-32">
+    <div id="profile-view" class="app-view px-6 pt-24 pb-32">
         <div class="max-w-md mx-auto text-center space-y-8">
-            <div class="relative w-40 h-40 mx-auto">
-                <div class="absolute inset-0 border-4 border-sky-500 rounded-full animate-pulse opacity-20"></div>
-                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=SHG" class="w-full h-full rounded-full p-2 bg-slate-800 border border-sky-500/30">
+            <div class="w-32 h-32 mx-auto sky-btn p-1 rounded-full">
+                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=SHG" class="bg-slate-900 rounded-full w-full h-full">
             </div>
-            <div>
-                <h2 id="p-name" class="text-4xl font-orbit font-bold italic mb-1">...</h2>
-                <p id="p-uid" class="text-sky-400 font-bold tracking-[0.4em] uppercase text-xs">UID: ...</p>
-            </div>
-            <div class="glass p-8 rounded-[3rem] text-left space-y-4">
-                <div class="flex justify-between border-b border-white/5 pb-3">
-                    <span class="text-gray-500 font-bold uppercase text-[10px]">Role</span>
-                    <span id="p-role" class="text-white font-bold uppercase text-[10px]">Player</span>
-                </div>
-                <div class="flex justify-between border-b border-white/5 pb-3">
-                    <span class="text-gray-500 font-bold uppercase text-[10px]">Member Since</span>
-                    <span id="p-date" class="text-white font-bold uppercase text-[10px]">April 2026</span>
-                </div>
-            </div>
-            <button onclick="logic.logout()" class="w-full py-5 rounded-[2.5rem] bg-red-600/10 text-red-500 border border-red-500/20 font-bold uppercase text-xs tracking-widest">Terminate Session</button>
+            <button onclick="logic.logout()" class="w-full py-5 rounded-[2.5rem] bg-red-600/10 text-red-500 border border-red-500/20 font-bold uppercase text-[10px] tracking-widest">TERMINATE SESSION</button>
         </div>
     </div>
 
-    <nav id="bottom-nav" class="fixed bottom-0 w-full z-[1000] glass-dark rounded-t-[3.5rem] border-t border-white/5 p-6 hidden">
-        <div class="max-w-lg mx-auto flex justify-around items-center">
-            <button onclick="showView('home-view')" class="nav-item flex flex-col items-center gap-1">
-                <i class="fas fa-home-alt nav-icon text-2xl text-gray-600"></i>
-                <span class="text-[9px] font-bold uppercase tracking-tighter">Home</span>
-            </button>
-            <button onclick="showView('arena-view')" class="nav-item flex flex-col items-center gap-1">
-                <i class="fas fa-gamepad nav-icon text-2xl text-gray-600"></i>
-                <span class="text-[9px] font-bold uppercase tracking-tighter">Arena</span>
-            </button>
-            <button onclick="showView('wallet-view')" class="nav-item flex flex-col items-center gap-1">
-                <i class="fas fa-wallet nav-icon text-2xl text-gray-600"></i>
-                <span class="text-[9px] font-bold uppercase tracking-tighter">Wallet</span>
-            </button>
-            <button onclick="showView('profile-view')" class="nav-item flex flex-col items-center gap-1">
-                <i class="fas fa-user-shield nav-icon text-2xl text-gray-600"></i>
-                <span class="text-[9px] font-bold uppercase tracking-tighter">Profile</span>
-            </button>
-            <button id="nav-admin" onclick="showView('admin-view')" class="hidden flex flex-col items-center gap-1">
-                <i class="fas fa-command nav-icon text-2xl text-red-600"></i>
-                <span class="text-[9px] font-bold uppercase tracking-tighter text-red-600">Admin</span>
-            </button>
+    <nav id="bottom-nav" class="fixed bottom-0 w-full z-[1000] glass-dark rounded-t-[3.5rem] p-6 hidden">
+        <div class="max-w-md mx-auto flex justify-around items-center">
+            <button onclick="show('home')" class="nav-btn"><i class="fas fa-home-alt text-2xl text-gray-600"></i></button>
+            <button onclick="show('arena')" class="nav-btn"><i class="fas fa-gamepad text-2xl text-gray-600"></i></button>
+            <button onclick="show('wallet')" class="nav-btn"><i class="fas fa-wallet text-2xl text-gray-600"></i></button>
+            <button onclick="show('profile')" class="nav-btn"><i class="fas fa-user-circle text-2xl text-gray-600"></i></button>
+            <button id="adm-btn" onclick="show('admin')" class="nav-btn hidden"><i class="fas fa-shield-halved text-2xl text-red-600"></i></button>
         </div>
     </nav>
 
     <script>
-        // 🛠 UI MANAGER 🛠
-        function showView(id) {
+        // NAVIGATION SYSTEM
+        function show(id) {
             document.querySelectorAll('.app-view').forEach(v => v.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
+            document.getElementById(id + '-view').classList.add('active');
             
-            // Nav State Update
-            const items = document.querySelectorAll('.nav-item');
-            const icons = document.querySelectorAll('.nav-icon');
-            icons.forEach(i => i.classList.replace('text-sky-400', 'text-gray-600'));
-            items.forEach(i => i.classList.remove('active-nav'));
-
-            const mapping = {'home-view':0, 'arena-view':1, 'wallet-view':2, 'profile-view':3, 'admin-view':4};
-            const idx = mapping[id];
-            if(idx !== undefined && items[idx]) {
-                items[idx].classList.add('active-nav');
-                items[idx].querySelector('i').classList.replace('text-gray-600', 'text-sky-400');
-            }
-            window.scrollTo({top:0, behavior:'smooth'});
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('nav-active'));
+            // Visual active state logic here...
+            window.scrollTo({top: 0, behavior: 'smooth'});
         }
 
         function toggleAuth(mode) {
-            document.getElementById('panel-login').classList.toggle('hidden', mode === 'reg');
-            document.getElementById('panel-reg').classList.toggle('hidden', mode === 'login');
-            document.getElementById('tab-login').className = mode === 'login' ? 'flex-1 py-3 rounded-xl sky-btn text-xs' : 'flex-1 py-3 rounded-xl text-gray-500 font-bold text-xs';
-            document.getElementById('tab-reg').className = mode === 'reg' ? 'flex-1 py-3 rounded-xl sky-btn text-xs' : 'flex-1 py-3 rounded-xl text-gray-500 font-bold text-xs';
+            document.getElementById('form-login').classList.toggle('hidden', mode === 'reg');
+            document.getElementById('form-reg').classList.toggle('hidden', mode === 'login');
+            document.getElementById('t-login').className = mode === 'login' ? 'flex-1 py-3 rounded-xl sky-btn text-[10px]' : 'flex-1 py-3 rounded-xl text-gray-500 font-bold text-[10px]';
+            document.getElementById('t-reg').className = mode === 'reg' ? 'flex-1 py-3 rounded-xl sky-btn text-[10px]' : 'flex-1 py-3 rounded-xl text-gray-500 font-bold text-[10px]';
         }
 
-        function toggleFinance(mode) {
-            document.getElementById('sec-dp').classList.toggle('hidden', mode === 'wd');
-            document.getElementById('sec-wd').classList.toggle('hidden', mode === 'dp');
-            document.getElementById('tab-dp').className = mode === 'dp' ? 'flex-1 py-3 rounded-xl sky-btn text-xs' : 'flex-1 py-3 rounded-xl text-gray-500 font-bold text-xs';
-            document.getElementById('tab-wd').className = mode === 'wd' ? 'flex-1 py-3 rounded-xl sky-btn text-xs' : 'flex-1 py-3 rounded-xl text-gray-500 font-bold text-xs';
-        }
-
-        // 🧠 LOGIC SYSTEM 🧠
+        // CORE ENGINE
         const logic = {
-            state: { user: JSON.parse(localStorage.getItem('shg_v3_session')) || null },
+            state: { user: JSON.parse(localStorage.getItem('shg_session')) || null },
 
             init: function() {
-                const bar = document.getElementById('boot-progress');
-                const txt = document.getElementById('boot-text');
-                
-                setTimeout(() => { bar.style.width = '40%'; txt.innerText = 'SYNCING FIREBASE...'; }, 500);
-                setTimeout(() => { bar.style.width = '80%'; txt.innerText = 'VERIFYING SESSION...'; }, 1200);
                 setTimeout(() => {
-                    bar.style.width = '100%';
-                    document.getElementById('boot-screen').style.opacity = '0';
-                    setTimeout(() => {
-                        document.getElementById('boot-screen').style.display = 'none';
-                        if(this.state.user) {
-                            this.launchApp();
-                        } else {
-                            showView('auth-view');
-                        }
-                    }, 500);
+                    document.getElementById('boot-loader').style.display = 'none';
+                    if(this.state.user) {
+                        this.launchApp();
+                    } else {
+                        show('auth');
+                    }
                 }, 2000);
             },
 
             launchApp: function() {
-                // Access Portal-ke purapuri UI theke vanish kora
-                document.getElementById('auth-view').remove(); 
+                // REMOVE LOGIN PAGE FROM DOM FOR SECURITY
+                const authView = document.getElementById('auth-view');
+                if(authView) authView.remove();
+
                 document.getElementById('main-header').classList.remove('hidden');
                 document.getElementById('bottom-nav').classList.remove('hidden');
-                showView('home-view');
+                show('home');
                 this.cloudSync();
             },
 
-            copy: function(val) {
-                navigator.clipboard.writeText(val);
-                Swal.fire({title:'Copied!', icon:'success', toast:true, position:'top-end', showConfirmButton:false, timer:2000});
-            },
-
-            // Firebase Actions
-            register: async function() {
-                const n = document.getElementById('r-name').value, u = document.getElementById('r-uid').value, p = document.getElementById('r-pass').value;
-                if(!n || !u || !p) return Swal.fire('Error', 'Please fill all data', 'error');
-
-                const { doc, setDoc, getDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
-                const check = await getDoc(doc(window.db, "users", u));
-                if(check.exists()) return Swal.fire('Error', 'UID already active!', 'error');
-
-                const data = { name: n, uid: u, pass: p, balance: 0, role: "player", time: Date.now() };
-                await setDoc(doc(window.db, "users", u), data);
-                localStorage.setItem('shg_v3_session', JSON.stringify(data));
-                location.reload();
-            },
-
+            // USER ACTIONS
             login: async function() {
                 const u = document.getElementById('l-uid').value, p = document.getElementById('l-pass').value;
                 const { doc, getDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
                 const snap = await getDoc(doc(window.db, "users", u));
                 if(snap.exists() && snap.data().pass === p) {
-                    localStorage.setItem('shg_v3_session', JSON.stringify(snap.data()));
+                    localStorage.setItem('shg_session', JSON.stringify(snap.data()));
                     location.reload();
-                } else Swal.fire('Failed', 'Identity mismatch!', 'error');
+                } else Swal.fire('Denied', 'Invalid Identity Data', 'error');
+            },
+
+            register: async function() {
+                const n = document.getElementById('r-name').value, u = document.getElementById('r-uid').value, p = document.getElementById('r-pass').value;
+                if(!n || !u || !p) return;
+                const { doc, setDoc, getDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
+                const check = await getDoc(doc(window.db, "users", u));
+                if(check.exists()) return Swal.fire('Error', 'UID already registered', 'error');
+
+                const data = { name: n, uid: u, pass: p, balance: 0, role: 'player', timestamp: Date.now() };
+                await setDoc(doc(window.db, "users", u), data);
+                localStorage.setItem('shg_session', JSON.stringify(data));
+                location.reload();
             },
 
             logout: function() { localStorage.clear(); location.reload(); },
 
-            submitDeposit: async function() {
-                const m = document.getElementById('dp-method').value, a = document.getElementById('dp-amt').value, t = document.getElementById('dp-trx').value;
+            deposit: async function() {
+                const a = document.getElementById('d-amt').value, t = document.getElementById('d-trx').value;
                 if(!a || !t) return;
                 const { collection, addDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
-                await addDoc(collection(window.db, "deposits"), { uid:this.state.user.uid, name:this.state.user.name, amount:parseFloat(a), method:m, trx:t, time:Date.now() });
-                Swal.fire('Transmitted', 'Request pending on cloud', 'success');
-                showView('home-view');
+                await addDoc(collection(window.db, "deposits"), { uid: this.state.user.uid, name: this.state.user.name, amount: parseFloat(a), trx: t, time: Date.now() });
+                Swal.fire('Transmitted', 'Reviewing Transaction...', 'success');
             },
 
-            submitWithdraw: async function() {
-                const n = document.getElementById('wd-num').value, a = document.getElementById('wd-amt').value;
-                if(!a || !n) return;
-                const { collection, addDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
-                await addDoc(collection(window.db, "withdraws"), { uid:this.state.user.uid, name:this.state.user.name, number:n, amount:parseFloat(a), time:Date.now() });
-                Swal.fire('Transmitted', 'Request sent for review', 'info');
-                showView('home-view');
+            joinMatch: async function(mId, fee) {
+                const { value: ign } = await Swal.fire({
+                    title: 'BATTLE ENTRY',
+                    input: 'text',
+                    inputLabel: 'Enter Your Game Name (IGN)',
+                    inputPlaceholder: 'e.g. SHG亗PLAYER',
+                    showCancelButton: true,
+                    confirmButtonText: 'JOIN FOR ৳' + fee
+                });
+
+                if(!ign) return;
+
+                const { doc, getDoc, updateDoc, increment, collection, addDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
+                const uRef = doc(window.db, "users", this.state.user.uid);
+                const uSnap = await getDoc(uRef);
+                
+                if(uSnap.data().balance < fee) return Swal.fire('Insufficent Credits', 'Deposit more to enter', 'error');
+
+                // TRANSACTION CORE
+                await updateDoc(uRef, { balance: increment(-fee) });
+                await updateDoc(doc(window.db, "system", "stats"), { total_revenue: increment(fee) });
+                await addDoc(collection(window.db, `matches/${mId}/participants`), {
+                    uid: this.state.user.uid,
+                    ign: ign,
+                    time: Date.now()
+                });
+
+                Swal.fire('Mission Accepted', 'Game Tag: ' + ign, 'success');
             },
 
-            // Admin Actions
+            // ADMIN COMMANDS
             admCreateMatch: async function() {
-                const t=document.getElementById('am-title').value, tm=document.getElementById('am-time').value, f=document.getElementById('am-fee').value, p=document.getElementById('am-prize').value, m=document.getElementById('am-map').value;
+                const t = document.getElementById('m-title').value, f = parseFloat(document.getElementById('m-fee').value), p = document.getElementById('m-prize').value;
                 const { collection, addDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
-                await addDoc(collection(window.db, "matches"), { title:t, time:tm, fee:f, prize:p, map:m, timestamp:Date.now() });
-                Swal.fire('Published', 'Tournament live on arena', 'success');
+                await addDoc(collection(window.db, "matches"), { title: t, fee: f, prize: p, time: Date.now() });
+                Swal.fire('Match Published', '', 'success');
             },
 
-            admApproveFin: async function(type, id, uid, amt) {
+            admEditBalance: async function(uid, current) {
+                const { value: newBal } = await Swal.fire({
+                    title: 'Update Operator Balance',
+                    input: 'number',
+                    inputValue: current
+                });
+                if(newBal) {
+                    const { doc, updateDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
+                    await updateDoc(doc(window.db, "users", uid), { balance: parseFloat(newBal) });
+                }
+            },
+
+            admApproveDeposit: async function(id, uid, amt) {
                 const { doc, updateDoc, increment, deleteDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
-                const val = (type === 'deposits') ? parseFloat(amt) : -parseFloat(amt);
-                await updateDoc(doc(window.db, "users", uid), { balance: increment(val) });
-                await deleteDoc(doc(window.db, type, id));
-                Swal.fire('Synced', 'Cloud data updated', 'success');
+                await updateDoc(doc(window.db, "users", uid), { balance: increment(parseFloat(amt)) });
+                await deleteDoc(doc(window.db, "deposits", id));
+                Swal.fire('Credits Synced', '', 'success');
             },
 
             admSendNotice: async function() {
-                const msg = document.getElementById('an-text').value;
+                const txt = document.getElementById('an-text').value;
                 const { doc, setDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
-                await setDoc(doc(window.db, "system", "notice"), { text: msg, time: Date.now() });
-                Swal.fire('Broadcasted', 'Message sent to all users', 'success');
+                await setDoc(doc(window.db, "system", "notice"), { text: txt, time: Date.now() });
+                Swal.fire('Broadcasted', '', 'info');
             }
         };
 
@@ -490,7 +374,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-        import { getFirestore, doc, collection, onSnapshot, query, orderBy, limit } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+        import { getFirestore, doc, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCXeBxPtMScUNyoctZ61g7eUNy-...", 
@@ -501,95 +385,66 @@
             appId: "1:899657492968:web:5f9a897f47ea683707834a"
         };
 
-        const fApp = initializeApp(firebaseConfig);
-        const db = getFirestore(fApp);
-        window.db = db;
+        window.db = getFirestore(initializeApp(firebaseConfig));
 
         logic.cloudSync = () => {
-            // Real-time User Data
-            onSnapshot(doc(db, "users", logic.state.user.uid), (d) => {
+            // USER DATA SYNC
+            onSnapshot(doc(window.db, "users", logic.state.user.uid), (d) => {
                 const u = d.data();
-                document.getElementById('h-balance').innerText = u.balance.toFixed(0) + " ৳";
-                document.getElementById('w-balance-val').innerText = u.balance.toFixed(0);
                 document.getElementById('u-name').innerText = u.name;
-                document.getElementById('u-uid-label').innerText = "UID: " + u.uid;
-                document.getElementById('p-name').innerText = u.name;
-                document.getElementById('p-uid').innerText = "UID: " + u.uid;
-                document.getElementById('p-role').innerText = u.role;
-                
-                if(u.role === 'admin') {
-                    document.getElementById('nav-admin').classList.remove('hidden');
-                }
+                document.getElementById('u-bal').innerText = "৳" + u.balance.toFixed(0);
+                document.getElementById('h-bal').innerText = u.balance.toFixed(0) + " ৳";
+                document.getElementById('w-bal-xl').innerText = "৳" + u.balance.toFixed(0);
+                if(u.role === 'admin') document.getElementById('adm-btn').classList.remove('hidden');
             });
 
-            // Global Notice
-            onSnapshot(doc(db, "system", "notice"), (d) => {
-                if(d.exists()) document.getElementById('sys-notice').innerText = d.data().text;
-            });
-
-            // Matches Engine
-            onSnapshot(collection(db, "matches"), (snap) => {
-                const matches = snap.docs.map(d => d.data());
-                const matchHtml = snap.docs.map(d => {
+            // MATCH ARENA SYNC
+            onSnapshot(collection(window.db, "matches"), (snap) => {
+                const html = snap.docs.map(d => {
                     const m = d.data();
                     return `
-                    <div class="glass p-8 rounded-[2.5rem] border-l-8 border-sky-500 relative group overflow-hidden">
-                        <div class="absolute -right-6 -top-6 opacity-5 group-hover:rotate-12 transition-transform"><i class="fas fa-gun text-9xl"></i></div>
-                        <div class="flex justify-between items-start mb-6">
-                            <div>
-                                <h4 class="text-3xl font-orbit font-bold italic tracking-tighter mb-1">${m.title}</h4>
-                                <div class="flex gap-4 text-[10px] text-gray-500 font-bold uppercase">
-                                    <span><i class="far fa-clock text-sky-400"></i> ${m.time}</span>
-                                    <span><i class="fas fa-map text-sky-400"></i> ${m.map}</span>
-                                </div>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-[9px] text-gray-500 font-bold uppercase">Prize Pool</p>
-                                <p class="text-3xl font-orbit font-bold sky-text">৳ ${m.prize}</p>
-                            </div>
+                    <div class="glass p-6 rounded-[2.5rem] border-l-4 border-sky-500 relative overflow-hidden group">
+                        <div class="absolute -right-4 -top-4 opacity-5 group-hover:rotate-12 transition-transform"><i class="fas fa-gun text-8xl"></i></div>
+                        <h4 class="font-orbit font-bold sky-text mb-4 uppercase text-lg">${m.title}</h4>
+                        <div class="flex justify-between mb-6">
+                            <div><p class="text-[8px] text-gray-500 font-bold">ENTRY FEE</p><p class="text-xl font-bold italic">৳${m.fee}</p></div>
+                            <div class="text-right"><p class="text-[8px] text-gray-500 font-bold">PRIZE POOL</p><p class="text-xl font-bold text-green-400 italic">৳${m.prize}</p></div>
                         </div>
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="bg-black/40 p-4 rounded-2xl border border-white/5">
-                                <p class="text-[9px] text-gray-500 uppercase font-bold mb-1">Entry Fee</p>
-                                <p class="text-xl font-bold">৳ ${m.fee}</p>
-                            </div>
-                            <button class="sky-btn rounded-2xl font-orbit text-xs tracking-widest uppercase">Join Battle</button>
-                        </div>
+                        <button onclick="logic.joinMatch('${d.id}', ${m.fee})" class="w-full sky-btn py-3 rounded-2xl text-[10px] uppercase tracking-widest">Enroll Mission</button>
                     </div>`;
                 }).join('');
-                document.getElementById('full-match-list').innerHTML = matchHtml;
-                document.getElementById('home-match-grid').innerHTML = matchHtml;
-                document.getElementById('adm-st-matches').innerText = snap.docs.length;
+                document.getElementById('match-grid').innerHTML = html;
             });
 
-            // Admin Logic Syncs
-            onSnapshot(collection(db, "users"), (s) => document.getElementById('adm-st-users').innerText = s.docs.length);
+            // GLOBAL NOTICE
+            onSnapshot(doc(window.db, "system", "notice"), (d) => { if(d.exists()) document.getElementById('sys-notice').innerText = d.data().text; });
+
+            // ADMIN: REVENUE & USER LIST
+            onSnapshot(doc(window.db, "system", "stats"), (d) => { if(d.exists()) document.getElementById('adm-revenue').innerText = "৳" + d.data().total_revenue; });
             
-            onSnapshot(collection(db, "deposits"), (snap) => {
-                document.getElementById('adm-dp-list').innerHTML = snap.docs.map(d => `
-                    <div class="glass p-5 rounded-3xl admin-card border-green-500 flex justify-between items-center">
-                        <div>
-                            <p class="font-bold text-sm text-sky-400">${d.data().name}</p>
-                            <p class="text-[9px] text-gray-500 uppercase">${d.data().method} | Trx: ${d.data().trx}</p>
-                            <p class="text-xl font-orbit font-bold">৳ ${d.data().amount}</p>
-                        </div>
-                        <button onclick="logic.admApproveFin('deposits', '${d.id}', '${d.data().uid}', ${d.data().amount})" class="bg-green-600 text-white px-6 py-2 rounded-xl font-bold text-[10px]">APPROVE</button>
-                    </div>`).join('');
+            onSnapshot(collection(window.db, "users"), (snap) => {
+                document.getElementById('adm-user-list').innerHTML = snap.docs.map(d => `
+                <tr class="hover:bg-white/5">
+                    <td class="p-6 font-bold text-sky-400 text-sm">${d.data().name}</td>
+                    <td class="p-6 text-[10px] font-mono text-gray-500">${d.data().uid}</td>
+                    <td class="p-6 font-bold">৳${d.data().balance}</td>
+                    <td class="p-6"><button onclick="logic.admEditBalance('${d.data().uid}', ${d.data().balance})" class="bg-white/10 px-4 py-1 rounded-lg text-[9px] font-bold uppercase">Edit</button></td>
+                </tr>`).join('');
             });
 
-            onSnapshot(collection(db, "withdraws"), (snap) => {
-                document.getElementById('adm-st-wd').innerText = snap.docs.length;
-                document.getElementById('adm-wd-list').innerHTML = snap.docs.map(d => `
-                    <div class="glass p-5 rounded-3xl admin-card flex justify-between items-center">
-                        <div>
-                            <p class="font-bold text-sm text-red-400">${d.data().name}</p>
-                            <p class="text-[9px] text-gray-500 uppercase">Number: ${d.data().number}</p>
-                            <p class="text-xl font-orbit font-bold">৳ ${d.data().amount}</p>
-                        </div>
-                        <button onclick="logic.admApproveFin('withdraws', '${d.id}', '${d.data().uid}', ${d.data().amount})" class="bg-red-600 text-white px-6 py-2 rounded-xl font-bold text-[10px]">PAID</button>
-                    </div>`).join('');
+            // ADMIN: DEPOSIT QUEUE
+            onSnapshot(collection(window.db, "deposits"), (snap) => {
+                document.getElementById('adm-dp-queue').innerHTML = snap.docs.map(d => `
+                <div class="glass p-4 rounded-2xl border-l-4 border-green-500 flex justify-between items-center">
+                    <div>
+                        <p class="font-bold text-xs sky-text">${d.data().name}</p>
+                        <p class="text-[10px] text-gray-500">Trx: ${d.data().trx}</p>
+                        <p class="font-bold text-sm">৳${d.data().amount}</p>
+                    </div>
+                    <button onclick="logic.admApproveDeposit('${d.id}', '${d.data().uid}', ${d.data().amount})" class="bg-green-600 px-4 py-2 rounded-xl text-[9px] font-bold">APPROVE</button>
+                </div>`).join('');
             });
-        }
+        };
     </script>
 </body>
 </html>
