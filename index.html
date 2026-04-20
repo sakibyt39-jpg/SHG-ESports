@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SHG亗ESPORTS | ULTIMATE MASTER</title>
+    <title>SHG亗ESPORTS | SUPREME CONTROL</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -11,361 +11,234 @@
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@300;500;700&display=swap');
-
-        :root {
-            --sky: #00eeff;
-            --sky-dark: #0088ff;
-            --bg: #010413;
-        }
-
-        body {
-            background-color: var(--bg);
-            color: #e2e8f0;
-            font-family: 'Rajdhani', sans-serif;
-            overflow-x: hidden;
-            background-image: 
-                radial-gradient(circle at 0% 0%, rgba(0, 238, 255, 0.05) 0%, transparent 40%),
-                radial-gradient(circle at 100% 100%, rgba(0, 238, 255, 0.05) 0%, transparent 40%);
-        }
-
+        :root { --sky: #00eeff; --sky-dark: #0088ff; --bg: #010413; }
+        body { background-color: var(--bg); color: #e2e8f0; font-family: 'Rajdhani', sans-serif; overflow-x: hidden; background-image: radial-gradient(circle at 50% 0%, rgba(0, 238, 255, 0.08) 0%, transparent 50%); }
         .font-orbit { font-family: 'Orbitron', sans-serif; }
-        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(25px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .glass-dark { background: rgba(1, 4, 19, 0.95); backdrop-filter: blur(30px); border-top: 1px solid rgba(255, 255, 255, 0.05); }
+        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); }
         .sky-text { color: var(--sky); text-shadow: 0 0 10px rgba(0, 238, 255, 0.5); }
-        .sky-btn { background: linear-gradient(135deg, var(--sky), var(--sky-dark)); color: #000; font-weight: 800; transition: 0.3s; box-shadow: 0 5px 15px rgba(0, 238, 255, 0.2); }
-        .sky-btn:active { transform: scale(0.95); }
-
-        .app-view { display: none; min-height: 100vh; animation: pageIn 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+        .sky-btn { background: linear-gradient(135deg, var(--sky), var(--sky-dark)); color: #000; font-weight: 800; transition: 0.3s; }
+        .app-view { display: none; animation: pageIn 0.4s ease-out; }
         .app-view.active { display: block; }
-        @keyframes pageIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        .nav-active i { color: var(--sky); transform: translateY(-5px) scale(1.1); filter: drop-shadow(0 0 8px var(--sky)); }
-        ::-webkit-scrollbar { width: 3px; }
-        ::-webkit-scrollbar-thumb { background: var(--sky); border-radius: 10px; }
+        @keyframes pageIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <div id="boot-loader" class="fixed inset-0 z-[9999] bg-[#010413] flex flex-col items-center justify-center">
-        <div class="relative w-24 h-24 mb-6">
-            <div class="absolute inset-0 border-4 border-sky-500/10 rounded-full"></div>
-            <div class="absolute inset-0 border-t-4 border-sky-400 rounded-full animate-spin"></div>
-            <div class="absolute inset-0 flex items-center justify-center font-orbit font-bold text-2xl sky-text">SHG</div>
-        </div>
-        <p class="font-orbit tracking-[0.4em] text-[10px] sky-text animate-pulse">CONNECTING TO CORE DATABASE</p>
+    <div id="boot-loader" class="fixed inset-0 z-[9999] bg-[#010413] flex flex-col items-center justify-center text-center">
+        <div class="w-16 h-16 border-4 border-sky-500/10 border-t-sky-400 rounded-full animate-spin mb-4"></div>
+        <p class="font-orbit tracking-[0.4em] text-[10px] sky-text">SYNCING WITH SERVER...</p>
     </div>
 
     <header id="main-header" class="fixed top-0 w-full z-[1000] glass px-6 py-4 hidden">
         <div class="max-w-5xl mx-auto flex justify-between items-center">
-            <div class="flex items-center gap-2">
-                <div class="w-8 h-8 sky-btn rounded-lg flex items-center justify-center font-orbit">亗</div>
-                <h1 class="font-orbit font-bold text-lg">SHG <span class="sky-text">ESPORTS</span></h1>
-            </div>
-            <div onclick="show('wallet')" class="bg-black/60 px-4 py-1.5 rounded-xl border border-sky-500/20 cursor-pointer flex items-center gap-3">
-                <div class="text-right leading-none">
-                    <p class="text-[7px] text-gray-500 font-bold uppercase">Balance</p>
-                    <p id="h-bal" class="font-bold sky-text text-sm">0 ৳</p>
-                </div>
-                <i class="fas fa-plus-circle text-sky-500 text-xs"></i>
+            <h1 class="font-orbit font-bold text-lg">SHG <span class="sky-text">亗ESPORTS</span></h1>
+            <div onclick="show('wallet')" class="bg-black/50 px-4 py-1.5 rounded-xl border border-sky-500/20 cursor-pointer">
+                <span id="h-bal" class="font-bold sky-text text-sm">0 ৳</span>
             </div>
         </div>
     </header>
 
-    <div id="auth-view" class="app-view active flex items-center justify-center p-6">
-        <div class="w-full max-w-md">
-            <div class="text-center mb-10">
-                <h2 class="text-5xl font-orbit font-bold italic sky-text mb-2">ACCESS</h2>
-                <p class="text-[10px] text-gray-500 tracking-[0.5em] uppercase">Private Operator Portal</p>
-            </div>
-            <div class="glass p-8 rounded-[3rem] shadow-2xl">
-                <div class="flex bg-black/40 rounded-2xl p-1 mb-8 border border-white/5">
-                    <button id="t-login" onclick="toggleAuth('login')" class="flex-1 py-3 rounded-xl sky-btn text-[10px]">LOGIN</button>
-                    <button id="t-reg" onclick="toggleAuth('reg')" class="flex-1 py-3 rounded-xl text-gray-500 font-bold text-[10px]">REGISTER</button>
-                </div>
-
-                <div id="form-login" class="space-y-4">
-                    <input id="l-uid" type="text" placeholder="Free Fire UID" class="w-full p-4 rounded-2xl bg-black border border-white/5 outline-none focus:border-sky-500">
-                    <input id="l-pass" type="password" placeholder="Access Key" class="w-full p-4 rounded-2xl bg-black border border-white/5 outline-none focus:border-sky-500">
-                    <button onclick="logic.login()" class="w-full sky-btn py-4 rounded-2xl font-bold tracking-widest mt-4">INITIALIZE SYSTEM</button>
-                </div>
-
-                <div id="form-reg" class="hidden space-y-4">
-                    <input id="r-name" type="text" placeholder="Full Name" class="w-full p-4 rounded-2xl bg-black border border-white/5 outline-none">
-                    <input id="r-uid" type="text" placeholder="In-Game UID" class="w-full p-4 rounded-2xl bg-black border border-white/5 outline-none">
-                    <input id="r-pass" type="password" placeholder="Set Access Key" class="w-full p-4 rounded-2xl bg-black border border-white/5 outline-none">
-                    <button onclick="logic.register()" class="w-full sky-btn py-4 rounded-2xl font-bold tracking-widest mt-4">CREATE OPERATOR</button>
-                </div>
+    <div id="auth-view" class="app-view active flex items-center justify-center min-h-screen p-6">
+        <div class="w-full max-w-md glass p-10 rounded-[3rem] text-center">
+            <h2 class="text-4xl font-orbit font-bold sky-text mb-8 italic">ACCESS</h2>
+            <div id="login-form" class="space-y-4">
+                <input id="l-uid" type="text" placeholder="UID" class="w-full p-4 rounded-2xl bg-black border border-white/5 outline-none">
+                <input id="l-pass" type="password" placeholder="Key" class="w-full p-4 rounded-2xl bg-black border border-white/5 outline-none">
+                <button onclick="logic.login()" class="w-full sky-btn py-4 rounded-2xl font-bold">INITIALIZE</button>
             </div>
         </div>
     </div>
 
     <div id="home-view" class="app-view px-6 pt-24 pb-32">
         <div class="max-w-4xl mx-auto space-y-8">
-            <div class="glass p-8 rounded-[3.5rem] border-l-8 border-sky-500 relative overflow-hidden">
-                <div class="absolute -right-10 -top-10 w-48 h-48 bg-sky-500/5 rounded-full blur-3xl"></div>
-                <p class="text-[10px] text-sky-400 font-bold uppercase tracking-[0.4em] mb-2">Operator Verified</p>
-                <h2 id="u-name" class="text-4xl font-orbit font-bold italic mb-6 leading-none">...</h2>
+            <div class="glass p-8 rounded-[3rem] border-l-8 border-sky-500">
+                <p id="u-name" class="text-3xl font-orbit font-bold italic mb-2">...</p>
                 <div class="flex gap-4">
-                    <div class="bg-black/60 px-6 py-3 rounded-2xl border border-white/5 flex-1">
-                        <p class="text-[8px] text-gray-500 uppercase font-bold mb-1">Rank Status</p>
-                        <p class="text-lg font-bold">SOLDIER 亗</p>
-                    </div>
-                    <div class="bg-sky-500/10 px-6 py-3 rounded-2xl border border-sky-500/20 flex-1">
-                        <p class="text-[8px] text-sky-400 uppercase font-bold mb-1">Available Credits</p>
-                        <p id="u-bal" class="text-lg font-bold">৳0</p>
-                    </div>
+                    <p class="text-xs font-bold text-sky-400 uppercase">Balance: <span id="u-bal">0</span>৳</p>
                 </div>
             </div>
 
-            <div class="glass p-5 rounded-3xl border-l-4 border-yellow-500 flex items-center gap-4">
-                <i class="fas fa-bullhorn text-yellow-500"></i>
-                <p id="sys-notice" class="text-sm text-gray-400 italic">Syncing broadcast system...</p>
-            </div>
-
-            <div>
-                <div class="flex justify-between items-end mb-6">
-                    <h3 class="text-2xl font-orbit font-bold italic tracking-tighter">BATTLE <span class="sky-text">ARENA</span></h3>
-                    <button onclick="show('arena')" class="text-[10px] text-sky-400 font-bold border-b border-sky-500/30">VIEW ALL</button>
-                </div>
-                <div id="match-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+            <div class="space-y-6">
+                <h3 class="text-xl font-orbit font-bold italic sky-text">ACTIVE MISSIONS</h3>
+                <div id="match-grid" class="grid gap-6"></div>
             </div>
         </div>
     </div>
 
     <div id="wallet-view" class="app-view px-6 pt-24 pb-32">
-        <div class="max-w-md mx-auto space-y-8">
-            <div class="glass p-12 rounded-[4rem] text-center border-2 border-sky-500/10 relative overflow-hidden">
-                <div class="absolute top-0 right-0 p-8 opacity-5"><i class="fas fa-vault text-8xl"></i></div>
-                <p class="text-gray-500 text-xs font-bold uppercase tracking-[0.5em] mb-4">Secured Balance</p>
-                <h1 id="w-bal-xl" class="text-6xl font-orbit font-bold italic sky-text mb-2">৳0</h1>
-                <span class="text-[8px] font-bold bg-green-500/10 text-green-500 px-3 py-1 rounded-full uppercase tracking-widest"><i class="fas fa-shield-alt mr-1"></i> Encrypted</span>
+        <div class="max-w-md mx-auto space-y-6">
+            <div class="glass p-10 rounded-[3rem] text-center border border-sky-500/20">
+                <h1 id="w-bal-xl" class="text-6xl font-orbit font-bold sky-text">৳0</h1>
+                <p class="text-[10px] uppercase tracking-widest text-gray-500 mt-2">Available for withdrawal</p>
             </div>
 
-            <div class="glass p-8 rounded-[3rem] space-y-5">
-                <div class="bg-sky-500/10 p-5 rounded-2xl border border-sky-500/20 text-center">
-                    <p class="text-[9px] text-sky-400 font-bold uppercase mb-1">Official Bkash/Nagad</p>
-                    <p class="text-2xl font-orbit font-bold tracking-widest">01941686065</p>
-                </div>
-                <input id="d-amt" type="number" placeholder="Enter Amount (৳)" class="w-full p-4 rounded-2xl bg-black border border-white/5 outline-none">
-                <input id="d-trx" type="text" placeholder="Transaction ID (TrxID)" class="w-full p-4 rounded-2xl bg-black border border-white/5 outline-none">
-                <button onclick="logic.deposit()" class="w-full sky-btn py-4 rounded-2xl font-bold tracking-widest uppercase text-xs">Transmit Deposit Request</button>
+            <div class="grid grid-cols-2 gap-4">
+                <button onclick="swichTab('dep')" class="py-3 rounded-xl bg-sky-500/10 border border-sky-500/30 sky-text font-bold text-xs">DEPOSIT</button>
+                <button onclick="swichTab('wd')" class="py-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-500 font-bold text-xs">WITHDRAW</button>
             </div>
+
+            <div id="wallet-content" class="glass p-8 rounded-[3rem] space-y-4">
+                </div>
         </div>
     </div>
 
     <div id="admin-view" class="app-view px-6 pt-24 pb-32">
         <div class="max-w-6xl mx-auto space-y-10">
             <div class="flex justify-between items-center">
-                <h2 class="text-4xl font-orbit font-bold text-red-500 italic">SYSTEM <span class="text-white">CORE</span></h2>
-                <div class="bg-red-500/10 p-4 rounded-2xl border border-red-500/20 text-right">
-                    <p class="text-[9px] text-gray-500 font-bold uppercase">Admin Revenue</p>
-                    <p id="adm-revenue" class="text-2xl font-bold sky-text">৳0</p>
-                </div>
+                <h2 class="text-3xl font-orbit font-bold text-red-500">ADMIN CORE</h2>
+                <p class="bg-red-500/10 p-3 rounded-xl border border-red-500/20 font-bold">Revenue: <span id="adm-rev">0</span>৳</p>
             </div>
 
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                <div class="lg:col-span-2 space-y-6">
-                    <h3 class="font-orbit font-bold text-xl flex items-center gap-3"><i class="fas fa-users-cog text-sky-400"></i> OPERATOR DIRECTORY</h3>
-                    <div class="glass rounded-[3rem] overflow-hidden border border-white/5 overflow-x-auto">
-                        <table class="w-full text-left">
-                            <thead class="bg-white/5 text-[9px] uppercase text-gray-500 font-bold">
-                                <tr>
-                                    <th class="p-6">Operator Name</th>
-                                    <th class="p-6">UID</th>
-                                    <th class="p-6">Balance</th>
-                                    <th class="p-6">Control</th>
-                                </tr>
-                            </thead>
-                            <tbody id="adm-user-list" class="divide-y divide-white/5"></tbody>
-                        </table>
-                    </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="glass p-8 rounded-[3rem] overflow-hidden">
+                    <h4 class="font-bold mb-4 text-xs uppercase tracking-widest text-sky-400">User Directory</h4>
+                    <div id="adm-user-list" class="space-y-3 max-h-[400px] overflow-y-auto pr-2"></div>
                 </div>
 
-                <div class="space-y-8">
+                <div class="space-y-6">
                     <div class="glass p-8 rounded-[3rem] border border-red-500/10">
-                        <h4 class="font-bold text-red-500 mb-6 uppercase text-xs tracking-widest">Publish New Battle</h4>
+                        <h4 class="font-bold mb-4 text-xs text-red-500">CREATE MATCH</h4>
                         <div class="space-y-3">
-                            <input id="m-title" type="text" placeholder="Match Title" class="w-full p-3 rounded-xl bg-black border border-white/5 text-sm">
-                            <input id="m-fee" type="number" placeholder="Entry Fee (৳)" class="w-full p-3 rounded-xl bg-black border border-white/5 text-sm">
-                            <input id="m-prize" type="number" placeholder="Prize Pool (৳)" class="w-full p-3 rounded-xl bg-black border border-white/5 text-sm">
-                            <button onclick="logic.admCreateMatch()" class="w-full sky-btn py-3 rounded-xl text-xs uppercase">Initialize Match</button>
+                            <input id="m-title" type="text" placeholder="Title" class="w-full p-3 rounded-xl bg-black border border-white/5">
+                            <div class="flex gap-2">
+                                <input id="m-fee" type="number" placeholder="Fee" class="w-full p-3 rounded-xl bg-black border border-white/5">
+                                <input id="m-prize" type="number" placeholder="Prize" class="w-full p-3 rounded-xl bg-black border border-white/5">
+                            </div>
+                            <input id="m-time" type="text" placeholder="Time (e.g. 10:00 PM)" class="w-full p-3 rounded-xl bg-black border border-white/5">
+                            <button onclick="logic.admCreateMatch()" class="w-full sky-btn py-3 rounded-xl font-bold">PUBLISH</button>
                         </div>
                     </div>
 
-                    <div class="glass p-8 rounded-[3rem] border border-white/5">
-                        <h4 class="font-bold sky-text mb-4 uppercase text-xs">Global Notice</h4>
-                        <textarea id="an-text" placeholder="Message for all players..." class="w-full p-4 rounded-2xl bg-black border border-white/5 text-xs h-24 mb-3"></textarea>
-                        <button onclick="logic.admSendNotice()" class="w-full bg-blue-600 py-3 rounded-xl text-[10px] font-bold uppercase">Broadcast</button>
-                    </div>
-
-                    <div class="space-y-4">
-                        <h4 class="font-bold text-xs uppercase text-gray-500">Deposit Queue</h4>
-                        <div id="adm-dp-queue" class="space-y-3"></div>
-                    </div>
+                    <div id="adm-wd-list" class="space-y-4">
+                        <h4 class="font-bold text-xs uppercase text-gray-500">Withdraw Requests</h4>
+                        </div>
+                    
+                    <div id="adm-dp-list" class="space-y-4">
+                        <h4 class="font-bold text-xs uppercase text-gray-500">Deposit Requests</h4>
+                        </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="profile-view" class="app-view px-6 pt-24 pb-32">
-        <div class="max-w-md mx-auto text-center space-y-8">
-            <div class="w-32 h-32 mx-auto sky-btn p-1 rounded-full">
-                <img src="https://api.dicebear.com/7.x/bottts/svg?seed=SHG" class="bg-slate-900 rounded-full w-full h-full">
-            </div>
-            <button onclick="logic.logout()" class="w-full py-5 rounded-[2.5rem] bg-red-600/10 text-red-500 border border-red-500/20 font-bold uppercase text-[10px] tracking-widest">TERMINATE SESSION</button>
-        </div>
-    </div>
-
-    <nav id="bottom-nav" class="fixed bottom-0 w-full z-[1000] glass-dark rounded-t-[3.5rem] p-6 hidden">
+    <nav id="bottom-nav" class="fixed bottom-0 w-full glass p-6 rounded-t-[3rem] hidden z-[1000]">
         <div class="max-w-md mx-auto flex justify-around items-center">
-            <button onclick="show('home')" class="nav-btn"><i class="fas fa-home-alt text-2xl text-gray-600"></i></button>
-            <button onclick="show('arena')" class="nav-btn"><i class="fas fa-gamepad text-2xl text-gray-600"></i></button>
-            <button onclick="show('wallet')" class="nav-btn"><i class="fas fa-wallet text-2xl text-gray-600"></i></button>
-            <button onclick="show('profile')" class="nav-btn"><i class="fas fa-user-circle text-2xl text-gray-600"></i></button>
-            <button id="adm-btn" onclick="show('admin')" class="nav-btn hidden"><i class="fas fa-shield-halved text-2xl text-red-600"></i></button>
+            <button onclick="show('home')"><i class="fas fa-home text-2xl text-gray-600"></i></button>
+            <button onclick="show('wallet')"><i class="fas fa-wallet text-2xl text-gray-600"></i></button>
+            <button onclick="location.reload()"><i class="fas fa-user-circle text-2xl text-gray-600"></i></button>
+            <button id="adm-btn" onclick="show('admin')" class="hidden"><i class="fas fa-shield-halved text-2xl text-red-600"></i></button>
         </div>
     </nav>
 
     <script>
-        // NAVIGATION SYSTEM
         function show(id) {
             document.querySelectorAll('.app-view').forEach(v => v.classList.remove('active'));
             document.getElementById(id + '-view').classList.add('active');
-            
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('nav-active'));
-            // Visual active state logic here...
-            window.scrollTo({top: 0, behavior: 'smooth'});
+            if(id === 'wallet') swichTab('dep');
         }
 
-        function toggleAuth(mode) {
-            document.getElementById('form-login').classList.toggle('hidden', mode === 'reg');
-            document.getElementById('form-reg').classList.toggle('hidden', mode === 'login');
-            document.getElementById('t-login').className = mode === 'login' ? 'flex-1 py-3 rounded-xl sky-btn text-[10px]' : 'flex-1 py-3 rounded-xl text-gray-500 font-bold text-[10px]';
-            document.getElementById('t-reg').className = mode === 'reg' ? 'flex-1 py-3 rounded-xl sky-btn text-[10px]' : 'flex-1 py-3 rounded-xl text-gray-500 font-bold text-[10px]';
+        function swichTab(type) {
+            const container = document.getElementById('wallet-content');
+            if(type === 'dep') {
+                container.innerHTML = `
+                    <p class="text-[10px] text-sky-400 font-bold uppercase mb-2">Official Bkash/Nagad: 01941686065</p>
+                    <input id="d-amt" type="number" placeholder="Amount" class="w-full p-4 rounded-xl bg-black border border-white/5 mb-3">
+                    <input id="d-trx" type="text" placeholder="Trx ID" class="w-full p-4 rounded-xl bg-black border border-white/5 mb-4">
+                    <button onclick="logic.deposit()" class="w-full sky-btn py-4 rounded-2xl font-bold">SEND DEPOSIT</button>`;
+            } else {
+                container.innerHTML = `
+                    <p class="text-[10px] text-red-500 font-bold uppercase mb-2">Withdraw (Min 100৳)</p>
+                    <input id="w-num" type="text" placeholder="Bkash/Nagad Number" class="w-full p-4 rounded-xl bg-black border border-white/5 mb-3">
+                    <input id="w-amt" type="number" placeholder="Amount" class="w-full p-4 rounded-xl bg-black border border-white/5 mb-4">
+                    <button onclick="logic.withdraw()" class="w-full bg-red-600 text-white py-4 rounded-2xl font-bold">SEND WITHDRAW</button>`;
+            }
         }
 
-        // CORE ENGINE
         const logic = {
-            state: { user: JSON.parse(localStorage.getItem('shg_session')) || null },
+            state: { user: JSON.parse(localStorage.getItem('shg_v6')) || null },
 
             init: function() {
                 setTimeout(() => {
                     document.getElementById('boot-loader').style.display = 'none';
                     if(this.state.user) {
-                        this.launchApp();
-                    } else {
-                        show('auth');
-                    }
+                        const av = document.getElementById('auth-view'); if(av) av.remove();
+                        document.getElementById('main-header').classList.remove('hidden');
+                        document.getElementById('bottom-nav').classList.remove('hidden');
+                        show('home'); this.sync();
+                    } else show('auth');
                 }, 2000);
             },
 
-            launchApp: function() {
-                // REMOVE LOGIN PAGE FROM DOM FOR SECURITY
-                const authView = document.getElementById('auth-view');
-                if(authView) authView.remove();
-
-                document.getElementById('main-header').classList.remove('hidden');
-                document.getElementById('bottom-nav').classList.remove('hidden');
-                show('home');
-                this.cloudSync();
-            },
-
-            // USER ACTIONS
             login: async function() {
                 const u = document.getElementById('l-uid').value, p = document.getElementById('l-pass').value;
                 const { doc, getDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
                 const snap = await getDoc(doc(window.db, "users", u));
                 if(snap.exists() && snap.data().pass === p) {
-                    localStorage.setItem('shg_session', JSON.stringify(snap.data()));
+                    localStorage.setItem('shg_v6', JSON.stringify(snap.data()));
                     location.reload();
-                } else Swal.fire('Denied', 'Invalid Identity Data', 'error');
+                } else Swal.fire('Error', 'Invalid Access', 'error');
             },
-
-            register: async function() {
-                const n = document.getElementById('r-name').value, u = document.getElementById('r-uid').value, p = document.getElementById('r-pass').value;
-                if(!n || !u || !p) return;
-                const { doc, setDoc, getDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
-                const check = await getDoc(doc(window.db, "users", u));
-                if(check.exists()) return Swal.fire('Error', 'UID already registered', 'error');
-
-                const data = { name: n, uid: u, pass: p, balance: 0, role: 'player', timestamp: Date.now() };
-                await setDoc(doc(window.db, "users", u), data);
-                localStorage.setItem('shg_session', JSON.stringify(data));
-                location.reload();
-            },
-
-            logout: function() { localStorage.clear(); location.reload(); },
 
             deposit: async function() {
                 const a = document.getElementById('d-amt').value, t = document.getElementById('d-trx').value;
-                if(!a || !t) return;
                 const { collection, addDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
                 await addDoc(collection(window.db, "deposits"), { uid: this.state.user.uid, name: this.state.user.name, amount: parseFloat(a), trx: t, time: Date.now() });
-                Swal.fire('Transmitted', 'Reviewing Transaction...', 'success');
+                Swal.fire('Sent', 'Wait for approval', 'success');
             },
 
-            joinMatch: async function(mId, fee) {
-                const { value: ign } = await Swal.fire({
-                    title: 'BATTLE ENTRY',
-                    input: 'text',
-                    inputLabel: 'Enter Your Game Name (IGN)',
-                    inputPlaceholder: 'e.g. SHG亗PLAYER',
-                    showCancelButton: true,
-                    confirmButtonText: 'JOIN FOR ৳' + fee
-                });
+            withdraw: async function() {
+                const n = document.getElementById('w-num').value, a = parseFloat(document.getElementById('w-amt').value);
+                if(a < 100 || a > this.state.user.balance) return Swal.fire('Error', 'Invalid amount', 'error');
+                const { collection, addDoc, doc, updateDoc, increment } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
+                await addDoc(collection(window.db, "withdraws"), { uid: this.state.user.uid, name: this.state.user.name, amount: a, number: n, time: Date.now() });
+                await updateDoc(doc(window.db, "users", this.state.user.uid), { balance: increment(-a) });
+                Swal.fire('Requested', 'Balance Deducted. Wait for payment.', 'success');
+            },
 
+            join: async function(id, fee) {
+                const { value: ign } = await Swal.fire({ title: 'Join Match', input: 'text', inputPlaceholder: 'Your FF Name', showCancelButton: true });
                 if(!ign) return;
-
                 const { doc, getDoc, updateDoc, increment, collection, addDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
                 const uRef = doc(window.db, "users", this.state.user.uid);
                 const uSnap = await getDoc(uRef);
+                if(uSnap.data().balance < fee) return Swal.fire('Low Balance', '', 'error');
                 
-                if(uSnap.data().balance < fee) return Swal.fire('Insufficent Credits', 'Deposit more to enter', 'error');
-
-                // TRANSACTION CORE
                 await updateDoc(uRef, { balance: increment(-fee) });
-                await updateDoc(doc(window.db, "system", "stats"), { total_revenue: increment(fee) });
-                await addDoc(collection(window.db, `matches/${mId}/participants`), {
-                    uid: this.state.user.uid,
-                    ign: ign,
-                    time: Date.now()
-                });
-
-                Swal.fire('Mission Accepted', 'Game Tag: ' + ign, 'success');
+                await updateDoc(doc(window.db, "system", "stats"), { total_rev: increment(fee) });
+                await addDoc(collection(window.db, `matches/${id}/players`), { uid: this.state.user.uid, ign: ign });
+                Swal.fire('Joined!', '', 'success');
             },
 
-            // ADMIN COMMANDS
+            // ADMIN CORE
             admCreateMatch: async function() {
-                const t = document.getElementById('m-title').value, f = parseFloat(document.getElementById('m-fee').value), p = document.getElementById('m-prize').value;
+                const t = document.getElementById('m-title').value, f = parseFloat(document.getElementById('m-fee').value), p = document.getElementById('m-prize').value, tm = document.getElementById('m-time').value;
                 const { collection, addDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
-                await addDoc(collection(window.db, "matches"), { title: t, fee: f, prize: p, time: Date.now() });
-                Swal.fire('Match Published', '', 'success');
+                await addDoc(collection(window.db, "matches"), { title: t, fee: f, prize: p, time: tm, room_id: "TBA", room_pass: "TBA" });
+                Swal.fire('Match Live', '', 'success');
             },
 
-            admEditBalance: async function(uid, current) {
-                const { value: newBal } = await Swal.fire({
-                    title: 'Update Operator Balance',
-                    input: 'number',
-                    inputValue: current
+            admSetRoom: async function(id) {
+                const { value: formValues } = await Swal.fire({
+                    title: 'Room Details',
+                    html: '<input id="sw-id" class="swal2-input" placeholder="Room ID"><input id="sw-ps" class="swal2-input" placeholder="Password">',
+                    focusConfirm: false,
+                    preConfirm: () => [document.getElementById('sw-id').value, document.getElementById('sw-ps').value]
                 });
-                if(newBal) {
+                if(formValues) {
                     const { doc, updateDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
-                    await updateDoc(doc(window.db, "users", uid), { balance: parseFloat(newBal) });
+                    await updateDoc(doc(window.db, "matches", id), { room_id: formValues[0], room_pass: formValues[1] });
                 }
             },
 
-            admApproveDeposit: async function(id, uid, amt) {
-                const { doc, updateDoc, increment, deleteDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
-                await updateDoc(doc(window.db, "users", uid), { balance: increment(parseFloat(amt)) });
-                await deleteDoc(doc(window.db, "deposits", id));
-                Swal.fire('Credits Synced', '', 'success');
+            admDeleteMatch: async function(id) {
+                const { doc, deleteDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
+                if(confirm("Delete this match?")) await deleteDoc(doc(window.db, "matches", id));
             },
 
-            admSendNotice: async function() {
-                const txt = document.getElementById('an-text').value;
-                const { doc, setDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
-                await setDoc(doc(window.db, "system", "notice"), { text: txt, time: Date.now() });
-                Swal.fire('Broadcasted', '', 'info');
+            admApproveWD: async function(id) {
+                const { doc, deleteDoc } = await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js");
+                await deleteDoc(doc(window.db, "withdraws", id));
+                Swal.fire('Paid', 'Request removed from list', 'success');
             }
         };
 
@@ -374,7 +247,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-        import { getFirestore, doc, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+        import { getFirestore, doc, collection, onSnapshot, query } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCXeBxPtMScUNyoctZ61g7eUNy-...", 
@@ -387,63 +260,83 @@
 
         window.db = getFirestore(initializeApp(firebaseConfig));
 
-        logic.cloudSync = () => {
-            // USER DATA SYNC
+        logic.sync = () => {
+            // USER & ADMIN UI SYNC
             onSnapshot(doc(window.db, "users", logic.state.user.uid), (d) => {
                 const u = d.data();
                 document.getElementById('u-name').innerText = u.name;
-                document.getElementById('u-bal').innerText = "৳" + u.balance.toFixed(0);
-                document.getElementById('h-bal').innerText = u.balance.toFixed(0) + " ৳";
-                document.getElementById('w-bal-xl').innerText = "৳" + u.balance.toFixed(0);
+                document.getElementById('u-bal').innerText = u.balance;
+                document.getElementById('h-bal').innerText = u.balance + " ৳";
+                document.getElementById('w-bal-xl').innerText = "৳" + u.balance;
                 if(u.role === 'admin') document.getElementById('adm-btn').classList.remove('hidden');
+                logic.state.user = u;
             });
 
-            // MATCH ARENA SYNC
+            // MATCHES SYNC (WITH JOIN CHECK)
             onSnapshot(collection(window.db, "matches"), (snap) => {
-                const html = snap.docs.map(d => {
+                document.getElementById('match-grid').innerHTML = "";
+                let admHtml = "";
+                snap.forEach(async d => {
                     const m = d.data();
-                    return `
-                    <div class="glass p-6 rounded-[2.5rem] border-l-4 border-sky-500 relative overflow-hidden group">
-                        <div class="absolute -right-4 -top-4 opacity-5 group-hover:rotate-12 transition-transform"><i class="fas fa-gun text-8xl"></i></div>
-                        <h4 class="font-orbit font-bold sky-text mb-4 uppercase text-lg">${m.title}</h4>
-                        <div class="flex justify-between mb-6">
-                            <div><p class="text-[8px] text-gray-500 font-bold">ENTRY FEE</p><p class="text-xl font-bold italic">৳${m.fee}</p></div>
-                            <div class="text-right"><p class="text-[8px] text-gray-500 font-bold">PRIZE POOL</p><p class="text-xl font-bold text-green-400 italic">৳${m.prize}</p></div>
+                    const playersSnap = await (await import("https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js")).getDocs(collection(window.db, `matches/${d.id}/players`));
+                    const isJoined = playersSnap.docs.some(p => p.data().uid === logic.state.user.uid);
+                    
+                    document.getElementById('match-grid').innerHTML += `
+                    <div class="glass p-6 rounded-[2.5rem] border-l-4 border-sky-500">
+                        <div class="flex justify-between items-start mb-4">
+                            <h4 class="font-orbit font-bold sky-text uppercase">${m.title}</h4>
+                            <p class="text-[10px] bg-sky-500/10 px-3 py-1 rounded-full text-sky-400 font-bold">${m.time}</p>
                         </div>
-                        <button onclick="logic.joinMatch('${d.id}', ${m.fee})" class="w-full sky-btn py-3 rounded-2xl text-[10px] uppercase tracking-widest">Enroll Mission</button>
+                        <div class="flex justify-between mb-6">
+                            <div><p class="text-[8px] text-gray-500 font-bold uppercase">Prize</p><p class="text-xl font-bold">৳${m.prize}</p></div>
+                            <div class="text-right"><p class="text-[8px] text-gray-500 font-bold uppercase">Fee</p><p class="text-xl font-bold">৳${m.fee}</p></div>
+                        </div>
+                        ${isJoined ? `
+                        <div class="bg-green-500/10 p-4 rounded-2xl border border-green-500/30 text-center">
+                            <p class="text-[9px] text-green-500 font-bold uppercase">Room Details Unlocked</p>
+                            <p class="text-xs font-bold">ID: ${m.room_id} | Pass: ${m.room_pass}</p>
+                        </div>` : `<button onclick="logic.join('${d.id}', ${m.fee})" class="w-full sky-btn py-3 rounded-2xl text-[10px] font-bold uppercase">Join Battle</button>`}
                     </div>`;
-                }).join('');
-                document.getElementById('match-grid').innerHTML = html;
+
+                    // Admin Match Management List
+                    if(logic.state.user.role === 'admin') {
+                        document.getElementById('adm-dp-list').innerHTML += `
+                        <div class="glass p-4 rounded-2xl border-l-4 border-red-500 flex justify-between">
+                            <p class="text-xs font-bold">${m.title}</p>
+                            <div class="flex gap-2">
+                                <button onclick="logic.admSetRoom('${d.id}')" class="text-sky-500 text-[10px] font-bold uppercase">Set Room</button>
+                                <button onclick="logic.admDeleteMatch('${d.id}')" class="text-red-500 text-[10px] font-bold uppercase">Delete</button>
+                            </div>
+                        </div>`;
+                    }
+                });
             });
 
-            // GLOBAL NOTICE
-            onSnapshot(doc(window.db, "system", "notice"), (d) => { if(d.exists()) document.getElementById('sys-notice').innerText = d.data().text; });
-
-            // ADMIN: REVENUE & USER LIST
-            onSnapshot(doc(window.db, "system", "stats"), (d) => { if(d.exists()) document.getElementById('adm-revenue').innerText = "৳" + d.data().total_revenue; });
-            
-            onSnapshot(collection(window.db, "users"), (snap) => {
-                document.getElementById('adm-user-list').innerHTML = snap.docs.map(d => `
-                <tr class="hover:bg-white/5">
-                    <td class="p-6 font-bold text-sky-400 text-sm">${d.data().name}</td>
-                    <td class="p-6 text-[10px] font-mono text-gray-500">${d.data().uid}</td>
-                    <td class="p-6 font-bold">৳${d.data().balance}</td>
-                    <td class="p-6"><button onclick="logic.admEditBalance('${d.data().uid}', ${d.data().balance})" class="bg-white/10 px-4 py-1 rounded-lg text-[9px] font-bold uppercase">Edit</button></td>
-                </tr>`).join('');
-            });
-
-            // ADMIN: DEPOSIT QUEUE
-            onSnapshot(collection(window.db, "deposits"), (snap) => {
-                document.getElementById('adm-dp-queue').innerHTML = snap.docs.map(d => `
-                <div class="glass p-4 rounded-2xl border-l-4 border-green-500 flex justify-between items-center">
-                    <div>
-                        <p class="font-bold text-xs sky-text">${d.data().name}</p>
-                        <p class="text-[10px] text-gray-500">Trx: ${d.data().trx}</p>
-                        <p class="font-bold text-sm">৳${d.data().amount}</p>
-                    </div>
-                    <button onclick="logic.admApproveDeposit('${d.id}', '${d.data().uid}', ${d.data().amount})" class="bg-green-600 px-4 py-2 rounded-xl text-[9px] font-bold">APPROVE</button>
-                </div>`).join('');
-            });
+            // ADMIN: WITHDRAWS, DEPOSITS, REVENUE, USERS
+            if(logic.state.user.role === 'admin') {
+                onSnapshot(doc(window.db, "system", "stats"), (d) => document.getElementById('adm-rev').innerText = d.data()?.total_rev || 0);
+                onSnapshot(collection(window.db, "users"), (snap) => {
+                    document.getElementById('adm-user-list').innerHTML = snap.docs.map(d => `
+                    <div class="bg-white/5 p-3 rounded-xl flex justify-between items-center">
+                        <div><p class="text-sm font-bold">${d.data().name}</p><p class="text-[10px] text-gray-500">Bal: ${d.data().balance}৳</p></div>
+                        <button class="bg-sky-500/20 px-3 py-1 rounded-lg text-[9px] font-bold text-sky-400">Edit</button>
+                    </div>`).join('');
+                });
+                onSnapshot(collection(window.db, "withdraws"), (snap) => {
+                    document.getElementById('adm-wd-list').innerHTML = snap.docs.map(d => `
+                    <div class="glass p-4 rounded-2xl border-l-4 border-yellow-500 flex justify-between items-center">
+                        <div class="text-[10px]"><p class="font-bold text-white">${d.data().name}</p><p>${d.data().number}</p><p class="text-yellow-400 font-bold">Amt: ${d.data().amount}৳</p></div>
+                        <button onclick="logic.admApproveWD('${d.id}')" class="bg-yellow-600 px-3 py-2 rounded-xl text-[9px] font-bold">PAID</button>
+                    </div>`).join('');
+                });
+                onSnapshot(collection(window.db, "deposits"), (snap) => {
+                    document.getElementById('adm-dp-list').innerHTML = snap.docs.map(d => `
+                    <div class="glass p-4 rounded-2xl border-l-4 border-green-500 flex justify-between items-center">
+                        <div class="text-[10px]"><p class="font-bold text-white">${d.data().name}</p><p>Trx: ${d.data().trx}</p><p class="text-green-400 font-bold">Amt: ${d.data().amount}৳</p></div>
+                        <button onclick="logic.admApproveDP('${d.id}', '${d.data().uid}', ${d.data().amount})" class="bg-green-600 px-3 py-2 rounded-xl text-[9px] font-bold">ADD</button>
+                    </div>`).join('');
+                });
+            }
         };
     </script>
 </body>
