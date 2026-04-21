@@ -3,72 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nik Top Up | Ultimate ESports</title>
+    <title>SHG亗ESports | Nik Top Up</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
 </head>
 <body>
 
+    <div id="authOverlay" class="auth-container hidden">
+        <div class="auth-card glass">
+            <h2 id="authTitle">LOGIN</h2>
+            <input type="email" id="authEmail" placeholder="Enter Email">
+            <input type="password" id="authPass" placeholder="Enter Password">
+            <button class="main-btn" onclick="handleAuth()" id="authBtn">LOGIN NOW</button>
+            <p onclick="toggleAuthMode()" id="toggleText">Don't have an account? Register</p>
+        </div>
+    </div>
+
     <nav class="navbar">
-        <div class="logo">NIK<span>BOY</span></div>
+        <div class="logo">SHG<span>亗ESports</span></div>
         <div class="nav-right">
-            <div class="wallet-badge" onclick="switchSection('wallet')">
+            <div id="walletBox" class="wallet-badge hidden" onclick="switchSection('wallet')">
                 <img src="https://cdn-icons-png.flaticon.com/512/2489/2489756.png" width="20">
                 ৳ <span id="userBalance">0</span>
             </div>
-            <i class="fas fa-user-circle profile-icon" onclick="toggleModal('profileModal')"></i>
+            <i id="userIcon" class="fas fa-user-circle profile-icon hidden" onclick="toggleModal('profileModal')"></i>
         </div>
     </nav>
 
-    <div class="main-tabs">
+    <div class="main-tabs" id="navTabs">
         <button class="t-btn active" onclick="switchSection('matches')"><i class="fas fa-gamepad"></i> Matches</button>
         <button class="t-btn" onclick="switchSection('wallet')"><i class="fas fa-wallet"></i> Wallet</button>
         <button class="t-btn" onclick="switchSection('history')"><i class="fas fa-history"></i> History</button>
-        <button id="adminBtn" class="t-btn hidden" onclick="window.location.href='admin.html'"><i class="fas fa-user-shield"></i> Admin</button>
+        <button id="adminBtn" class="t-btn admin-special hidden" onclick="window.location.href='admin.html'"><i class="fas fa-user-shield"></i> Admin</button>
     </div>
 
-    <main id="matches" class="content-section">
-        <div class="banner">
-            <marquee>Welcome to Nik Top Up ESports! Join matches and win big prizes.</marquee>
-        </div>
-        <div id="matchContainer">
-            <p style="text-align:center; margin-top:20px;">Loading matches...</p>
-        </div>
+    <main class="content-area">
+        <section id="matches" class="content-section">
+            <div class="banner-box">
+                <marquee>Nik Top Up-e apnake shagoto! Proti match-e win kore jite nin prize money.</marquee>
+            </div>
+            <div id="matchContainer">
+                <p class="loading">Fetching Matches...</p>
+            </div>
+        </section>
+
+        <section id="wallet" class="content-section hidden">
+            <div class="card deposit-card">
+                <h3>Deposit Money</h3>
+                <div class="payment-info">
+                    <p>Bkash/Nagad: <b>017XXXXXXXX</b></p>
+                    <small>Payment korar por Transaction ID niche din.</small>
+                </div>
+                <input type="number" id="depAmount" placeholder="Amount (min 20)">
+                <input type="text" id="txnId" placeholder="Transaction ID">
+                <button class="main-btn" onclick="submitDeposit()">SUBMIT REQUEST</button>
+            </div>
+        </section>
+
+        <section id="history" class="content-section hidden">
+            <div class="history-card card">
+                <h3>Your Transactions</h3>
+                <div id="historyList">No transactions yet.</div>
+            </div>
+        </section>
     </main>
 
-    <section id="wallet" class="content-section hidden">
-        <div class="card deposit-card">
-            <h3>Add Money (Auto Deposit)</h3>
-            <div class="method-box">
-                <p>Bkash/Nagad (Personal): <b>017XXXXXXXX</b></p>
-            </div>
-            <input type="number" id="depAmount" placeholder="Enter Amount">
-            <input type="text" id="txnId" placeholder="Transaction ID">
-            <button class="action-btn" onclick="submitDeposit()">Submit Deposit</button>
-        </div>
-    </section>
-
-    <section id="history" class="content-section hidden">
-        <div class="history-list">
-            <h3>Transaction History</h3>
-            <div id="txnLogs">No history found.</div>
-        </div>
-    </section>
-
     <div id="profileModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content glass">
             <span class="close" onclick="toggleModal('profileModal')">&times;</span>
-            <div class="p-header">
-                <div class="p-avatar"></div>
-                <h2 id="pName">Nikboy Developer</h2>
-                <p>ID: <span id="uID">#12345</span></p>
-            </div>
+            <div class="p-avatar"></div>
+            <h2 id="pName">Player</h2>
+            <p id="pEmail">Email@test.com</p>
             <div class="p-options">
-                <div class="opt" onclick="window.open('https://t.me/yourlink')"><i class="fab fa-telegram"></i> Telegram Support</div>
-                <div class="opt" onclick="window.open('https://wa.me/number')"><i class="fab fa-whatsapp"></i> WhatsApp Help</div>
-                <div class="opt logout"><i class="fas fa-sign-out-alt"></i> Logout</div>
+                <div class="opt" onclick="window.open('https://wa.me/yournumber')"><i class="fab fa-whatsapp"></i> Contact Admin</div>
+                <div class="opt logout-btn" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Logout</div>
             </div>
         </div>
     </div>
