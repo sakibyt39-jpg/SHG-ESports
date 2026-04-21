@@ -115,7 +115,31 @@ function loadMatches() {
         });
     });
 }
+// Withdraw Request Function
+async function submitWithdraw() {
+    const amount = parseInt(document.getElementById('witAmount').value);
+    const method = document.getElementById('witMethod').value;
+    const number = document.getElementById('witNumber').value;
+    const userRef = db.collection("users").doc(auth.currentUser.uid);
+    
+    const userDoc = await userRef.get();
+    if (userDoc.data().balance < amount || amount < 100) {
+        return alert("Balance kom ba 100 takar niche withdraw hobe na!");
+    }
 
+    await db.collection("withdrawals").add({
+        uid: auth.currentUser.uid,
+        email: auth.currentUser.email,
+        amount: amount,
+        method: method,
+        number: number,
+        status: "Pending",
+        date: new Date().toLocaleString()
+    });
+
+    await userRef.update({ balance: userDoc.data().balance - amount });
+    alert("Withdraw Request Sent!");
+}
 // 3. Join Match Logic
 async function joinMatch(mId, fee) {
     const userRef = db.collection("users").doc(auth.currentUser.uid);
