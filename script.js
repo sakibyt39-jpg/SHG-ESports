@@ -1,4 +1,4 @@
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// Firebase Configuration (Directly Added)
 const firebaseConfig = {
   apiKey: "AIzaSyCXeBxPtMSCuNyoctZ61g7eUNZgG0FyISE",
   authDomain: "shgesports-15815.firebaseapp.com",
@@ -9,96 +9,131 @@ const firebaseConfig = {
   measurementId: "G-NTG8VCBYLM"
 };
 
-
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
+const auth = firebase.auth();
 
-// Demo User ID (Tumi auth use korle real ID pabe)
-const USER_ID = "nikboy_user_1"; 
+let isLoginMode = true;
 
-// 1. Fetch Matches & Handle Logic
-function initApp() {
-    db.collection("matches").onSnapshot((snapshot) => {
-        const container = document.getElementById("matchContainer");
-        container.innerHTML = "";
-        const now = new Date().getTime();
+// 1. Auth Logic (Login/Logout)
+auth.onAuthStateChanged(user => {
+    if (user) {
+        document.getElementById('authOverlay').classList.add('hidden');
+        document.getElementById('walletBox').classList.remove('hidden');
+        document.getElementById('userIcon').classList.remove('hidden');
+        loadUserData(user.uid);
+        loadMatches();
+    } else {
+        document.getElementById('authOverlay').classList.remove('hidden');
+        document.getElementById('walletBox').classList.add('hidden');
+        document.getElementById('userIcon').classList.add('hidden');
+    }
+});
 
-        snapshot.forEach((doc) => {
-            const m = doc.data();
-            const id = doc.id;
-            const startTime = new Date(m.startTime).getTime();
+async function handleAuth() {
+    const email = document.getElementById('authEmail').value;
+    const pass = document.getElementById('authPass').value;
 
-            // Auto-Delete Logic: Time shesh hole dilit
-            if (now >= startTime) {
-                db.collection("matches").doc(id).delete();
-                return;
-            }
+    if(!email || !pass) return alert("Email & Password din!");
 
-            const isJoined = m.players && m.players.includes(USER_ID);
+    try {
+        if (isLoginMode) {
+            await auth.signInWithEmailAndPassword(email, pass);
+        } else {
+            const res = await auth.createUserWithEmailAndPassword(email, pass);
+            // New user entry in DB
+            await db.collection("users").doc(res.user.uid).set({
+                email: email,
+                balance: 0,
+                role: "player"
+            });
+        }
+    } catch (err) {
+        alert(err.message);
+    }
+}
 
-            container.innerHTML += `
-                <div class="match-card">
-                    <div class="m-top">
-                        <span class="m-map">${m.map}</span>
-                        <span class="m-type">${m.type}</span>
-                    </div>
-                    <div class="m-info">
-                        <p><i class="fas fa-clock"></i> ${m.startTime}</p>
-                        <p>Win Prize: ৳${m.prize} | Entry: ৳${m.entryFee}</p>
-                    </div>
-                    ${isJoined ? `
-                        <div class="room-info">
-                            <p><b>Room ID:</b> ${m.roomId || 'Waiting...'}</p>
-                            <p><b>Pass:</b> ${m.roomPass || 'Waiting...'}</p>
-                        </div>
-                        <button class="join-btn joined" disabled>JOINED</button>
-                    ` : `
-                        <button class="join-btn" onclick="processJoin('${id}', ${m.entryFee})">JOIN MATCH</button>
-                    `}
-                </div>
-            `;
-        });
-    });
+function handleLogout() {
+    auth.signOut().then(() => window.location.reload());
+}
 
-    // User Profile & Admin Check
-    db.collection("users").doc(USER_ID).onSnapshot(doc => {
+function toggleAuthMode() {
+    isLoginMode = !isLoginMode;
+    document.getElementById('authTitle').innerText = isLoginMode ? "LOGIN" : "REGISTER";
+    document.getElementById('authBtn').innerText = isLoginMode ? "LOGIN NOW" : "REGISTER NOW";
+    document.getElementById('toggleText').innerText = isLoginMode ? "Don't have an account? Register" : "Already have an account? Login";
+}
+
+// 2. Load User & Match Data
+async function loadUserData(uid) {
+    db.collection("users").doc(uid).onSnapshot(doc => {
         const data = doc.data();
         document.getElementById('userBalance').innerText = data.balance;
+        document.getElementById('pName').innerText = data.email.split('@')[0];
+        document.getElementById('pEmail').innerText = data.email;
         
-        // Agar user admin hoy, tobe admin button dekhabe
         if (data.role === "admin") {
             document.getElementById('adminBtn').classList.remove('hidden');
         }
     });
 }
 
-// 2. Join Logic
-async function processJoin(mId, fee) {
-    const userRef = db.collection("users").doc(USER_ID);
-    const userDoc = await userRef.get();
-    
-    if (userDoc.data().balance < fee) {
-        alert("Pokaṭe taka nai! Agey Add Money koro.");
-        return;
-    }
+function loadMatches() {
+    db.collection("matches").onSnapshot(snapshot => {
+        const container = document.getElementById('matchContainer');
+        container.innerHTML = "";
+        
+        snapshot.forEach(doc => {
+            const m = doc.data();
+            const id = doc.id;
+            const now = new Date().getTime();
+            const startTime = new Date(m.startTime).getTime();
 
-    // Ekbar join korle ar parbe na (Firebase arrayUnion automatically handle kore)
-    await db.collection("matches").doc(mId).update({
-        players: firebase.firestore.FieldValue.arrayUnion(USER_ID)
+            // Auto Delete
+            if (now >= startTime) {
+                db.collection("matches").doc(id).delete();
+                return;
+            }
+
+            const joined = m.players && m.players.includes(auth.currentUser.uid);
+
+            container.innerHTML += `
+                <div class="match-card">
+                    <div class="m-header"><span>${m.map}</span> <b>${m.type}</b></div>
+                    <div class="m-body">
+                        <p><i class="far fa-clock"></i> ${m.startTime}</p>
+                        <p>Win: ৳${m.prize} | Entry: ৳${m.entryFee}</p>
+                    </div>
+                    ${joined ? `
+                        <div class="room-box">ID: ${m.roomId} | PW: ${m.roomPass}</div>
+                        <button class="main-btn joined" disabled>ALREADY JOINED</button>
+                    ` : `
+                        <button class="main-btn" onclick="joinMatch('${id}', ${m.entryFee})">JOIN NOW</button>
+                    `}
+                </div>
+            `;
+        });
     });
-
-    await userRef.update({
-        balance: userDoc.data().balance - fee
-    });
-
-    alert("Match Join Success!");
 }
 
-// 3. Tab Switching
+// 3. Join Match Logic
+async function joinMatch(mId, fee) {
+    const userRef = db.collection("users").doc(auth.currentUser.uid);
+    const userDoc = await userRef.get();
+    
+    if(userDoc.data().balance < fee) return alert("Low Balance!");
+
+    await db.collection("matches").doc(mId).update({
+        players: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.uid)
+    });
+    await userRef.update({ balance: userDoc.data().balance - fee });
+    alert("Joined Success!");
+}
+
+// Tabs & Modals
 function switchSection(id) {
     document.querySelectorAll('.content-section').forEach(s => s.classList.add('hidden'));
     document.getElementById(id).classList.remove('hidden');
-    
     document.querySelectorAll('.t-btn').forEach(b => b.classList.remove('active'));
     event.currentTarget.classList.add('active');
 }
@@ -107,5 +142,3 @@ function toggleModal(id) {
     const m = document.getElementById(id);
     m.style.display = (m.style.display === "block") ? "none" : "block";
 }
-
-window.onload = initApp;
