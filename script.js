@@ -1,4 +1,7 @@
-// Firebase Configuration (Directly Added)
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getDatabase, ref, push, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+// Your provided Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyCXeBxPtMSCuNyoctZ61g7eUNZgG0FyISE",
   authDomain: "shgesports-15815.firebaseapp.com",
@@ -6,163 +9,53 @@ const firebaseConfig = {
   storageBucket: "shgesports-15815.firebasestorage.app",
   messagingSenderId: "899657492968",
   appId: "1:899657492968:web:5f9a897f47ea97e1c35c5d",
-  measurementId: "G-NTG8VCBYLM"
+  measurementId: "G-NTG8VC BYLM"
 };
 
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-const auth = firebase.auth();
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
-let isLoginMode = true;
+let currentProduct = "";
 
-// 1. Auth Logic (Login/Logout)
-auth.onAuthStateChanged(user => {
-    if (user) {
-        document.getElementById('authOverlay').classList.add('hidden');
-        document.getElementById('walletBox').classList.remove('hidden');
-        document.getElementById('userIcon').classList.remove('hidden');
-        loadUserData(user.uid);
-        loadMatches();
-    } else {
-        document.getElementById('authOverlay').classList.remove('hidden');
-        document.getElementById('walletBox').classList.add('hidden');
-        document.getElementById('userIcon').classList.add('hidden');
-    }
-});
-
-async function handleAuth() {
-    const email = document.getElementById('authEmail').value;
-    const pass = document.getElementById('authPass').value;
-
-    if(!email || !pass) return alert("Email & Password din!");
-
-    try {
-        if (isLoginMode) {
-            await auth.signInWithEmailAndPassword(email, pass);
-        } else {
-            const res = await auth.createUserWithEmailAndPassword(email, pass);
-            // New user entry in DB
-            await db.collection("users").doc(res.user.uid).set({
-                email: email,
-                balance: 0,
-                role: "player"
-            });
-        }
-    } catch (err) {
-        alert(err.message);
-    }
+// Modal Functions
+window.openModal = function(productName) {
+    currentProduct = productName;
+    document.getElementById('productTitle').innerText = productName;
+    document.getElementById('orderModal').style.display = 'block';
+    document.getElementById('overlay').style.display = 'block';
 }
 
-function handleLogout() {
-    auth.signOut().then(() => window.location.reload());
+window.closeModal = function() {
+    document.getElementById('orderModal').style.display = 'none';
+    document.getElementById('overlay').style.display = 'none';
 }
 
-function toggleAuthMode() {
-    isLoginMode = !isLoginMode;
-    document.getElementById('authTitle').innerText = isLoginMode ? "LOGIN" : "REGISTER";
-    document.getElementById('authBtn').innerText = isLoginMode ? "LOGIN NOW" : "REGISTER NOW";
-    document.getElementById('toggleText').innerText = isLoginMode ? "Don't have an account? Register" : "Already have an account? Login";
-}
+// Order Submission Logic
+document.getElementById('topupForm').addEventListener('submit', (e) => {
+    e.preventDefault();
 
-// 2. Load User & Match Data
-async function loadUserData(uid) {
-    db.collection("users").doc(uid).onSnapshot(doc => {
-        const data = doc.data();
-        document.getElementById('userBalance').innerText = data.balance;
-        document.getElementById('pName').innerText = data.email.split('@')[0];
-        document.getElementById('pEmail').innerText = data.email;
-        
-        if (data.role === "admin") {
-            document.getElementById('adminBtn').classList.remove('hidden');
-        }
-    });
-}
-
-function loadMatches() {
-    db.collection("matches").onSnapshot(snapshot => {
-        const container = document.getElementById('matchContainer');
-        container.innerHTML = "";
-        
-        snapshot.forEach(doc => {
-            const m = doc.data();
-            const id = doc.id;
-            const now = new Date().getTime();
-            const startTime = new Date(m.startTime).getTime();
-
-            // Auto Delete
-            if (now >= startTime) {
-                db.collection("matches").doc(id).delete();
-                return;
-            }
-
-            const joined = m.players && m.players.includes(auth.currentUser.uid);
-
-            container.innerHTML += `
-                <div class="match-card">
-                    <div class="m-header"><span>${m.map}</span> <b>${m.type}</b></div>
-                    <div class="m-body">
-                        <p><i class="far fa-clock"></i> ${m.startTime}</p>
-                        <p>Win: ৳${m.prize} | Entry: ৳${m.entryFee}</p>
-                    </div>
-                    ${joined ? `
-                        <div class="room-box">ID: ${m.roomId} | PW: ${m.roomPass}</div>
-                        <button class="main-btn joined" disabled>ALREADY JOINED</button>
-                    ` : `
-                        <button class="main-btn" onclick="joinMatch('${id}', ${m.entryFee})">JOIN NOW</button>
-                    `}
-                </div>
-            `;
-        });
-    });
-}
-// Withdraw Request Function
-async function submitWithdraw() {
-    const amount = parseInt(document.getElementById('witAmount').value);
-    const method = document.getElementById('witMethod').value;
-    const number = document.getElementById('witNumber').value;
-    const userRef = db.collection("users").doc(auth.currentUser.uid);
-    
-    const userDoc = await userRef.get();
-    if (userDoc.data().balance < amount || amount < 100) {
-        return alert("Balance kom ba 100 takar niche withdraw hobe na!");
-    }
-
-    await db.collection("withdrawals").add({
-        uid: auth.currentUser.uid,
-        email: auth.currentUser.email,
-        amount: amount,
-        method: method,
-        number: number,
+    const orderDetails = {
+        game: currentProduct,
+        playerID: document.getElementById('playerID').value,
+        phone: document.getElementById('userPhone').value,
+        method: document.getElementById('payMethod').value,
+        transactionID: document.getElementById('trxID').value,
         status: "Pending",
         date: new Date().toLocaleString()
-    });
+    };
 
-    await userRef.update({ balance: userDoc.data().balance - amount });
-    alert("Withdraw Request Sent!");
-}
-// 3. Join Match Logic
-async function joinMatch(mId, fee) {
-    const userRef = db.collection("users").doc(auth.currentUser.uid);
-    const userDoc = await userRef.get();
-    
-    if(userDoc.data().balance < fee) return alert("Low Balance!");
+    // Firebase Database-e pathano
+    const ordersRef = ref(db, 'orders');
+    const newOrderRef = push(ordersRef);
 
-    await db.collection("matches").doc(mId).update({
-        players: firebase.firestore.FieldValue.arrayUnion(auth.currentUser.uid)
-    });
-    await userRef.update({ balance: userDoc.data().balance - fee });
-    alert("Joined Success!");
-}
-
-// Tabs & Modals
-function switchSection(id) {
-    document.querySelectorAll('.content-section').forEach(s => s.classList.add('hidden'));
-    document.getElementById(id).classList.remove('hidden');
-    document.querySelectorAll('.t-btn').forEach(b => b.classList.remove('active'));
-    event.currentTarget.classList.add('active');
-}
-
-function toggleModal(id) {
-    const m = document.getElementById(id);
-    m.style.display = (m.style.display === "block") ? "none" : "block";
-}
+    set(newOrderRef, orderDetails)
+        .then(() => {
+            alert("Order Submitted! Please wait for SHG ESPORTS to process.");
+            document.getElementById('topupForm').reset();
+            closeModal();
+        })
+        .catch((error) => {
+            alert("Error: " + error.message);
+        });
+});
