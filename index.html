@@ -54,8 +54,21 @@
             <div class="card deposit-card">
                 <h3>Deposit Money</h3>
                 <div class="payment-info">
-                    <p>Bkash/Nagad: <b>017XXXXXXXX</b></p>
+                    <p>Bkash/Nagad: <b>01941686065</b></p>
                     <small>Payment korar por Transaction ID niche din.</small>
+         <section id="wallet" class="content-section hidden">
+    <div class="card withdraw-card" style="margin-top: 20px;">
+        <h3>Withdraw Money</h3>
+        <p style="font-size: 12px; color: #ccc; margin-bottom: 10px;">Minimum Withdraw: ৳100</p>
+        <select id="witMethod" class="auth-input">
+            <option value="Bkash">Bkash</option>
+            <option value="Nagad">Nagad</option>
+        </select>
+        <input type="number" id="witAmount" placeholder="Enter Amount" class="auth-input">
+        <input type="text" id="witNumber" placeholder="Bkash/Nagad Number" class="auth-input">
+        <button class="main-btn" style="background: linear-gradient(45deg, #ff4757, #ff6b81);" onclick="submitWithdraw()">WITHDRAW NOW</button>
+    </div>
+         </section>     
                 </div>
                 <input type="number" id="depAmount" placeholder="Amount (min 20)">
                 <input type="text" id="txnId" placeholder="Transaction ID">
