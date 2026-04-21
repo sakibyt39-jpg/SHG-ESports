@@ -3,100 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SHG亗ESports | Nik Top Up</title>
+    <title>SHG ESPORTS | Game Top-Up Store</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
 </head>
 <body>
 
-    <div id="authOverlay" class="auth-container hidden">
-        <div class="auth-card glass">
-            <h2 id="authTitle">LOGIN</h2>
-            <input type="email" id="authEmail" placeholder="Enter Email">
-            <input type="password" id="authPass" placeholder="Enter Password">
-            <button class="main-btn" onclick="handleAuth()" id="authBtn">LOGIN NOW</button>
-            <p onclick="toggleAuthMode()" id="toggleText">Don't have an account? Register</p>
-        </div>
-    </div>
-
     <nav class="navbar">
-        <div class="logo">SHG<span>亗ESports</span></div>
-        <div class="nav-right">
-            <div id="walletBox" class="wallet-badge hidden" onclick="switchSection('wallet')">
-                <img src="https://cdn-icons-png.flaticon.com/512/2489/2489756.png" width="20">
-                ৳ <span id="userBalance">0</span>
-            </div>
-            <i id="userIcon" class="fas fa-user-circle profile-icon hidden" onclick="toggleModal('profileModal')"></i>
-        </div>
+        <div class="logo">SHG <span>ESPORTS</span></div>
+        <ul class="nav-links">
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Games</a></li>
+            <li><a href="#">Support</a></li>
+        </ul>
     </nav>
 
-    <div class="main-tabs" id="navTabs">
-        <button class="t-btn active" onclick="switchSection('matches')"><i class="fas fa-gamepad"></i> Matches</button>
-        <button class="t-btn" onclick="switchSection('wallet')"><i class="fas fa-wallet"></i> Wallet</button>
-        <button class="t-btn" onclick="switchSection('history')"><i class="fas fa-history"></i> History</button>
-        <button id="adminBtn" class="t-btn admin-special hidden" onclick="window.location.href='admin.html'"><i class="fas fa-user-shield"></i> Admin</button>
-    </div>
+    <header class="hero">
+        <h1>Fastest Game Top-Up in Bangladesh</h1>
+        <p>Reliable service for Free Fire, PUBG & more.</p>
+    </header>
 
-    <main class="content-area">
-        <section id="matches" class="content-section">
-            <div class="banner-box">
-                <marquee>Nik Top Up-e apnake shagoto! Proti match-e win kore jite nin prize money.</marquee>
+    <main class="container">
+        <div class="product-grid">
+            <div class="card">
+                <div class="badge">Hot</div>
+                <img src="https://img.freepik.com/free-vector/free-fire-game-logo_52683-45044.jpg" alt="Free Fire">
+                <h3>Free Fire Diamonds</h3>
+                <p>Instant Delivery via UID</p>
+                <button class="buy-btn" onclick="openModal('Free Fire Diamonds')">Buy Now</button>
             </div>
-            <div id="matchContainer">
-                <p class="loading">Fetching Matches...</p>
-            </div>
-        </section>
 
-        <section id="wallet" class="content-section hidden">
-            <div class="card deposit-card">
-                <h3>Deposit Money</h3>
-                <div class="payment-info">
-                    <p>Bkash/Nagad: <b>01941686065</b></p>
-                    <small>Payment korar por Transaction ID niche din.</small>
-         <section id="wallet" class="content-section hidden">
-    <div class="card withdraw-card" style="margin-top: 20px;">
-        <h3>Withdraw Money</h3>
-        <p style="font-size: 12px; color: #ccc; margin-bottom: 10px;">Minimum Withdraw: ৳100</p>
-        <select id="witMethod" class="auth-input">
-            <option value="Bkash">Bkash</option>
-            <option value="Nagad">Nagad</option>
-        </select>
-        <input type="number" id="witAmount" placeholder="Enter Amount" class="auth-input">
-        <input type="text" id="witNumber" placeholder="Bkash/Nagad Number" class="auth-input">
-        <button class="main-btn" style="background: linear-gradient(45deg, #ff4757, #ff6b81);" onclick="submitWithdraw()">WITHDRAW NOW</button>
-    </div>
-         </section>     
-                </div>
-                <input type="number" id="depAmount" placeholder="Amount (min 20)">
-                <input type="text" id="txnId" placeholder="Transaction ID">
-                <button class="main-btn" onclick="submitDeposit()">SUBMIT REQUEST</button>
-            </div>
-        </section>
-
-        <section id="history" class="content-section hidden">
-            <div class="history-card card">
-                <h3>Your Transactions</h3>
-                <div id="historyList">No transactions yet.</div>
-            </div>
-        </section>
-    </main>
-
-    <div id="profileModal" class="modal">
-        <div class="modal-content glass">
-            <span class="close" onclick="toggleModal('profileModal')">&times;</span>
-            <div class="p-avatar"></div>
-            <h2 id="pName">Player</h2>
-            <p id="pEmail">Email@test.com</p>
-            <div class="p-options">
-                <div class="opt" onclick="window.open('https://wa.me/yournumber')"><i class="fab fa-whatsapp"></i> Contact Admin</div>
-                <div class="opt logout-btn" onclick="handleLogout()"><i class="fas fa-sign-out-alt"></i> Logout</div>
+            <div class="card">
+                <img src="https://w0.peakpx.com/wallpaper/1010/364/wallpaper-pubg-mobile-logo.jpg" alt="PUBG">
+                <h3>PUBG Mobile UC</h3>
+                <p>Global/BD Region</p>
+                <button class="buy-btn" onclick="openModal('PUBG Mobile UC')">Buy Now</button>
             </div>
         </div>
+    </main>
+
+    <div class="overlay" id="overlay"></div>
+    <div class="modal" id="orderModal">
+        <h2 id="productTitle" style="color: #f39c12;">Order Form</h2>
+        <form id="topupForm">
+            <input type="text" id="playerID" placeholder="Player ID / UID" required>
+            <input type="tel" id="userPhone" placeholder="Your Phone Number" required>
+            <select id="payMethod">
+                <option value="Bkash">Bkash (Manual)</option>
+                <option value="Nagad">Nagad (Manual)</option>
+            </select>
+            <input type="text" id="trxID" placeholder="Transaction ID (TxID)" required>
+            <button type="submit" class="submit-btn">Confirm Order</button>
+            <button type="button" class="close-btn" onclick="closeModal()">Cancel</button>
+        </form>
     </div>
 
-    <script src="script.js"></script>
+    <script type="module" src="script.js"></script>
 </body>
 </html>
